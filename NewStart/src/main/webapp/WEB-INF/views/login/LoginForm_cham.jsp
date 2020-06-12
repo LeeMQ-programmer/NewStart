@@ -9,12 +9,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-function ccchk(form){
-	alert(form.key.value);
-	alert(form.chk.value);
+
+function ccchk(){
 	
-	var key = form.key.value;
-	var chk = form.chk.value;
+	var key = $('input[name=key]').val();
+	var chk = $('input[name=chk]').val();
+
+	if(typeof key == 'undefined'){
+		$('form').submit();
+	}else{
+		//alert('캡챠 확인합니다');
+		getkey(key, chk);
+	}
+}
+
+function getkey(key, chk){
 	
 	$.ajax({
 		url : "./valchk.do",
@@ -22,13 +31,13 @@ function ccchk(form){
 		data : {"key":key,"chk":chk},
 		dataType : "json",
 		success: function(data){
-			alert(data.result);
+			//alert(data.result);
 			if(data.result == true){
-				alert('성공');
-				return true;
+				//alert('성공');
+				$('form').submit();
 			}else{
-				alert('실패');
-				return false;
+				alert('캡챠를 확인해주세요');
+				return;
 			}
 		},
 		error: function(){
@@ -36,8 +45,10 @@ function ccchk(form){
 			return false;
 		}
 	});
-	
 }
+
+
+
 
 
 </script>
@@ -45,29 +56,27 @@ function ccchk(form){
 <body>
 ${msg}
 ${error}
-<form action="./logingo.do" method="post" onsubmit="ccchk(this)">
+<form action="./logingo.do" method="post" id='login'>
 
 아이디 : 
 <input type="text" name="username" value="${id}">
 비밀번호
 <input type="text" name="password" value="${password}">
 <input id="remember_me" name ="remember_me" type = "checkbox"/>Remember me
-<c:if test="${not empty key}">
+ <c:if test="${not empty key}"> 
 		<br>
 	<img  src="https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=${key}">
 		<br>
 	<input type="hidden" name="key" value="${key}">
 	입력 : 
 	<input type="text" name="chk">
-</c:if>
+</c:if> 
 
-<input type="submit" value="제출">
-
-
+<button type="button" onclick="return ccchk()">로그인</button>
 </form>
 
 
-<a href="./singUpform.do">회원가입</a>
+<a href="./singUpform1.do">회원가입</a>
 <a href="./goFId.do">아이디찾기</a>
 <a href="./goFPW.do">비밀번호 찾기</a>
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_Filter;
+import com.start.pro.dto.DTO_Mounui;
 
 public interface IDao_Email {
 
@@ -229,6 +230,27 @@ public interface IDao_Email {
 	 * @param Map<String, String>
 	 * @return List<String>
 	 */
-	public List<String> SelUserFiter(Map<String, String[]> map);
+	public List<String> SelUserFiter(Map<String, String> map);
+	
+	/**
+	 * 문의 답변 이메일을 보낼 때 답변 데이터를 저장합니다.
+	 * 필요한 데이터는 다음과 같습니다.<br>
+	 * mounui_seq, title, content, filechk
+	 * @param DTO_Mounui
+	 * @return boolean
+	 */
+	public boolean SendReply(DTO_Mounui dto);
+	
+	
+	/**
+	 * 관리자가 답변 이메일을 조회할 때 사용합니다.<br>
+	 * 가져오는 데이터는 다음과 같습니다.<br>
+	 * mounui_seq, title, content, filechk, successchk
+	 * successchk는 Y와 N으로 DTO_Mounui의 delchk에 넣어주시면 됩니다.
+	 * @param mounui_seq
+	 * @return DTO_Mounui
+	 */
+	public DTO_Mounui selReplyAemail(String seq);
+	
 	
 }

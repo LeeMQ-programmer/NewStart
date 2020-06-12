@@ -11,6 +11,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 @Component(value = "getKey")
@@ -39,7 +42,9 @@ public class CaptchaGetKey implements ICaptchaKey{
 			}
 			int responseCode = con.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
-				return readBody(con.getInputStream());
+				String key = readBody(con.getInputStream());
+				return getkey(key);
+				
 			} else { // 에러 발생
 				return readBody(con.getErrorStream());
 			}
@@ -82,5 +87,22 @@ public class CaptchaGetKey implements ICaptchaKey{
 		}
 	}
 	
-	
+	private String getkey(String jsonkey) {
+		
+		// json으로 key 값 뽑아오기
+        JSONParser parser  = new JSONParser();
+        Object obj = null;
+		try {
+			obj = parser.parse(jsonkey);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+        JSONObject jsonobj = (JSONObject) obj;
+        
+        String key = (String) jsonobj.get("key");
+        System.out.println(key);
+        	//model.addAttribute("key",key);
+        return key;
+		
+	}
 }

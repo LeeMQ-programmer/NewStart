@@ -2,6 +2,7 @@ package com.start.pro.security;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +70,8 @@ public class Sc_LoginSuccessHandler implements AuthenticationSuccessHandler{
 		clearErrorSession(req, userDto);
 		// 로그인성공 업데이트
 		service.loginUpdate(id);
+		ServletContext app = req.getSession().getServletContext();
+		app.removeAttribute("failchk");
 		
 		
 		
@@ -94,7 +97,7 @@ public class Sc_LoginSuccessHandler implements AuthenticationSuccessHandler{
 			redirectStratgy.sendRedirect(req, resp, defaultUrl);
 		}
 	}
-//	loginResult
+	
 	@SuppressWarnings("unused")
 	private void clearErrorSession(HttpServletRequest req, DTO_User userDto) {
 		HttpSession session = req.getSession(false);

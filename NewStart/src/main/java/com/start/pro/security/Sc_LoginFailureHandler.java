@@ -3,18 +3,13 @@ package com.start.pro.security;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
@@ -83,20 +78,23 @@ public class Sc_LoginFailureHandler implements AuthenticationFailureHandler{
 		String password = req.getParameter("password");
 		String errormsg = null;
 		
+//		ServletContext app = req.getSession().getServletContext();
+//		app.getAttribute("");
+		
 		int cnt = 0;
 		System.out.println(exception);
 		if(exception instanceof LockedException){
         	System.out.println("_____________________________________________________________________왜안들어와?");
-        	cnt = loginFailureCount(id);
+        	cnt = loginFailureCount(id,req);
         	errormsg = message.getMessage("error.LockedException");
         
 		}else if(exception instanceof BadCredentialsException) {
-			cnt = loginFailureCount(id);
+			cnt = loginFailureCount(id, req);
 			errormsg = message.getMessage("error.BadCredentials");
 		}else if(exception instanceof InternalAuthenticationServiceException) {
             errormsg = message.getMessage("error.BadCredentials");
         }
-		
+
 		
 		System.out.println(errormsg+"오류!");
 		
@@ -104,43 +102,34 @@ public class Sc_LoginFailureHandler implements AuthenticationFailureHandler{
 		req.setAttribute("password", password);
 		req.setAttribute("error", errormsg);
 		
-		
-		if(cnt >= 5) {
-			String key = getccKey();
-			req.setAttribute("key", key);
-		}
-			req.getRequestDispatcher(defaultFailureUrl).forward(req, resp);
+		req.getRequestDispatcher(defaultFailureUrl).forward(req, resp);
 	}
 	
 	
-	private int loginFailureCount(String id) {
+	private int loginFailureCount(String id, HttpServletRequest req) {
 		System.out.println(id);
-		int cnt = Integer.parseInt(service.PWFail(id));
-		System.out.println("이 사용자는 비밀번호를 "+cnt+"만큼 틀렸습니당");
-		return cnt;
-	
-	}
-	
-	
-	private String getccKey() {
 		
-		String key = getKey.get("0");
-		System.out.println(key+"키 받아왔나요?");
-		
-		// json으로 key 값 뽑아오기
-        JSONParser parser  = new JSONParser();
-        Object obj = null;
-		try {
-			obj = parser.parse(key);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		ServletContext app = req.getSession().getServletContext();
+		Object cnt = app.getAttribute("failchk"); 
+		int failcnt = 0;
+		System.out.println("_______________________"+cnt);
+		if(cnt == null) {
+			int temp = 1;
+			app.setAttribute("failchk", temp);
+			failcnt = 1;
+		}else {
+			failcnt = (Integer)app.getAttribute("failchk") + 1;
+			app.setAttribute("failchk", failcnt);
 		}
-        JSONObject jsonobj = (JSONObject) obj;
-        
-        key = (String) jsonobj.get("key");
-        System.out.println(key);
-        return key;
+		
+		
+		//int cnt = Integer.parseInt(service.PWFail(id));
+		System.out.println("이 사용자는 비밀번호를 "+failcnt+"만큼 틀렸습니당");
+		return failcnt;
+	
 	}
+	
+	
 	
 	
 }

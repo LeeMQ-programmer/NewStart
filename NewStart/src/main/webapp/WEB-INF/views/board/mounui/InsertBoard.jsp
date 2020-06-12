@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,26 +10,23 @@
 </head>
 <body>
 <div class="container">
-  <form>
+  <form action="./insertBoard.do" method="post">
     <div class="form-group">
      <label for="sel1">Select list (select one):</label>
-      <select class="form-control" id="sel1">
-        <option value="0">1</option>
-        <option value="0">2</option>
-        <option value="0">3</option>
-        <option value="0">4</option>
+      <select class="form-control" name="category_seq" id="sel1">
+        <c:forEach items="${Fdto}" var="fdto">
+	        <option  value="${fdto.category_seq}">${fdto.category_title}</option>
+        </c:forEach>
       </select>
-      <label for="usr">Name:</label>
-      <input type="text" class="form-control" id="usr">
+      <label for="usr">제목 :</label>
+      <input type="text" class="form-control" name="title" id="usr">
     </div>
     <div class="form-group">
-      <label for="pwd">Password:</label>
-      <input type="password" class="form-control" id="pwd">
+      <label for="comment">내용:</label>
+      <textarea class="form-control" rows="5" id="comment" name="content"></textarea>
     </div>
-    <div class="form-group">
-      <label for="comment">Comment:</label>
-      <textarea class="form-control" rows="5" id="comment"></textarea>
-    </div>
+      <input type="hidden" class="form-control" name="filechk" value="N">
+      <input type="submit" class="form-control">
   </form>
 </div>
 

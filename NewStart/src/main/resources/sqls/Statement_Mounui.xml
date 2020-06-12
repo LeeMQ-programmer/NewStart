@@ -2,24 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.start.pro.mounui">
 
+<resultMap type="MDto" id="getAdminBoard">
+	<result column="mounui_seq" property="mounui_seq"/>
+	<result column="user_seq" property="user_seq"/>
+	<result column="user_email" property="board_code"/>
+	<result column="user_nickname" property="category_seq"/>
+	<result column="category_title" property="category_title"/>
+	<result column="title" property="title"/>
+	<result column="content" property="content"/>
+	<result column="regdate" property="regdate"/>
+	<result column="replychk" property="replychk"/>
+	<result column="filechk" property="filechk"/>
+	<result column="delchk" property="delchk"/>
+</resultMap>
+
+<resultMap type="EmailDto" id="replydto">
+	<result column="title" property="email_title"/>
+	<result column="content" property="email_content"/>
+	<result column="successchk" property="successchk"/>
+	<result column="regdate" property="regdate"/>
+</resultMap>
+
 
 <!-- 문의 게시판 -->
 
 <!-- 문의글 등록하기 -->
 <insert id="insertBoard" parameterType="MDto">
 INSERT INTO MOUNUI
-(BOARD_CODE, MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK)
-VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
+(BOARD_CODE, MOUNUI_SEQ, USER_SEQ, CATEGORY_SEQ, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK)
+VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category_seq}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
 </insert>
 
 
 <!--회원번호로 문의글 정보 가져오기-->
  <select id="userBoard" parameterType="java.lang.String" resultType="MDto">
- SELECT MOUNUI_SEQ, 
+ SELECT fc.CATEGORY_TITLE, MOUNUI_SEQ, 
 	 CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
  	CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK 
- 		FROM MOUNUI m 
-  			WHERE USER_SEQ = #{user_seq} AND DELCHK = 'N'
+ 		FROM MOUNUI m JOIN FAQ_CODE fc 
+ 			ON m.CATEGORY_SEQ = fc.CATEGORY_SEQ 
+  			AND USER_SEQ = #{seq} AND DELCHK = 'N'
+  				ORDER BY MOUNUI_SEQ DESC
  </select>
  
  
@@ -32,15 +55,15 @@ VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category}, #{title}, #{content}
    DELCHK = 'N'0
   -->
  <select id="userBoardDetail" parameterType="java.lang.String" resultType="MDto">
- SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
- 	FROM MOUNUI m 
-  		WHERE BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq} AND DELCHK = 'N'
+  SELECT MOUNUI_SEQ, f.CATEGORY_TITLE ,TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
+ 	FROM MOUNUI m JOIN FAQ_CODE f ON m.CATEGORY_SEQ = f.CATEGORY_SEQ 
+ 		AND BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq} AND DELCHK = 'N'
  </select>
   
  <!--글 seq로 문의글 정보 수정하기-->
 <update id="updateBoard" parameterType="MDto">
 UPDATE MOUNUI 
- SET CATEGORY = #{category}, TITLE = #{title}, CONTENT = #{content},
+ SET CATEGORY_SEQ = #{category_seq}, TITLE = #{title}, CONTENT = #{content},
  	REGDATE = SYSDATE, FILECHK = #{filechk}
   		 WHERE MOUNUI_SEQ = #{mounui_seq}
 </update>
@@ -58,18 +81,50 @@ UPDATE MOUNUI
 
  
  <!--전체 글 가져오기(삭제된 것까지)-->
-<select id="adminBoard" resultType="MDto">
-SELECT MOUNUI_SEQ, USER_SEQ, CATEGORY, 
- CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
- REGDATE, REPLYCHK, FILECHK, DELCHK  
- 	FROM MOUNUI m
+<select id="adminBoard" parameterType="FilterDto" resultMap="getAdminBoard">
+SELECT MOUNUI_SEQ, CATEGORY_TITLE, USER_SEQ, USER_EMAIL, USER_NICKNAME,
+	CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
+	REGDATE, REPLYCHK, FILECHK, DELCHK  
+	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
+	<where>
+		<if test="_parameter != null">
+			<if test="user_grade != ''">
+				AND u.USER_GRADE = #{user_grade}
+			</if>
+			<if test="replychk != ''">
+				AND m.REPLYCHK = #{replychk}
+			</if>		
+			<if test="delchk != ''">
+				m.DELCHK  = #{delchk}
+			</if>
+			<if test="firstDate != ''">
+		  		<![CDATA[AND REGDATE >= #{firstDate}]]>
+			</if>
+			<if test="lastDate != ''">
+		  		<![CDATA[AND REGDATE <= #{lastDate}]]>
+			</if>
+		</if>
+	</where>
+	
+	
+	ORDER BY MOUNUI_SEQ DESC
 </select>
 
 <!-- 글 상세조회-->
-<select id="adminBoardDetail" parameterType="java.lang.String" resultType="MDto">
-SELECT MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK 
- 	FROM MOUNUI m 
- 	 WHERE BOARD_CODE = '0' AND MOUNUI_SEQ =#{mounui_seq}
+<select id="adminBoardDetail" parameterType="java.lang.String" resultMap="getAdminBoard">
+SELECT MOUNUI_SEQ, CATEGORY_TITLE,CONTENT, USER_SEQ, USER_EMAIL, USER_NICKNAME, 
+	TITLE,
+	REGDATE, REPLYCHK, FILECHK ,DELCHK  
+	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
+		WHERE  BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq}
+</select>
+
+
+
+<!-- 답변 가져오기 -->
+<select id="getReply" parameterType="java.lang.String" resultMap="replydto">
+SELECT TITLE, CONTENT, SUCCESSCHK, REGDATE FROM R_EMAIL re
+	WHERE MOUNUI_SEQ =#{mounui_seq}
 </select>
 
 <!-- seq로 답변처리여부 y로 수정 -->
@@ -81,8 +136,9 @@ SELECT MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE, CONTENT, REGDATE, REPLYCHK, FILECH
 <delete id="adminDelBoard" parameterType="java.util.Map">
  DELETE FROM MOUNUI
  	<where>
+ 	MOUNUI_SEQ IN
  		<foreach collection="seq" item="seq" open="(" close=")" separator=",">
-			 MOUNUI_SEQ IN #{seq}
+			  #{seq}
  		</foreach>
  	</where>
 </delete>
