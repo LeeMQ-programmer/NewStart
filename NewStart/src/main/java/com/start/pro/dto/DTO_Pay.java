@@ -1,17 +1,16 @@
 package com.start.pro.dto;
 
-import java.util.Date;
-
 public class DTO_Pay {
 
-	private String pay_seq;
+	private int pay_seq;
 	private String pay_token;
 	private String pay_type;
 	private int pay_orderno;
 	private String pay_amount;
-	private Date pay_date;
-	private int user_seq;
-	private int admin_seq;
+	private String pay_date;
+	private String user_seq;
+	private String delrefund;
+	
 	
 	public DTO_Pay() {
 		// TODO Auto-generated constructor stub
@@ -21,13 +20,21 @@ public class DTO_Pay {
 	public String toString() {
 		return "DTO_Pay [pay_seq=" + pay_seq + ", pay_token=" + pay_token + ", pay_type=" + pay_type + ", pay_orderno="
 				+ pay_orderno + ", pay_amount=" + pay_amount + ", pay_date=" + pay_date + ", user_seq=" + user_seq
-				+ ", admin_seq=" + admin_seq + "]";
+				+ ", delrefund=" + delrefund + "]";
 	}
 
-	public String getPay_seq() {
+	public String getDelrefund() {
+		return delrefund;
+	}
+
+	public void setDelrefund(String delrefund) {
+		this.delrefund = delrefund;
+	}
+
+	public int getPay_seq() {
 		return pay_seq;
 	}
-	public void setPay_seq(String pay_seq) {
+	public void setPay_seq(int pay_seq) {
 		this.pay_seq = pay_seq;
 	}
 	public String getPay_token() {
@@ -48,23 +55,17 @@ public class DTO_Pay {
 	public void setPay_amount(String pay_amount) {
 		this.pay_amount = pay_amount;
 	}
-	public Date getPay_date() {
+	public String getPay_date() {
 		return pay_date;
 	}
-	public void setPay_date(Date pay_date) {
+	public void setPay_date(String pay_date) {
 		this.pay_date = pay_date;
 	}
-	public int getUser_seq() {
+	public String getUser_seq() {
 		return user_seq;
 	}
-	public void setUser_seq(int user_seq) {
+	public void setUser_seq(String user_seq) {
 		this.user_seq = user_seq;
-	}
-	public int getAdmin_seq() {
-		return admin_seq;
-	}
-	public void setAdmin_seq(int admin_seq) {
-		this.admin_seq = admin_seq;
 	}
 
 	public int getPay_orderno() {
@@ -75,8 +76,8 @@ public class DTO_Pay {
 		this.pay_orderno = pay_orderno;
 	}
 
-	public DTO_Pay(String pay_seq, String pay_token, int pay_orderno, String pay_amount, Date pay_date,
-			int user_seq) {
+	public DTO_Pay(int pay_seq, String pay_token, int pay_orderno, String pay_amount, String pay_date,
+			String user_seq, String delrefund) {
 		super();
 		this.pay_seq = pay_seq;
 		this.pay_token = pay_token;
@@ -84,8 +85,14 @@ public class DTO_Pay {
 		this.pay_amount = pay_amount;
 		this.pay_date = pay_date;
 		this.user_seq = user_seq;
+		this.delrefund = delrefund;
+	}
+
+	public DTO_Pay(int pay_seq) {
+		super();
+		this.pay_seq = pay_seq;
 	}
 	
-
+	
 	
 }
