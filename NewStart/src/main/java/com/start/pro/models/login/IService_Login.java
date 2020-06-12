@@ -28,7 +28,7 @@ public interface IService_Login {
 		public DTO_User getUser(String user_seq);
 		
 		/**
-		 * 사용자 아이디(이메일)을 통해 비밀번호 틀린횟수 초기화, 로그인 날짜 업데이트를 해줍니다.
+		 * 사용자 아이디(이메일)을 통해 로그인 날짜 업데이트를 해줍니다.
 		 * 로그인 성공했을 시 사용합니다.
 		 * @param 사용자 아이디(user_email)
 		 * @return boolean(성공, 실패)

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-이메일 인증을 하시면 정상적으로 회원가입이 완료됩니다.!
-<a href="./loginForm.do">메인화면으로 돌아가기</a>
+문의 글이 등록되었습니다!
+<a href="./UserMBoard.do">문의 게시판</a>
 </body>
 </html>
