@@ -12,16 +12,17 @@ import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
 @Service
-public class Service_GonggoImpl implements IService_Gonggo {
+public class Service_GonggoImpl implements IService_Gonggo{
 
 	@Autowired
 	IDao_Gonggo dao;
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Override
-	public List<DTO_Gonggo> Gonggo_Show(String seq) {
-		log.info("Service impl Gonggo_Show : \t{}", seq);
-		return dao.Gonggo_Show(seq);
+	public List<DTO_Gonggo> gonggo_View() {
+		log.info("Service impl Gonggo_Show : \t{}");
+		return dao.Gonggo_Show();
 	}
 
 	@Override

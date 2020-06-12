@@ -14,7 +14,7 @@ public interface IService_Gonggo {
 	 * @param dto
 	 * @return
 	 */
-	public List<DTO_Gonggo> Gonggo_Show(String seq);
+	public List<DTO_Gonggo> gonggo_View();
 	
 	
 	/**

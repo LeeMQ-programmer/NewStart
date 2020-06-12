@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.start.pro.dto.DTO_BWL;
 
 @Repository
-public class Dao_BwlImpl implements IDao_Bwl {
-
+public class Dao_BwlImpl implements IDao_Bwl{
 
 	@Autowired
 	SqlSessionTemplate session;
@@ -20,25 +19,22 @@ public class Dao_BwlImpl implements IDao_Bwl {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	private final String NS = "com.start.pro.bidding_w_list.";
 	
-	
 	@Override
 	public List<DTO_BWL> bwl_show() {
-		log.info("dao impl bwl_show : \t{}");
-		List<DTO_BWL> lists = session.selectList(NS+"bwl_show");
-		return lists;
+		log.info("bwl_show 진입");
+		return session.selectList(NS+"bwl_show");
 	}
-
 	@Override
-	public DTO_BWL bwl_detail(String seq) {
-		log.info("dao impl bwl_detail : \t{}", seq);
-		return session.selectOne(NS+"bwl_detail", seq);
+	public DTO_BWL bwl_detail(String gonggo_seq) {
+		log.info("bwl_detail 진입 : \t{}", gonggo_seq);
+		return session.selectOne(NS+"bwl_detail", gonggo_seq);
 	}
-
 	@Override
 	public boolean bwl_winner(DTO_BWL dto) {
-		log.info("dao impl bwl_winner : \t{}", dto);
+		log.info("bwl_winner 진입 : \t{}", dto);
 		int n = session.insert(NS+"bwl_winner", dto);
 		return n > 0 ? true : false;
 	}
+
 
 }
