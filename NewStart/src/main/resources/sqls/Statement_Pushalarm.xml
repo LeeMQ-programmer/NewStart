@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.pushalarm">
+  
+<insert id="">
+INSERT INTO PUSHALARM
+	(PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER)
+	VALUES(PUSH_SEQ.NEXTVAL, #{admin_seq}, #{push_title}, 
+	#{push_content}, #{push_accident}, SYSDATE, 
+	PUSH_AM = #{push_am}, 'U', #{push_touser})
+</insert>
+  
+  
+  
+<select id="">
+SELECT PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER
+	FROM PUSHALARM
+</select>
+  
+<select id="">
+SELECT PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER 
+	FROM PUSHALARM
+	WHERE PUSH_ACCIDENT = #{push_accident}
+</select>
+  
+<select id="">
+SELECT PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER
+	FROM PUSHALARM
+	WHERE PUSH_SEQ = #{push_seq}
+</select>
+  
+  
+<update id="">
+UPDATE PUSHALARM
+	SET PUSH_STATE='F'
+	WHERE PUSH_SEQ=#{push_seq}
+</update>
+  
+  
+<update id="">
+UPDATE PUSHALARM
+	SET PUSH_STATE='L'
+	WHERE PUSH_SEQ=#{push_seq}
+</update>
+  
+<update id="">
+UPDATE PUSHALARM
+	SET PUSH_STATE='U'
+	WHERE PUSH_SEQ=#{push_seq}
+</update>
+
+
+
+<select id="">
+SELECT PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER 
+	FROM PUSHALARM
+	WHERE PUSH_STATE = #{push_state}
+</select>
+  
+<select id="">
+SELECT PUSH_SEQ, ADMIN_SEQ, PUSH_TITLE, PUSH_CONTENT, PUSH_ACCIDENT, PUSH_DATE, PUSH_AM, PUSH_STATE, PUSH_TOUSER 
+	FROM PUSHALARM
+	WHERE PUSH_AM = #{push_am}
+</select>
+  
+<update id="">
+UPDATE PUSHALARM SET
+	ADMIN_SEQ = #{admin_seq}, PUSH_TITLE = #{push_title}, PUSH_CONTENT = #{push_content}, 
+	PUSH_ACCIDENT = #{push_accident}, PUSH_TOUSER = #{push_touser}
+	WHERE PUSH_SEQ=#{push_seq}
+</update>
+  
+</mapper>

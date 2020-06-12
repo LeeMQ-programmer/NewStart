@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.pay">
+
+<!-- 결제 생성 -->
+<insert id="createPay" parameterType="PayDto">
+INSERT INTO PAYMENT
+(PAY_SEQ, PAY_TOKEN, PAY_ORDERNO, PAY_AMOUNT, PAY_DATE, USER_SEQ)
+VALUES(PAY_SEQ.NEXTVAL, #{pay_token}, #{pay_orderno}, #{pay_amount}, SYSDATE, #{user_seq})
+</insert>
+
+<!-- 결제내역 조회 -->
+<select id="selectPay" parameterType="java.lang.String" resultType="PayDto">
+SELECT PAY_SEQ, PAY_TOKEN, PAY_AMOUNT, TO_CHAR(PAY_DATE,'YYYY-MM-DD') AS PAY_DATE, USER_SEQ
+	FROM PAYMENT
+		WHERE USER_SEQ = #{user_seq}
+</select>
+
+<!-- 결제 주문번호 구하는 쿼리 -->
+<select id="selectMax" parameterType="java.lang.String" resultType="java.lang.Integer">
+SELECT MAX(PAY_ORDERNO)
+	FROM PAYMENT
+</select>
+
+<!-- 결제 환불 -->
+<insert id="refundPay" parameterType="java.lang.String">
+INSERT INTO REFUND_PAYMENT 
+(REFUND_SEQ, REFUND_DATE, PAY_SEQ)
+VALUES(REFUND_SEQ.NEXTVAL, SYSDATE, #{pay_seq})
+</insert>
+
+<!-- 환불내역 조회 -->
+<select id="selectRef" parameterType="java.lang.String" resultType="RefundPayDto">
+SELECT REFUND_SEQ, TO_CHAR(REFUND_DATE,'YYYY-MM-DD') AS REFUND_DATE
+	FROM REFUND_PAYMENT 
+		WHERE PAY_SEQ = #{pay_seq}
+</select>
+
+<!-- 크레딧 생성 -->
+<insert id="createCredit" parameterType="CreditDto">
+INSERT INTO CREDIT_TEST
+(CREDIT_SEQ, MILG_CREDIT, REMAIN_CREDIT, CREDIT_DATE, USER_SEQ)
+VALUES(CREDIT_SEQ.NEXTVAL, #{milg_credit}, #{remain_credit}, SYSDATE, 1)
+</insert>
+
+<!-- 크레딧 내역 조회 -->
+<select id="selectCredit" parameterType="java.lang.String" resultType="CreditDto">
+SELECT CREDIT_SEQ, MILG_CREDIT, TO_CHAR(CREDIT_DATE,'YYYY-MM-DD') AS CREDIT_DATE
+	FROM CREDIT
+		WHERE USER_SEQ = #{user_seq}
+</select>
+
+<!-- 크레딧 환불 -->
+<insert id="refundCredit" parameterType="java.lang.String">
+INSERT INTO REFUND_CREDIT
+(REFUNDCREDIT_SEQ, REFUNDCREDIT_DATE, CREDIT_SEQ)
+VALUES(REFUNDCREDIT_SEQ.NEXTVAL, SYSDATE, #{credit_seq})
+</insert>
+
+<!-- 크레딧 환불 내역 조회 -->
+<select id="selectCreRef" parameterType="java.lang.String" resultType="RefundCreDto">
+SELECT REFUNDCREDIT_SEQ, TO_CHAR(REFUNDCREDIT_DATE,'YYYY-MM-DD') AS REFUNDCREDIT_DATE
+	FROM REFUND_CREDIT
+		WHERE REFUNDCREDIT_SEQ = #{refundcredit_seq}
+</select>
+
+</mapper>

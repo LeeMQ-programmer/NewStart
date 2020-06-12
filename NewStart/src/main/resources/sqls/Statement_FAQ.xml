@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.faq">
+
+
+<!-- 카테고리 -->
+
+<!-- 
+카테고리 테이블에서 설명, 순서 맥스+`1해서 추가 
+INSERT INTO FAQ_CODE 
+ (CATEGORY_SEQ, CATEGORY_TITLE, CATEGORY_SORT)
+  VALUES(FAQ_CODE_SEQS.NEXTVAL, '결제 관련', 
+   (SELECT NVL(MAX(CATEGORY_SORT),1) FROM FAQ_CODE))
+-->
+
+
+<!-- 
+seq 통해서 내용 혹은 순서 수정
+UPDATE FAQ_CODE SET CATEGORY_TITLE = '수정 관련', CATEGORY_SORT = '2'
+ WHERE CATEGORY_SEQ = '21'
+ -->
+
+<!-- 
+seq 통해서 삭제(cascade)
+DELETE FROM FAQ_CODE
+ WHERE CATEGORY_SEQ='0'
+ -->
+
+
+<!-- 
+전체 카테고리 조회(순서로 정렬해서)
+SELECT CATEGORY_SEQ, CATEGORY_TITLE 
+ FROM FAQ_CODE fc 
+  ORDER BY CATEGORY_SORT
+ -->
+
+
+<!-- FAQ 게시판 -->
+
+<!-- 
+글 작성
+INSERT INTO FAQ_BOARD
+(BOARD_CODE, FAQ_SEQ, CATEGORY_SEQ, FAQ_TITLE, FAQ_CONTENT, FAQ_REGDATE, FILECHK)
+VALUES(0, FAQ_BOARD_SEQS.NEXTVAL, '22', '결제 궁금하세요?', '그럼 결제하세요', SYSDATE, 'N')
+ -->
+
+
+<!-- 
+seq 통해서 글 수정
+UPDATE FAQ_BOARD
+SET FAQ_TITLE='결제 궁금하세요?(수정본)', FAQ_CONTENT='그럼 결제하세요^^(수정본)', FAQ_REGDATE=SYSDATE, FILECHK='N'
+WHERE BOARD_CODE = '0' AND FAQ_SEQ='1'
+ -->
+
+
+<!-- 
+seq 통해서 글 삭제
+DELETE FROM FAQ_BOARD
+ WHERE FAQ_SEQ='0'
+ -->
+
+<!-- 
+seq 통해서 글 다중 삭제
+DELETE FROM FAQ_BOARD
+ WHERE FAQ_SEQ='0'
+ -->
+
+
+<!-- 
+카테고리 정렬하고 그 안에서 게시글 seq순으로
+ 정렬해서 최대 6개 가져오기
+ SELECT CATEGORY_SEQ, FAQ_SEQ,
+ CASE WHEN LENGTH(FAQ_TITLE)>10 THEN SUBSTR(FAQ_TITLE,1,10) || '....' ELSE FAQ_TITLE END AS FAQ_TITLE
+ FROM FAQ_BOARD fb2 
+  WHERE CATEGORY_SEQ ='23' AND ROWNUM <=7
+ -->
+
+
+<!-- 
+카테고리 seq 기준으로 해당 카테고리에 대한
+ 글만 가져오기
+ SELECT  FAQ_SEQ, 
+ CASE WHEN LENGTH(FAQ_TITLE)>10 THEN SUBSTR(FAQ_TITLE,1,10) || '....' ELSE FAQ_TITLE END AS FAQ_TITLE,
+ FAQ_REGDATE 
+ FROM FAQ_BOARD fb 
+  WHERE CATEGORY_SEQ = '22'
+ -->
+
+
+<!-- 
+게시글 상세조회
+SELECT FAQ_SEQ, FAQ_TITLE, FAQ_CONTENT , FAQ_REGDATE 
+ FROM FAQ_BOARD fb 
+  WHERE CATEGORY_SEQ = '1' AND FAQ_SEQ = '0'
+ FROM FAQ_BOARD fb 
+  WHERE FAQ_SEQ = '0' AND CATEGORY_SEQ = '1'
+ -->
+
+
+</mapper>

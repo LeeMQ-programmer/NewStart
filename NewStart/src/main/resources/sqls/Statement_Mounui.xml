@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.mounui">
+
+
+<!-- 문의 게시판 -->
+
+<!-- 문의글 등록하기 -->
+<insert id="insertBoard" parameterType="MDto">
+INSERT INTO MOUNUI
+(BOARD_CODE, MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK)
+VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
+</insert>
+
+
+<!--회원번호로 문의글 정보 가져오기-->
+ <select id="userBoard" parameterType="java.lang.String" resultType="MDto">
+ SELECT MOUNUI_SEQ, 
+	 CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
+ 	CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK 
+ 		FROM MOUNUI m 
+  			WHERE USER_SEQ = #{user_seq} AND DELCHK = 'N'
+ </select>
+ 
+ 
+ <!-- 
+ SEQ로 문의글 상세조회
+ SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
+ FROM MOUNUI m 
+  WHERE BOARD_CODE = '0' AND
+   MOUNUI_SEQ = '1' AND 
+   DELCHK = 'N'0
+  -->
+ <select id="userBoardDetail" parameterType="java.lang.String" resultType="MDto">
+ SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
+ 	FROM MOUNUI m 
+  		WHERE BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq} AND DELCHK = 'N'
+ </select>
+  
+ <!--글 seq로 문의글 정보 수정하기-->
+<update id="updateBoard" parameterType="MDto">
+UPDATE MOUNUI 
+ SET CATEGORY = #{category}, TITLE = #{title}, CONTENT = #{content},
+ 	REGDATE = SYSDATE, FILECHK = #{filechk}
+  		 WHERE MOUNUI_SEQ = #{mounui_seq}
+</update>
+  
+<!--글 seq로 문의글 삭제여부 y로 변경하기 -->
+<update id="delBoard" parameterType="java.util.Map">
+ UPDATE MOUNUI 
+ SET DELCHK = 'Y'
+ <where>
+	<foreach collection="seq" item="seq" open="(" close=")" separator=",">
+	  MOUNUI_SEQ IN #{seq}
+	</foreach>
+ </where>
+</update>
+
+ 
+ <!--전체 글 가져오기(삭제된 것까지)-->
+<select id="adminBoard" resultType="MDto">
+SELECT MOUNUI_SEQ, USER_SEQ, CATEGORY, 
+ CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
+ REGDATE, REPLYCHK, FILECHK, DELCHK  
+ 	FROM MOUNUI m
+</select>
+
+<!-- 글 상세조회-->
+<select id="adminBoardDetail" parameterType="java.lang.String" resultType="MDto">
+SELECT MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK 
+ 	FROM MOUNUI m 
+ 	 WHERE BOARD_CODE = '0' AND MOUNUI_SEQ =#{mounui_seq}
+</select>
+
+<!-- seq로 답변처리여부 y로 수정 -->
+ <update id="replyMounui" parameterType="java.lang.String">
+ 	UPDATE MOUNUI SET REPLYCHK = 'Y' WHERE MOUNUI_SEQ = #{mounui_seq}
+ </update>
+ 
+ <!--seq로 단일 삭제하기 -->
+<delete id="adminDelBoard" parameterType="java.util.Map">
+ DELETE FROM MOUNUI
+ 	<where>
+ 		<foreach collection="seq" item="seq" open="(" close=")" separator=",">
+			 MOUNUI_SEQ IN #{seq}
+ 		</foreach>
+ 	</where>
+</delete>
+
+<!-- 카테고리 가져오기 -->
+<select id="getCategory" resultType="FAQDto">
+SELECT CATEGORY_SEQ, CATEGORY_TITLE FROM FAQ_CODE fc
+	ORDER BY CATEGORY_SORT
+</select>
+
+
+</mapper>

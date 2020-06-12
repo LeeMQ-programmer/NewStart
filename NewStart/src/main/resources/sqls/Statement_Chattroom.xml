@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.chattroom">
+  
+<select id="">
+SELECT CONTENT_SEQ, CHAT_SEQ, USER_SEQ, CHATCONTENT, CHATTIME
+	FROM CHATTROOM
+	ORDER BY CHATTIME DESC
+</select>
+
+
+
+
+<insert id="">
+INSERT INTO CHATTROOM
+	(CONTENT_SEQ, CHAT_SEQ, USER_SEQ, CHATCONTENT, CHATTIME)
+	VALUES(CONTENT_SEQ.NEXTVAL, #{chat_seq}, #{user_seq}, #{chatcontent}, SYSDATE)
+</insert>
+
+
+
+<update id="">
+UPDATE CHATTROOM
+	SET CHATCONTENT = #{chatcontent}, CHATTIME = SYSDATE
+	WHERE CHAT_SEQ = #{chat_seq}
+</update>
+  
+  
+  
+<update id="">
+MERGE INTO CHATTROOM CHA
+	USING (
+		SELECT CHAT_SEQ, USER_SEQ
+			FROM CHATLIST 
+			WHERE SYSDATE - CREATEDATE > 730
+	) TARGET
+	ON (CHA.USER_SEQ = TARGET.USER_SEQ)
+	WHEN MATCHED THEN
+		UPDATE SET CHATTIME = SYSDATE
+		DELETE WHERE (TARGET.CHAT_SEQ = CHA.CHAT_SEQ)
+</update>
+	         
+	                  
+
+
+</mapper>

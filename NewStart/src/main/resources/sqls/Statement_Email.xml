@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.email">
+
+
+<!-- 인증 이메일 -->
+
+<!--인증 이메일 발송하면서 정보 입력-->
+<insert id="sendLJ" parameterType="java.util.Map">
+ INSERT INTO LJ_EMAIL
+(LJ_SEQ, LJ_CODE, USER_EMAIL, LJ_KEY, REGDATE)
+VALUES(LJ_EMAIL_SEQS.NEXTVAL,#{lj_code} ,#{user_email}, #{lj_key}, SYSDATE)
+</insert>
+ 
+
+
+<!-- 유저 인증받기 -->
+<select id="LJKey" parameterType="java.util.Map" resultType="java.lang.String">
+SELECT LJ_CODE
+ FROM LJ_EMAIL
+  WHERE USER_EMAIL = #{user_email} AND LJ_KEY = #{lj_key}
+</select>
+
+<!--생성일시부터 1년 지난거 데이터 삭제 -->
+ <delete id="DelLJ">
+ <![CDATA[DELETE FROM LJ_EMAIL
+	 WHERE LJ_SEQ = (SELECT LJ_SEQ 
+    	  FROM LJ_EMAIL le 
+       		WHERE (REGDATE + (INTERVAL '1' YEAR)) <= SYSDATE)]]>
+ </delete>
+ 
+ 
+
+<!-- 문의 답변 이메일  -->
+
+<!-- 
+문의 답변 정보들 입력
+INSERT INTO R_EMAIL
+(MOUNUI_SEQ, TITLE, CONTENT, REGDATE, SUCCESSCHK, FILECHK)
+VALUES('1', '문의 답변 드립니다', '확인해볼게요', SYSDATE, 'N', 'N')
+ -->
+
+<!-- 
+문의 답변 발송 성공 여부 수정 Y/N
+UPDATE R_EMAIL SET SUCCESSCHK = 'Y' WHERE MOUNUI_SEQ = '5'
+ -->
+
+
+<!-- 
+문의글 seq로 문의 답변 정보 조회
+관리자 :SELECT MOUNUI_SEQ, TITLE, CONTENT,  REGDATE, SUCCESSCHK
+ FROM R_EMAIL re
+  WHERE MOUNUI_SEQ = '1'
+사용자 :SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE, SUCCESSCHK
+ FROM R_EMAIL re
+  WHERE  MOUNUI_SEQ = '1'
+ -->
+
+
+
+<!-- 자동 이메일  -->
+
+<!--처음 카테고리 코드에 따라 정보 입력-->
+<insert id="SetAutoEmail" parameterType="EmailDto">
+INSERT INTO AUTO_EMAIL
+(CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT, FILECHK, REGDATE, USE_CHK)
+VALUES(0, #{email_title}, #{email_content} , #{filechk}, SYSDATE, #{use_chk})
+</insert>
+
+<!--카테고리 코드에 의해 정보 수정-->
+<update id="UpdateAuto" parameterType="EmailDto">
+UPDATE AUTO_EMAIL
+SET EMAIL_TITLE=#{email_title}, EMAIL_CONTENT=#{email_content}, FILECHK=#{filechk}, REGDATE=SYSDATE, USE_CHK=#{use_chk}
+WHERE CATEGORY_CODE=#{category_code}
+</update>
+
+<!--등록된 글 전체 조회-->
+ <select id="SelAuto" resultType="EmailDto">
+ SELECT CATEGORY_CODE,
+ CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE END AS EMAIL_TITLE ,
+ USE_CHK FROM AUTO_EMAIL ae
+ </select>
+ 
+ 
+ <!--카테고리 코드별로 글 상세조회-->
+ <select id="SelDetailAuto" parameterType="java.lang.String" resultType="EmailDto">
+ SELECT CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT,FILECHK, USE_CHK FROM AUTO_EMAIL ae 
+ WHERE CATEGORY_CODE = #{category_code}
+ </select>
+  
+<!--발송할 때 정보 가져오기 --> 
+<select id="getEmailInfo" parameterType="java.lang.String" resultType="EmailDto">
+ SELECT CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT, FILECHK FROM AUTO_EMAIL ae 
+ 	WHERE CATEGORY_CODE = #{category_code}
+ 	 AND USE_CHK = 'Y'
+</select>
+  
+  
+ <!-- 이메일 발송 이력  -->
+ 
+ <!-- 메일 보낼때 정보 입력-->
+ <insert id="SendEmail" parameterType="EmailDto">
+  INSERT INTO EMAIL_SAVE 
+	(BOARD_CODE, EMAIL_SEQ, CATEGORY_CODE, EMAIL_TITLE, 
+	EMAIL_CONTENT, FILECHK, USER_EMAIL, SUCCESSCHK, REGDATE, FILTER)
+ 		VALUES(002, EMAIL_SAVE_SEQS.NEXTVAL, #{category_code}, #{email_title}, 
+ 			#{email_content}, #{filechk}, #{user_email}, #{successchk}, SYSDATE, #{filter})
+ <selectKey order="AFTER" resultType="java.lang.String" keyProperty="email_seq">
+ 	SELECT EMAIL_SAVE_SEQS.CURRVAL AS EMAIL_SEQ FROM DUAL
+ </selectKey>
+  </insert> 
+ 
+ 
+ <!-- 메일 성공/ 실패--> 
+ <update id="MailSuccess" parameterType="java.util.Map">
+  UPDATE EMAIL_SAVE SET SUCCESSCHK = #{successchk}
+  <if test="fail_reason != null">
+  	, FAIL_REASON = #{fail_reason}
+  </if>
+  <if test="user_email != null">
+  	, USER_EMAIL = #{user_email}
+  </if>
+	 WHERE EMAIL_SEQ = #{email_seq}
+ </update>
+  
+  
+
+
+	 
+  
+  
+ <!-- 재전송 -->
+ <select id="mailresend" parameterType="java.lang.String" resultType="EmailDto">
+ SELECT EMAIL_SEQ, CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT, FILECHK, USER_EMAIL
+	FROM EMAIL_SAVE es 
+		WHERE EMAIL_SEQ = #{email_seq}
+ </select> 
+  
+  
+ <!--발송일 1년 지난거 데이터 삭제 -->
+ <delete id="DelMail">
+ DELETE FROM EMAIL_SAVE
+ WHERE (TO_CHAR(SYSDATE,'YYYYMMDD') - TO_CHAR(REGDATE,'YYYYMMDD')) >= 10000
+ </delete>
+ 
+ 
+ <!--전체 발송 이력 조회-->
+<select id="SelAllMail" resultType="EmailDto">
+SELECT EMAIL_SEQ, CATEGORY_CODE, 
+	CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE END AS EMAIL_TITLE
+	, USER_EMAIL, SUCCESSCHK, REGDATE 
+	FROM EMAIL_SAVE es
+		ORDER BY EMAIL_SEQ desc
+</select>
+
+
+<!-- 발송 이력 상세 조회-->
+<select id="SelMailDetail" parameterType="java.lang.String" resultType="EmailDto">
+SELECT EMAIL_SEQ,CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT, FILECHK, USER_EMAIL, SUCCESSCHK,FAIL_REASON , REGDATE 
+ FROM EMAIL_SAVE es 
+  WHERE EMAIL_SEQ = #{email_seq}
+</select>
+
+<!-- 
+필터에 따른 발송 이력 조회
+SELECT EMAIL_SEQ, CATEGORY_CODE,
+	CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE END AS EMAIL_TITLE,
+	USER_EMAIL, SUCCESSCHK, REGDATE 
+	FROM EMAIL_SAVE es
+		WHERE (REGDATE >= '20200601' AND REGDATE <= '20200605') 
+			OR CATEGORY_CODE = '0'
+			OR (SELECT USER_GRADE FROM "USER" u WHERE u.USER_EMAIL = es.USER_EMAIL) = 'M' 
+			OR (SELECT USER_TYPE FROM "USER" u WHERE u.USER_EMAIL = es.USER_EMAIL) = 'N'
+ -->
+
+<select id="SelMailFilter" parameterType="FilterDto" resultType="EmailDto">
+SELECT EMAIL_SEQ, CATEGORY_CODE, 
+CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE
+END AS EMAIL_TITLE, USER_EMAIL, SUCCESSCHK, REGDATE 
+	FROM EMAIL_SAVE es 
+	<where>
+		<if test="filter != 'X/X'">
+		"FILTER" = #{filter} 
+		</if>
+		<if test="successchk != null">
+		AND SUCCESSCHK IN 
+		<foreach collection="successchk" item="successchk" open="(" close=")" separator=",">
+				#{successchk}
+			</foreach>
+		</if>
+		<if test="firstDate != ''">
+		  <![CDATA[AND REGDATE >= #{firstDate}]]>
+		</if>
+		<if test="lastDate != ''">
+		  <![CDATA[AND REGDATE <= #{lastDate}]]>
+		</if>
+	</where>
+</select>
+
+<!-- 수동 이메일 -->
+
+<!-- 
+필터에 따라서 회원 유저 이메일 정보 받아오기
+SELECT USER_EMAIL FROM "USER" u 
+ WHERE USER_GRADE = 'M' AND USER_ADCHK = 'Y'
+ -->
+<select id="SelUserFiter" parameterType="java.util.Map" resultType="java.lang.String">
+SELECT USER_EMAIL FROM "USER" u 
+	<where>
+		<if test="user_grade != null">
+			USER_GRADE IN
+			<foreach collection="user_grade" item="grade" open="(" close=")" separator=",">
+				#{grade}
+			</foreach>
+		</if>
+		<if test="user_type != null">
+		AND	USER_TYPE IN  
+		<foreach collection="user_type" item="type" open="(" close=")" separator=",">
+				#{type}
+			</foreach>
+		</if>
+	</where>
+</select>
+
+
+
+</mapper>

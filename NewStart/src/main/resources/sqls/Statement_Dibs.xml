@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.dibs">
+  
+  
+<select id="">
+SELECT USER_SEQ, GONGGO_SEQ, DIBS_TIME
+	FROM DIBS
+	WHERE USER_SEQ = #{user_seq}
+</select>
+  
+  
+  
+<insert id="">
+INSERT INTO NEW_START.DIBS
+	(USER_SEQ, GONGGO_SEQ, DIBS_TIME)
+	VALUES(#{user_seq}, #{gonggo_seq}, SYSDATE)
+</insert>
+  
+<delete id="">
+DELETE DIBS 
+	WHERE GONGGO_SEQ = #{gonggo_seq}
+</delete>
+  
+  
+  
+  
+  
+  
+  
+</mapper>

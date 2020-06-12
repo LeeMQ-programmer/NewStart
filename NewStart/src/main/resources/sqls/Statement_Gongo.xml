@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.start.pro.gongo">
+  
+  
+<!-- 필요기능 1. 공고글 전체 조회 USER_GRADE = grade_seq-->
+<select id="Gonggo_Show" parameterType="java.lang.String" resultType="GGDto">
+SELECT GONGGO_SEQ, BOARD_CODE, g.USER_SEQ, GONGGO_TITLE,
+	GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX 
+	FROM GONGO g, "USER" u
+	WHERE g.USER_SEQ = u.USER_SEQ AND
+	<choose>
+		<when test="grade_seq = 'M'">
+			 FILEOX = 'Y' AND u.USER_GRADE = 'T'
+        </when>
+		<when test="grade_seq = 'T'">
+			 FILEOX = 'Y' AND u.USER_GRADE = 'M'
+		</when>
+		<otherwise>
+			 (u.USER_GRADE = 'T' OR u.USER_GRADE = 'M')
+		</otherwise>
+	</choose>
+</select>
+  
+  
+<!--	필요기능 2. 공고글 등록 -->
+<insert id="gonggo_insert" parameterType="GGDto">
+INSERT INTO GONGO
+	(GONGGO_SEQ, BOARD_CODE, USER_SEQ, GONGGO_TITLE, GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX)
+	VALUES(GONGO_SEQ.NEXTVAL, 2000, #{user_seq}, #{gonggo_title}, #{gonggo_content}, 'N', SYSDATE, 0, 'Y')
+</insert>
+  
+  
+<!--	필요기능 3. 공고글 수정 -->
+<update id="gonggo_modify"  parameterType="GGDto">
+UPDATE GONGO
+	SET GONGGO_TITLE = #{gonggo_title}, GONGGO_CONTENT = #{gonggo_content}
+	WHERE GONGGO_SEQ=#{gonggo_seq} AND BOARD_CODE=2000
+</update>
+  
+  
+<!--  필요기능 4. 공고글 삭제 =>  파일이 무조건 등록되어 있어야 되는데 파일 OX가 X라는건 더이상 없는 게시글이라는 뜻 이렇게 되면 해당 게시글에 연관되어 있던 파일이 삭제되게 만들면 되겠다.-->
+<update id="gonggo_delete"  parameterType="java.lang.String">
+UPDATE GONGO
+	SET FILEOX = 'N'
+	WHERE GONGGO_SEQ=#{grade_seq} AND BOARD_CODE=2000
+</update>
+  
+  
+<!--	 필요기능 5. 공고글 상세조회 -->
+<select id="gonggo_detail"  parameterType="java.lang.String" resultType="GGDto">
+SELECT GONGGO_SEQ, BOARD_CODE, USER_SEQ, GONGGO_TITLE,
+	GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX 
+	FROM GONGO
+	WHERE GONGGO_SEQ=#{grade_seq}
+</select>
+  
+  
+  
+<!--	 필요기능 6. 입찰자 유무 조회(1명이라도 있으면 'Y', 없으면 'N', Y면 목록 출) 연속해서 작동하게 만들기(gonggo_biddinger와 묶어서 진행) -->
+<select id="gonggo_bidding_view"  parameterType="java.lang.String" resultType="java.lang.String">
+SELECT BIDDING
+	FROM GONGO g 
+	WHERE GONGGO_SEQ = #{grade_seq} AND BIDDING = 'Y'
+</select>
+<select id="gonggo_biddinger" parameterType="java.lang.String" resultType="BiddingDto">
+SELECT BIDDINGER, BIDDINGER_W 
+	FROM BIDDING b 
+	WHERE GONGGO_SEQ = #{grade_seq}
+</select>
+
+
+  
+<!-- 		 필요기능 7. 파일 유무 조회 (있으면 해당 파일을 가져오게 할거임) -->
+<select id="gonggo_fileox"  parameterType="java.lang.String" resultType="java.lang.String">
+SELECT FILEOX
+	FROM GONGO g 
+	WHERE GONGGO_SEQ=#{grade_seq}
+</select>
+  
+  
+<!--	 필요기능 8. 업로드된 파일  조회(있으면 파일 첨부되어있다고 표시하고 파일 테이블로부터 데이터 받아오게 만들기)  -->
+<select id="gonggo_upload_file_view"  parameterType="java.lang.String" resultType="FileDto">
+SELECT FILE_SEQ, FILEBOARD, BOARD_SEQ, FILENAME, FILEREALNAME, FILEURL, FILEDATE, FILETYPE
+	FROM FILEBOARD 
+	WHERE FILEBOARD = 2000 AND BOARD_SEQ = #{grade_seq}
+</select>
+  
+  
+<!-- DTO_Bidding =  -->  
+  
+</mapper>
