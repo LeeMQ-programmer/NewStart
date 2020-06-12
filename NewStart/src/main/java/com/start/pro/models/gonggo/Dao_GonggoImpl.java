@@ -13,7 +13,7 @@ import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
 @Repository
-public class Dao_GonggoImpl implements IDao_Gonggo {
+public class Dao_GonggoImpl implements IDao_Gonggo{
 
 	@Autowired
 	SqlSessionTemplate session;
@@ -23,10 +23,9 @@ public class Dao_GonggoImpl implements IDao_Gonggo {
 	private final String NSS = "com.start.pro.bidding.";
 	
 	@Override
-	public List<DTO_Gonggo> Gonggo_Show(String seq) {
-		log.info("dao impl Gonggo_Show : \t{}", seq);
-		List<DTO_Gonggo> lists = session.selectList(NS+"Gonggo_Show", seq);
-		return lists;
+	public List<DTO_Gonggo> Gonggo_Show() { // Gonggo_Show
+		log.info("dao impl Gonggo_Show : \t{}");
+		return session.selectList(NS+"Gonggo_Show");
 	}
 
 	@Override

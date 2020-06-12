@@ -2,19 +2,25 @@ package com.start.pro.models.gonggo;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+
 import com.start.pro.dto.DTO_Gonggo;
 import com.start.pro.dto.DTO_User;
 
+@Controller
 public class inputTList {
 	private List<DTO_Gonggo> lists;
-	private DTO_User T_user;
-
+	private DTO_User users;
+	
+	
+	
 	public void setLists(List<DTO_Gonggo> lists) {
 		this.lists = lists;
+		System.out.println("들어온 리스트의 값입니다. : " + lists);
 	}
 
-	public void setT_user(DTO_User T_user) {
-		this.T_user = T_user;
+	public void setUsers(DTO_User users) {
+		this.users = users;
 	}
 
 	// 날짜
@@ -22,92 +28,102 @@ public class inputTList {
 		return date.substring(0, date.indexOf(" "));
 	}
 
-	// 이미지
+	
+	// TODO
+	// 이미지 미리보기 구현 파트로 파일 업로드 구현이 완료되면 사용자가 선택한 사진이 여기에 자동으로 어펜드되게 만들어주면 되겠다.
 	private String titleFormat() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<img src='./img/reply.jpg'/>");
 		return buf.toString();
 	}
-
+	
 	// 출력 리스트 폼
 	private String listForm(DTO_Gonggo dto) {
+		System.out.println("inputList시작합니다. : \t{}");
+		System.out.println("DTO_Gonggo : \t{}" + dto);
+		System.out.println("DTO_User : \t{}" + users);
 		StringBuffer buf = new StringBuffer();
-		// colspan의 기본 user의 값
-		int n = 7;
-		buf.append(
-				"<tr>                                                                                                    				  ");
-		buf.append("<td><input type='checkbox' name='chkVal' value='" + dto.getGonggo_seq()
-				+ "'></td>                                               				  ");
-		buf.append("<td>" + dto.getGonggo_seq()
-				+ "</td>                                                                                             			  ");
-		buf.append(
-				"<td>                                                                                                    			 	 ");
-		buf.append(
-				"	 <div class='panel-heading'>                                                                          				");
-		buf.append("		<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + dto.getGonggo_seq()
-				+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat() + dto.getGonggo_title()
-				+ "</a>	");
-		buf.append(
-				"	 </div>                                                                                     						   ");
-		buf.append(
-				"</td>                                                                                        				 		     ");
-		buf.append("<td>" + dto.getUser_seq()
-				+ "</td>                                                                                				   			 ");
-		buf.append("<td>"
-				+ "</td>                                                                            							     ");
-		if (T_user.getUser_grade().equalsIgnoreCase("A")) {
-			n = 7;
-			buf.append("<td>" + dto.getFileox() + "</td>");
+		
+		// 공고글을 작성한 작성자 등급 불러오기
+		
+		
+		// colspan의 기본 user 종류별로 구분
+			System.out.println("유저쪽으로 유입 : \t{}" + dto);
+			int n = 7;
+			
+			// TODO
+			// 나중에는 newstart에서 유저 정보 빼내가지고 users.getUser_seq대신에 접속한  유저의 seq를 넣어주어야도니다.
+//			session.getAttribute("newstart");
+			System.out.println("users.getUser_seq() : " + users.getUser_seq() + " dto.getUser_seq() : " + dto.getUser_seq());
+			
+			if(dto.getFileox().equalsIgnoreCase("Y") ) {
+				
+				buf.append("<div>");
+				buf.append("<input type='hidden' name='Gonggo_seq' id='Gonggo_seq' value='"+dto.getGonggo_seq()+"'>");
+				buf.append("<input type='hidden' name='title' id='title' value='"+dto.getGonggo_title()+"'>");
+				buf.append("<input type='hidden' name='content' id='content' value='"+dto.getGonggo_content()+"'>");
+				buf.append("</div>");
+				
+				buf.append("<tr>");
+				buf.append("<td><input type='checkbox' name='chkVal' value='" + dto.getGonggo_seq() + "'></td>");
+				buf.append("<td>" + dto.getGonggo_seq() + "</td>");
+				buf.append("<td>");
+				buf.append("<div class='panel-heading'>");
+				buf.append("<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + dto.getGonggo_seq()
+						+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat() + dto.getGonggo_title()
+						+ "</a>	");
+				buf.append("</div>");
+				buf.append("</td>");
+				buf.append("<td>" + dto.getUser_seq() + "</td>");
+				buf.append("<td>" + dateFormat(dto.getGonggo_time()) + "</td>");
+				n = 7;
+				buf.append("<td>" + dto.getFileox() + "</td>");
+				buf.append("</tr>");
+				buf.append("<tr>");
+				buf.append("<td colspan='" + n + "'>");
+				buf.append("<div id='collapse'" + dto.getGonggo_seq() + " class='panel-collapse'>");
+				buf.append("<div class='form-group'>");
+				buf.append("<label>내용</label>");
+				buf.append("<textarea rows='7' class='form-control' readonly='readonly'>" + dto.getGonggo_content() + "</textarea>");
+				buf.append("</div>");
+				buf.append("<div>");
+				buf.append("<div class ='form-group' name='biddingList' id='biddingList"+dto.getGonggo_seq()+"'>");
+				if(users.getUser_seq().trim().equalsIgnoreCase(dto.getUser_seq().trim())) {
+					buf.append("<input id='biddingOX' name='biddingOX"+dto.getGonggo_seq()+"' class='btn btn-primary btn-center' type='button' value='입찰 내역보기' onclick='biddingList(\""+dto.getGonggo_seq()+"\")'>");
+				}
+				if(users.getUser_seq().trim().equalsIgnoreCase(dto.getUser_seq().trim())) {
+			  		buf.append("<input class='btn btn-primary btn-center' type='button' value='글 수정' onclick='modify(\""+dto.getGonggo_seq()+"\")'>");
+			  	}
+				if(users.getUser_seq().trim().equalsIgnoreCase(dto.getUser_seq().trim())) {
+				buf.append("<input class='btn btn-primary btn-center' type='button' value='글 삭제' onclick='del(\""
+						+ dto.getGonggo_seq() + "\")'>");
+				}
 
-		}
-		buf.append("<td>" + dateFormat(dto.getGonggo_time())
-				+ "</td>                                                                                  ");
-		buf.append(
-				"</tr>                                                                                              ");
-		buf.append(
-				"<tr>                                                                                               ");
-		buf.append("	<td colspan='" + n
-				+ "'>                                                                               ");
-		buf.append("		<div id='collapse'" + dto.getGonggo_seq()
-				+ " class='panel-collapse'>                                    ");
-		buf.append(
-				"			<div class='form-group'>                                                               ");
-		buf.append("				<label>내용</label>                                                                ");
-		buf.append("				<textarea rows='7' class='form-control' readonly='readonly'>" + dto.getGonggo_content()
-				+ "</textarea>");
-		buf.append(
-				"			</div>                                                                                 ");
-		buf.append("<div>");
-		buf.append("	<div class ='form-group'>");
-		if (T_user.getUser_seq().equalsIgnoreCase(dto.getUser_seq())) {
-			buf.append("<input class='btn btn-primary btn-center' type='button' value='글 수정' onclick='modify(\""
-					+ dto.getGonggo_seq() + "\")'>");
-		}
-		if (T_user.getUser_seq().equalsIgnoreCase(dto.getUser_seq()) || T_user.getUser_grade().equalsIgnoreCase("A")) {
-			buf.append("<input class='btn btn-primary btn-center' type='button' value='글 삭제' onclick='del(\""
-					+ dto.getGonggo_seq() + "\")'>");
-		}
-		if (T_user.getUser_grade().equalsIgnoreCase("U")) {
-			buf.append("<input class='btn btn-primary btn-center' type='button' value='답글' onclick='reply(\""
-					+ dto.getGonggo_seq() + "\")'>");
-		}
-		buf.append("	</div>");
-		buf.append("</div>");
-		buf.append(
-				"		</div>                                                                                     ");
-		buf.append("</td>");
-		buf.append("</tr>");
-
-		return buf.toString();
+				if(users.getUser_grade().equalsIgnoreCase("M")) {
+					buf.append("<input class='btn btn-primary btn-center' name='bidding_btn"+dto.getGonggo_seq()+"' type='button' value='강좌 신청하기' onclick='bidding(\""
+							+ dto.getGonggo_seq() + "\")'>");
+				}
+				
+				buf.append("</div>");
+				buf.append("</div>");
+				buf.append("</div>");
+				buf.append("</td>");
+				buf.append("</tr>");
+			}
+			return buf.toString();
+			
 	}
 
 	// 리스트 가져가기
 	public String getListForm() {
+		System.out.println("getListForm으로 들어오긴 합니다.");
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < lists.size(); i++) {
+			System.out.println("나가는 lists의 값은 뭔가요?" + lists);
 			buf.append(listForm(lists.get(i)));
 		}
 		return buf.toString();
 	}
+
 
 }

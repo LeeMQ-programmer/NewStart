@@ -8,7 +8,7 @@ import com.start.pro.dto.DTO_Gonggo;
 
 public interface IDao_Gonggo {
 
-	public List<DTO_Gonggo> Gonggo_Show(String seq);
+	public List<DTO_Gonggo> Gonggo_Show();
 	
 	public boolean gonggo_insert(DTO_Gonggo dto);
 	
