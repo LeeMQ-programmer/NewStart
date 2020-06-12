@@ -4,30 +4,19 @@
   
   
 <!-- 필요기능 1. 공고글 전체 조회 USER_GRADE = grade_seq-->
-<select id="Gonggo_Show" parameterType="java.lang.String" resultType="GGDto">
+<select id="Gonggo_Show" resultType="GGDto">
 SELECT GONGGO_SEQ, BOARD_CODE, g.USER_SEQ, GONGGO_TITLE,
 	GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX 
 	FROM GONGO g, "USER" u
-	WHERE g.USER_SEQ = u.USER_SEQ AND
-	<choose>
-		<when test="grade_seq = 'M'">
-			 FILEOX = 'Y' AND u.USER_GRADE = 'T'
-        </when>
-		<when test="grade_seq = 'T'">
-			 FILEOX = 'Y' AND u.USER_GRADE = 'M'
-		</when>
-		<otherwise>
-			 (u.USER_GRADE = 'T' OR u.USER_GRADE = 'M')
-		</otherwise>
-	</choose>
+	WHERE g.USER_SEQ = u.USER_SEQ
 </select>
   
   
 <!--	필요기능 2. 공고글 등록 -->
 <insert id="gonggo_insert" parameterType="GGDto">
 INSERT INTO GONGO
-	(GONGGO_SEQ, BOARD_CODE, USER_SEQ, GONGGO_TITLE, GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX)
-	VALUES(GONGO_SEQ.NEXTVAL, 2000, #{user_seq}, #{gonggo_title}, #{gonggo_content}, 'N', SYSDATE, 0, 'Y')
+	(GONGGO_SEQ, BOARD_CODE, USER_SEQ, GONGGO_TITLE, GONGGO_CONTENT, BIDDING, GONGGO_TIME, VIEWS, FILEOX, GONGO_COST)
+	VALUES(GONGO_SEQ.NEXTVAL, 2000, #{user_seq}, #{gonggo_title}, #{gonggo_content}, 'N', SYSDATE, 0, 'Y', #{gongo_cost})
 </insert>
   
   
