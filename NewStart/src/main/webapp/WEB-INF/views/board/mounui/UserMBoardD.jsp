@@ -9,6 +9,15 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
+<script type="text/javascript">
+
+del(){
+	if(confirm('정말로 삭제하시겠습니까?')){
+	location.href='./UserMBoardDel.do?seq=${dto.mounui_seq}';
+	}
+}
+
+</script>
 
 <body>
 <div class="container">
@@ -30,7 +39,7 @@
     </div>
       <input type="hidden" class="form-control" name="filechk" value="N">
       <button type="button" class='btn'  onclick="location.href='./UserMBoard.do'">목록</button>
-      <button type="button" class='btn' id="del" onclick="location.href='./UserMBoardDel.do?seq=${dto.mounui_seq}'">삭제</button>
+      <button type="button" class='btn' id="del" onclick="del()">삭제</button>
 </div>
 
 </body>

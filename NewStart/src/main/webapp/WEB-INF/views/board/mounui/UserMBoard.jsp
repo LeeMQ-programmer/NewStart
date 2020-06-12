@@ -30,7 +30,9 @@ function multiDelChk(){
 		}
 	}
 	if(cntChecked>0){
+		if(confirm('정말로 삭제하시겠습니까?')){
 		 document.getElementById('del').submit();
+		}
 	}else{
 		alert("선택된 글이 없습니다.");
 		return;

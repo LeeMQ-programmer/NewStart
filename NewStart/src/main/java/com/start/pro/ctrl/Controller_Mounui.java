@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,15 +43,33 @@ public class Controller_Mounui {
 	
 	//insertBoard
 	@RequestMapping(value = "/insertBoard.do", method = RequestMethod.POST)
-	public String insertBoard(DTO_Mounui dto, HttpSession session,Model model){
+	public void insertBoard(DTO_Mounui dto, HttpSession session,Model model,
+			HttpServletResponse resp) throws IOException{
+		
+		
 		
 		DTO_User user = (DTO_User) session.getAttribute("newstart");
 		dto.setUser_seq(user.getUser_seq());
 		System.out.println(dto.toString());
 //		System.out.println(user.toString());
 		service.insertBoard(dto);
+
 		
-		return "board/mounui/InsertSuccess";
+		String userSeq = ((DTO_User) session.getAttribute("newstart")).getUser_seq();
+		List<DTO_Mounui> dtos = service.userBoard(userSeq);
+		
+		model.addAttribute("dtos", dtos);
+		resp.setCharacterEncoding("utf-8");
+	    resp.setContentType("text/html; charset=UTF-8");
+
+
+		
+		
+	    PrintWriter	out = resp.getWriter();
+		out.println("<script>alert('문의글이 등록되었습니다.');  location.href='./UserMBoard.do'; </script>");
+		out.flush();
+
+//		return "board/mounui/UserMBoard";
 	}
 
 	//유저 문이 게시판
@@ -77,14 +97,17 @@ public class Controller_Mounui {
 
 	
 	@RequestMapping(value = "/UserMBoardDel.do", method = {RequestMethod.GET,RequestMethod.POST})
-	public String UserMBoardDel(String[] seq) {
+	public void UserMBoardDel(String[] seq, HttpServletResponse resp) throws IOException {
 		Map<String, String[]> map = new HashMap<String, String[]>();
 		map.put("seq", seq);
 		service.delBoard(map);
 		
 //		System.out.println(seq[0]);
 		
-		return "redirect:/UserMBoard.do";
+		PrintWriter	out = resp.getWriter();
+		out.println("<script>alert('삭제되었습니다.');location.href='./UserMBoard.do'; </script>");
+		out.flush();
+		
 	}
 
 	// 관리자 문의 게시판
