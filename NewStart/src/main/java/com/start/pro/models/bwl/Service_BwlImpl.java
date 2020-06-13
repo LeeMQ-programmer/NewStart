@@ -10,30 +10,27 @@ import org.springframework.stereotype.Service;
 import com.start.pro.dto.DTO_BWL;
 
 @Service
-public class Service_BwlImpl implements IService_Bwl {
-
+public class Service_BwlImpl implements IService_Bwl{
 
 	@Autowired
 	IDao_Bwl dao;
-	Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	
+	Logger log = LoggerFactory.getLogger(getClass());
+
 	@Override
 	public List<DTO_BWL> bwl_show() {
-		log.info("Service impl bwl_show : \t{}");
 		return dao.bwl_show();
 	}
 
 	@Override
-	public DTO_BWL bwl_detail(String seq) {
-		log.info("Service impl bwl_detail : \t{}");
-		return dao.bwl_detail(seq);
+	public DTO_BWL bwl_detail(String gonggo_seq){
+		return dao.bwl_detail(gonggo_seq);
 	}
 
 	@Override
 	public boolean bwl_winner(DTO_BWL dto) {
-		log.info("Service impl bwl_winner : \t{}");
 		return dao.bwl_winner(dto);
 	}
+	
 
 }

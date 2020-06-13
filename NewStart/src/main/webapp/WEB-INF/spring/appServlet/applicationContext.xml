@@ -77,6 +77,13 @@
 
 <!--************************************** DB 연결 **************************************-->
 
-
+<bean id="diskFileItemFactory" class="org.apache.commons.fileupload.disk.DiskFileItemFactory">
+		<constructor-arg name="repository" value="D:\\atteches"/>
+		<constructor-arg name="sizeThreshold" value="41943040"/>
+		<!-- <property name="defaultCharset" value="utf-8"/> -->
+	</bean>
+	<bean class="org.apache.commons.fileupload.servlet.ServletFileUpload">
+		<property name="fileItemFactory" ref="diskFileItemFactory"/>
+	</bean>
 
 </beans>

@@ -33,28 +33,23 @@ SELECT LJ_CODE
 
 <!-- 문의 답변 이메일  -->
 
-<!-- 
-문의 답변 정보들 입력
+<!--문의 답변 정보들 입력-->
+<insert id="SendReply" parameterType="MDto">
 INSERT INTO R_EMAIL
-(MOUNUI_SEQ, TITLE, CONTENT, REGDATE, SUCCESSCHK, FILECHK)
-VALUES('1', '문의 답변 드립니다', '확인해볼게요', SYSDATE, 'N', 'N')
- -->
-
-<!-- 
-문의 답변 발송 성공 여부 수정 Y/N
-UPDATE R_EMAIL SET SUCCESSCHK = 'Y' WHERE MOUNUI_SEQ = '5'
- -->
+	(MOUNUI_SEQ, TITLE, CONTENT, SUCCESSCHK ,REGDATE, FILECHK)
+		VALUES(#{mounui_seq}, #{title}, #{content}, #{delchk} ,SYSDATE, #{filechk})
+</insert>
 
 
-<!-- 
-문의글 seq로 문의 답변 정보 조회
-관리자 :SELECT MOUNUI_SEQ, TITLE, CONTENT,  REGDATE, SUCCESSCHK
+
+<!--문의글 seq로 문의 답변 정보 조회-->
+<select id="selReplyAemail" parameterType="java.lang.String" resultType="MDto">
+SELECT MOUNUI_SEQ, TITLE, CONTENT,  REGDATE
  FROM R_EMAIL re
-  WHERE MOUNUI_SEQ = '1'
-사용자 :SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE, SUCCESSCHK
- FROM R_EMAIL re
-  WHERE  MOUNUI_SEQ = '1'
- -->
+  WHERE MOUNUI_SEQ = #{mounui_seq}
+</select>
+
+
 
 
 
@@ -179,8 +174,8 @@ CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EM
 END AS EMAIL_TITLE, USER_EMAIL, SUCCESSCHK, REGDATE 
 	FROM EMAIL_SAVE es 
 	<where>
-		<if test="filter != 'X/X'">
-		"FILTER" = #{filter} 
+		<if test="filter != null">
+		"FILTER" = ''''||${filter}||'''' 
 		</if>
 		<if test="successchk != null">
 		AND SUCCESSCHK IN 
@@ -208,16 +203,7 @@ SELECT USER_EMAIL FROM "USER" u
 SELECT USER_EMAIL FROM "USER" u 
 	<where>
 		<if test="user_grade != null">
-			USER_GRADE IN
-			<foreach collection="user_grade" item="grade" open="(" close=")" separator=",">
-				#{grade}
-			</foreach>
-		</if>
-		<if test="user_type != null">
-		AND	USER_TYPE IN  
-		<foreach collection="user_type" item="type" open="(" close=")" separator=",">
-				#{type}
-			</foreach>
+			USER_GRADE IN (${user_grade})
 		</if>
 	</where>
 </select>

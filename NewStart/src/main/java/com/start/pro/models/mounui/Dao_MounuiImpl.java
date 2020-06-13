@@ -5,9 +5,15 @@ import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import com.start.pro.dto.DTO_Email;
+import com.start.pro.dto.DTO_FAQ;
+import com.start.pro.dto.DTO_Filter;
 import com.start.pro.dto.DTO_Mounui;
 
+
+@Repository
 public class Dao_MounuiImpl implements IDao_Mounui {
 
 	@Autowired
@@ -41,8 +47,8 @@ public class Dao_MounuiImpl implements IDao_Mounui {
 	}
 
 	@Override
-	public List<DTO_Mounui> adminBoard() {
-		return session.selectList(NS+"adminBoard");
+	public List<DTO_Mounui> adminBoard(DTO_Filter dto) {
+		return session.selectList(NS+"adminBoard", dto);
 	}
 
 	@Override
@@ -58,6 +64,16 @@ public class Dao_MounuiImpl implements IDao_Mounui {
 	@Override
 	public boolean adminDelBoard(Map<String, String[]> map) {
 		return session.delete(NS+"adminDelBoard", map) > 0 ? true : false;
+	}
+
+	@Override
+	public List<DTO_FAQ> getCategory() {
+		return session.selectList(NS+"getCategory");
+	}
+
+	@Override
+	public DTO_Email getReply(String seq) {
+		return session.selectOne(NS+"getReply",seq);
 	}
 
 }

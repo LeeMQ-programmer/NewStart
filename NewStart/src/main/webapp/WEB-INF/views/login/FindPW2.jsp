@@ -8,5 +8,6 @@
 </head>
 <body>
 비밀번호가 성공적으로 변경되었습니다
+<a href="./loginForm.do">메인화면으로 돌아가기</a>
 </body>
 </html>

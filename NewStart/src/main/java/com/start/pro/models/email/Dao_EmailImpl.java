@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_Filter;
+import com.start.pro.dto.DTO_Mounui;
 
 @Repository
 public class Dao_EmailImpl implements IDao_Email{
@@ -96,8 +97,20 @@ public class Dao_EmailImpl implements IDao_Email{
 	}
 
 	@Override
-	public List<String> SelUserFiter(Map<String, String[]> map) {
+	public List<String> SelUserFiter(Map<String, String> map) {
 		return session.selectList(NS+"SelUserFiter", map);
+	}
+
+	@Override
+	public boolean SendReply(DTO_Mounui dto) {
+		return session.insert(NS+"SendReply", dto) > 0 ? true : false;
+	}
+
+
+
+	@Override
+	public DTO_Mounui selReplyAemail(String seq) {
+		return session.selectOne(NS+"selReplyAemail", seq);
 	}
 
 

@@ -8,5 +8,6 @@
 </head>
 <body>
 이메일 인증을 하시면 정상적으로 회원가입이 완료됩니다.!
+<a href="./loginForm.do">메인화면으로 돌아가기</a>
 </body>
 </html>

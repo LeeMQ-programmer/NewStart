@@ -16,54 +16,25 @@
 
 
 function checkAll(bool,name){
-	//alert(name);
-	var filter = document.getElementsByName('filter')[0];
-	var f = '';
 	var chkVals = document.getElementsByName(name);
 	for (var i = 0; i < chkVals.length; i++) {
 		chkVals[i].checked = bool;
 		}
 	
-	 if(bool){
-		if(name=='user_grade'){
-			filter.value = 'MT/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/NHL';
-		}
-	}else{
-		if(name=='user_grade'){
-			filter.value = 'X/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/X';
-		}
-	} 
 }
 
 function chk(name){
 	var chkbool = document.getElementsByName(name);
-	var filter = document.getElementsByName('filter')[0];
-	var f = "";
 	var cnt = 0;
+
 	for (var i = 1; i < chkbool.length; i++) {
 		if(chkbool[i].checked){
-			if(name == 'user_grade'){
-				f = f+chkbool[i].value;
 				cnt++;
-			}else{
-				f = f+chkbool[i].value;
-			}
 		}else{
 			chkbool[0].checked = false;
+			return;
 		}
 	}
-		if(f == ""){
-			f = 'X';
-		}
-		if(name == 'user_grade'){
-			filter.value = f+'/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/'+f;
-		}
 		
 		if(cnt == chkbool.length-1){
 			chkbool[0].checked = true;
@@ -72,30 +43,23 @@ function chk(name){
 }
 
 
-function subchk(bool,name){
-	var chkbool = document.getElementsByName(name);
-	if(!bool){
-		chkbool[0].checked = false;
-	}else{
-		var cnt = 0;
-		for (var i = 1; i < chkbool.length; i++) {
-			if(chkbool[i].checked){
-				cnt++;
-			}
-		}
-		if(cnt == chkbool.length-1){
-			chkbool[0].checked = true;
-		}
-	}
-}
-
 function searchFilter(){
 	
-	var filter = document.getElementsByName('filter')[0].value;
+	var user_grade = document.getElementsByName('user_grade');
 	var successchk = document.getElementsByName('successchk');
 	var succhkidx = [];
+	var filter = [];
 	var firstDate = document.getElementsByName('firstDate')[0].value;
 	var lastDate = document.getElementsByName('lastDate')[0].value;
+	
+	if(!user_grade[0].checked){
+		for (var i = 1; i < user_grade.length; i++) {
+			if(user_grade[i].checked){
+				filter.push(user_grade[i].value);	
+			}
+		}
+	}
+	
 	for (var i = 1; i < successchk.length; i++) {
 		if(successchk[i].checked){
 			succhkidx.push(successchk[i].value);			
@@ -188,32 +152,17 @@ function searchFilter(){
 		scope="page" />
 	<jsp:setProperty property="key" name="emailparser" value="user_email" />
 
-
+	
 	유저 타입 :
 	<div id="searchfilter">
-		회원 등급 : <input type="checkbox" name="user_grade" value="A"
-			onclick="checkAll(this.checked, this.name)"> 전체 <input
-			type="checkbox" name="user_grade" value="M" onclick="chk(this.name)">
-		멘티 <input type="checkbox" name="user_grade" value="T"
-			onclick="chk(this.name)"> 강사 <br> 회원 상태 : <input
-			type="checkbox" name="user_type" value="A"
-			onclick="checkAll(this.checked, this.name)"> 전체 <input
-			type="checkbox" name="user_type" value="N" onclick="chk(this.name)">
-		일반 <input type="checkbox" name="user_type" value="H"
-			onclick="chk(this.name)"> 휴면 <input type="checkbox"
-			name="user_type" value="L" onclick="chk(this.name)"> 잠김 <br>
-		상태 여부 : <input type="checkbox" name="successchk" value="A"
-			onclick="checkAll(this.checked, this.name)"> 전체 <input
-			type="checkbox" name="successchk" value="Y"
-			onclick="subchk(this.checked,this.name)"> 성공 <input
-			type="checkbox" name="successchk" value="S"
-			onclick="subchk(this.checked,this.name)"> 대기 <input
-			type="checkbox" name="successchk" value="F"
-			onclick="subchk(this.checked,this.name)"> 실패 <br> 날짜 검색
-		: <input type="date" name="firstDate"> ~ <input type="date"
-			name="lastDate"> <input type="hidden" name="filter"
-			value="X/X"> <input type="hidden" name="successchk"
-			value="X/X">
+		회원 등급 : <input type="checkbox" name="user_grade" value="'A'" onclick="checkAll(this.checked, this.name)"> 전체
+				 <input type="checkbox" name="user_grade" value="'M'" onclick="chk(this.name)"> 멘티
+				 <input type="checkbox" name="user_grade" value="'T'"	onclick="chk(this.name)"> 강사 <br>
+		상태 여부 : <input type="checkbox" name="successchk" value="A" onclick="checkAll(this.checked, this.name)"> 전체
+		 <input type="checkbox" name="successchk" value="Y" onclick="chk(this.name)"> 성공
+		  <input type="checkbox" name="successchk" value="S" onclick="chk(this.name)"> 대기 
+		  <input type="checkbox" name="successchk" value="F" onclick="chk(this.name)"> 실패 <br>
+		   날짜 검색 : <input type="date" name="firstDate"> ~ <input type="date" name="lastDate"> 
 		<button onclick="searchFilter()">검색</button>
 	</div>
 

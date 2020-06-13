@@ -9,7 +9,7 @@ SELECT SUCCESS_PERSON, GONGGO_SEQ, BOARD_CODE
 	FROM BIDDING_W_LIST
 </select>
 
-<!-- 필요기능 2. 성공된 매칭의 매칭 입찰자 상세 조회하기(성공한 사람만 따로 조회하는 기능) -->
+<!-- 필요기능 2. 해당 공고글 상세조회 -->
 <select id="bwl_detail" parameterType="java.lang.String" resultType="BWL_Dto">
 SELECT SUCCESS_PERSON, GONGGO_SEQ, BOARD_CODE
 	FROM BIDDING_W_LIST
@@ -17,7 +17,7 @@ SELECT SUCCESS_PERSON, GONGGO_SEQ, BOARD_CODE
 </select>
 
 
-<!-- 필요기능 3. 성공된 매칭의 매칭 입찰자 등록하기(성공한 사람만 따로 조회하는 기능) -->
+<!-- 필요기능 3. 성공된 매칭의 매칭 입찰자 등록하기 -->
 <insert id="bwl_winner" parameterType="BWL_Dto">
 INSERT INTO BIDDING_W_LIST(SUCCESS_PERSON, GONGGO_SEQ, BOARD_CODE)
 	VALUES(#{success_person}, #{gonggo_seq}, 2000)

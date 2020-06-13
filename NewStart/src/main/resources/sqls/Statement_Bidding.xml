@@ -5,11 +5,12 @@
 
 <!-- 필요기능 1. 입찰하기(GONGO테이블 업데이트 필요 입찰자 유무 조회에서 Y로 바꾸기) -->
 <insert id="bidding_insert" parameterType="BiddingDto">
-INSERT INTO NEW_START.BIDDING
-(BIDDING_SEQ, GONGGO_SEQ, BOARD_CODE, BIDDINGER, BIDDINGER_W)
-VALUES(BIDDING_SEQ.NEXTVAL, #{gonggo_seq}, 2000, #{biddinger}, #{biddinger_w}) 
+INSERT INTO BIDDING
+(BIDDING_SEQ, GONGGO_SEQ, BOARD_CODE, BIDDINGER, BIDDINGER_W, BIDDING_COST)
+VALUES(BIDDING_SEQ.NEXTVAL, #{gonggo_seq}, 2000, #{biddinger}, #{biddinger_w}, #{bidding_cost}) 
 </insert>
 
+<!-- 필요기능 1-1. GONGO테이블 업데이트 필요 입찰자 유무 조회에서 Y로 바꾸기 -->
 <update id="bidding_update" parameterType="java.lang.String">
 UPDATE GONGO 
 	SET BIDDING = 'Y'
@@ -20,10 +21,13 @@ UPDATE GONGO
 
 
 <!-- 필요기능 2. 해당 공고의 전체 입찰 내역(매칭 성공하기 전 까지) -->
-<select id="bidding_list" parameterType="java.lang.String" resultType="BiddingDto">
-SELECT BIDDING_SEQ, GONGGO_SEQ, BOARD_CODE, BIDDINGER, BIDDINGER_W 
-	FROM BIDDING b 
-	WHERE GONGGO_SEQ = #{gonggo_seq} AND BOARD_CODE = 2000
+<select id="bidding_list" parameterType="java.util.Map" resultType="BiddingDto">
+SELECT BIDDING_SEQ, GONGGO_SEQ, BOARD_CODE, BIDDINGER, BIDDINGER_W, BIDDING_COST
+	FROM BIDDING b WHERE
+	<if test="gonggo_seq != null">
+	 GONGGO_SEQ = #{gonggo_seq} AND
+	</if>
+	BOARD_CODE = 2000
 </select>
 
 

@@ -32,10 +32,10 @@ public class Sc_AuthenticationProvider implements AuthenticationProvider {
 		System.out.println("CustomAuthenticationProvider동작하거든?"+id+":"+pw+":"+"user.getPassword()");
 		
 		Sc_User user = (Sc_User) userDetails.loadUserByUsername(id);
-		System.out.println((Integer.parseInt(service.getPWFail(id)) >= 5));
-		if(Integer.parseInt(service.getPWFail(id)) >= 5) {
-			throw new LockedException(id);
-		}
+//		System.out.println((Integer.parseInt(service.getPWFail(id)) >= 5));
+//		if(Integer.parseInt(service.getPWFail(id)) >= 5) {
+//			throw new LockedException(id);
+//		}
 		if(!matchPassword(user.getPassword(),pw)) {
 			throw new BadCredentialsException(id);
 		}

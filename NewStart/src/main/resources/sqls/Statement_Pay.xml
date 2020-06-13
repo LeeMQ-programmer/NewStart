@@ -5,15 +5,49 @@
 <!-- 결제 생성 -->
 <insert id="createPay" parameterType="PayDto">
 INSERT INTO PAYMENT
-(PAY_SEQ, PAY_TOKEN, PAY_ORDERNO, PAY_AMOUNT, PAY_DATE, USER_SEQ)
-VALUES(PAY_SEQ.NEXTVAL, #{pay_token}, #{pay_orderno}, #{pay_amount}, SYSDATE, #{user_seq})
+(PAY_SEQ, PAY_TOKEN, PAY_ORDERNO, PAY_AMOUNT, PAY_DATE, USER_SEQ, DELREFUND)
+VALUES(PAY_SEQ.NEXTVAL, #{pay_token}, #{pay_orderno}, #{pay_amount}, SYSDATE, #{user_seq}, #{delrefund})
 </insert>
 
+<!--  parameterType="com.start.pro.dto.DTO_Criteria" -->
 <!-- 결제내역 조회 -->
-<select id="selectPay" parameterType="java.lang.String" resultType="PayDto">
-SELECT PAY_SEQ, PAY_TOKEN, PAY_AMOUNT, TO_CHAR(PAY_DATE,'YYYY-MM-DD') AS PAY_DATE, USER_SEQ
-	FROM PAYMENT
-		WHERE USER_SEQ = #{user_seq}
+<select id="selectPay" parameterType="java.util.Map" resultType="PayDto">
+SELECT PAY_SEQ, PAY_TOKEN, PAY_AMOUNT, TO_CHAR(PAY_DATE,'YYYY-MM-DD') AS PAY_DATE, USER_SEQ, DELREFUND
+	FROM(
+			SELECT PAY_SEQ, PAY_TOKEN, PAY_AMOUNT, PAY_DATE, USER_SEQ, DELREFUND,
+					ROW_NUMBER() OVER(ORDER BY PAY_SEQ DESC) AS RNUM
+			FROM PAYMENT
+		)
+		WHERE RNUM BETWEEN #{rowStart} AND #{rowEnd}
+		AND USER_SEQ = #{user_seq}
+</select>
+
+<!-- 결제 게시물 총 갯수 -->
+<select id="listCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	<![CDATA[
+		SELECT COUNT(PAY_SEQ)
+		  FROM PAYMENT
+		 WHERE PAY_SEQ > 0
+		 	AND USER_SEQ = #{user_seq}
+	]]>
+</select>
+<!-- 환불 게시물 총 갯수 -->
+<select id="refListCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	<![CDATA[
+		SELECT COUNT(REFUND_SEQ)
+		  FROM REFUND_PAYMENT
+		 WHERE REFUND_SEQ > 0
+		 AND USER_SEQ = #{user_seq}
+	]]>
+</select>
+<!-- 크레딧 게시물 총 갯수 -->
+<select id="creListCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	<![CDATA[
+		SELECT COUNT(CREDIT_SEQ)
+		  FROM CREDIT
+		 WHERE CREDIT_SEQ > 0
+		 AND USER_SEQ = #{user_seq}
+	]]>
 </select>
 
 <!-- 결제 주문번호 구하는 쿼리 -->
@@ -23,31 +57,52 @@ SELECT MAX(PAY_ORDERNO)
 </select>
 
 <!-- 결제 환불 -->
-<insert id="refundPay" parameterType="java.lang.String">
+<insert id="refundPay" parameterType="RefundPayDto">
 INSERT INTO REFUND_PAYMENT 
-(REFUND_SEQ, REFUND_DATE, PAY_SEQ)
-VALUES(REFUND_SEQ.NEXTVAL, SYSDATE, #{pay_seq})
+(REFUND_SEQ, REFUND_DATE, USER_SEQ, PAY_SEQ)
+VALUES(REFUND_SEQ.NEXTVAL, SYSDATE, #{user_seq}, #{pay_seq})
 </insert>
+<!-- 결제 환불여부 고치기 -->
+<update id="updateRef" parameterType="java.lang.Integer">
+	UPDATE PAYMENT
+		SET DELREFUND = 'N'
+			WHERE PAY_SEQ = #{pay_seq}
+</update>
 
 <!-- 환불내역 조회 -->
-<select id="selectRef" parameterType="java.lang.String" resultType="RefundPayDto">
-SELECT REFUND_SEQ, TO_CHAR(REFUND_DATE,'YYYY-MM-DD') AS REFUND_DATE
-	FROM REFUND_PAYMENT 
-		WHERE PAY_SEQ = #{pay_seq}
+<select id="selectRef" parameterType="java.util.Map" resultType="RefundPayDto">
+SELECT REFUND_SEQ, TO_CHAR(REFUND_DATE,'YYYY-MM-DD') AS REFUND_DATE, PAY_SEQ, USER_SEQ
+	FROM(
+			SELECT REFUND_SEQ, REFUND_DATE, PAY_SEQ, USER_SEQ,
+					ROW_NUMBER() OVER(ORDER BY REFUND_SEQ DESC) AS RNUM
+			FROM REFUND_PAYMENT
+		)
+		WHERE RNUM BETWEEN #{rowStart} AND #{rowEnd}
+		AND USER_SEQ = #{user_seq}
+
 </select>
 
 <!-- 크레딧 생성 -->
 <insert id="createCredit" parameterType="CreditDto">
-INSERT INTO CREDIT_TEST
-(CREDIT_SEQ, MILG_CREDIT, REMAIN_CREDIT, CREDIT_DATE, USER_SEQ)
-VALUES(CREDIT_SEQ.NEXTVAL, #{milg_credit}, #{remain_credit}, SYSDATE, 1)
+INSERT INTO CREDIT
+(CREDIT_SEQ, MILG_CREDIT, CREDIT_DATE, USER_SEQ)
+VALUES(CREDIT_SEQ.NEXTVAL, #{milg_credit}, SYSDATE, #{user_seq})
 </insert>
 
 <!-- 크레딧 내역 조회 -->
-<select id="selectCredit" parameterType="java.lang.String" resultType="CreditDto">
-SELECT CREDIT_SEQ, MILG_CREDIT, TO_CHAR(CREDIT_DATE,'YYYY-MM-DD') AS CREDIT_DATE
-	FROM CREDIT
-		WHERE USER_SEQ = #{user_seq}
+<select id="selectCredit" parameterType="java.util.Map" resultType="CreditDto">
+<!-- SELECT CREDIT_SEQ, MILG_CREDIT, TO_CHAR(CREDIT_DATE,'YYYY-MM-DD') AS CREDIT_DATE, USER_SEQ -->
+<!-- 	FROM CREDIT -->
+<!-- 		WHERE USER_SEQ = #{user_seq} -->
+<!-- 		ORDER BY CREDIT_SEQ DESC -->
+SELECT CREDIT_SEQ, MILG_CREDIT, TO_CHAR(CREDIT_DATE,'YYYY-MM-DD') AS CREDIT_DATE, USER_SEQ
+	FROM(
+			SELECT CREDIT_SEQ, MILG_CREDIT, CREDIT_DATE, USER_SEQ,
+					ROW_NUMBER() OVER(ORDER BY CREDIT_SEQ DESC) AS RNUM
+			FROM CREDIT
+		)
+		WHERE RNUM BETWEEN #{rowStart} AND #{rowEnd}
+		AND USER_SEQ = #{user_seq}
 </select>
 
 <!-- 크레딧 환불 -->

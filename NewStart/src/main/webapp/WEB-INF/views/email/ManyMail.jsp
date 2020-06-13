@@ -10,103 +10,107 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-function checkAll(bool,name){
+function checkAll(bool){
 	//alert(name);
-	var filter = document.getElementsByName('filter')[0];
-	var f = '';
-	var chkVals = document.getElementsByName(name);
+	var chkVals = document.getElementsByName('filter');
+	//Allfilter
+	document.getElementsByName('Allfilter').checked = bool;
 	for (var i = 0; i < chkVals.length; i++) {
 		chkVals[i].checked = bool;
 		}
-	
-	 if(bool){
-		if(name=='user_grade'){
-			filter.value = 'MT/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/NHL';
-		}
-	}else{
-		if(name=='user_grade'){
-			filter.value = 'X/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/X';
-		}
-	} 
-}
 
-function chk(name){
-	var chkbool = document.getElementsByName(name);
-	var filter = document.getElementsByName('filter')[0];
-	var f = "";
-	var cnt = 0;
-	for (var i = 1; i < chkbool.length; i++) {
-		if(chkbool[i].checked){
-			if(name == 'user_grade'){
-				f = f+chkbool[i].value;
-				cnt++;
-			}else{
-				f = f+chkbool[i].value;
-			}
-		}else{
-			chkbool[0].checked = false;
-		}
-	}
-		if(f == ""){
-			f = 'X';
-		}
-		if(name == 'user_grade'){
-			filter.value = f+'/'+filter.value.split('/')[1];
-		}else{
-			filter.value = filter.value.split('/')[0]+'/'+f;
-		}
-		
-		if(cnt == chkbool.length-1){
-			chkbool[0].checked = true;
-		}
-	
-}
-
-function sub(form){
-	
-	var grade = document.getElementsByName("user_grade");
-	var type = document.getElementsByName("user_type");
-	
-	var user_grade = [];
-	var user_type = [];
-	
-	for (var i = 1; i < grade.length; i++) {
-		if(grade[i].checked){
-			user_grade.push(grade[i].value);
-		}
-	}
-	for (var i = 1; i < type.length; i++) {
-		if(type[i].checked){
-			user_type.push(type[i].value);
-		}
-	}
-	
+	if(bool){
+	var user_grade = ["'M'","'T'"];
 	alert(user_grade);
-	alert(user_type);
+	chkCnt(user_grade);
+	}else{
+		document.getElementById('sendCnt').innerHTML = '총 발송 건 수 : 0통';
+	}
 	
+	
+}
 
- 	$.ajax({
+function chk(){
+	var chkbool = document.getElementsByName('filter');
+
+
+	var user_grade = [];
+	var cnt = 0;
+	
+	for (var i = 0; i < chkbool.length; i++) {
+		if(chkbool[i].checked){
+			cnt++;
+			user_grade.push(chkbool[i].value);
+		}else{
+			document.getElementsByName('Allfilter')[0].checked = false;
+		}
+	}
+		if(cnt == chkbool.length){
+			document.getElementsByName('Allfilter')[0].checked = true;
+			//alert(user_grade);
+			chkCnt(user_grade);
+		}else if(cnt > 0){
+			chkCnt(user_grade);
+		}else{
+			document.getElementById('sendCnt').innerHTML = '총 발송 건 수 : 0통';
+		}
+	
+		
+		
+		
+}
+
+function chkCnt(user_grade){
+	var emailList = document.getElementsByName('user_email')[0];
+	var sendCnt = document.getElementById('sendCnt');
+
+	$.ajax({
 		url : "./getuserEmails.do",
 		type : "post",
 		traditional : true,
-		data : {"user_grade":user_grade,"user_type":user_type},
+		data : {"user_grade":user_grade},
 		dataType : "text",
 		success: function(data){
-			alert(data);
-			document.getElementsByName("user_email")[0].value = data;
-			form.submit();
+			//alert(data);
+			//alert(data.split(',').length);
+			emailList.value = data;
+			sendCnt.innerHTML = '총 발송 건 수 : '+data.split(',').length+'통';
 		},
 		error: function(){
 			alert('오류');
 		}
 	}); 
-	
-
 }
+
+function gosubmit(){
+	var chkbool = document.getElementsByName('filter');
+	var email_title = document.getElementsByName('email_title')[0];
+	var email_content = document.getElementsByName('email_content')[0];
+	
+	var cnt = 0;
+
+	if(email_title.value.trim() == '' || email_content.value.trim() == ''){
+		alert('제목 및 내용을 작성해주세요');
+		return;
+	}
+	
+	for (var i = 0; i < chkbool.length; i++) {
+		if(chkbool[i].checked){
+			cnt ++;
+		}
+	}
+	
+	if(cnt == 0){
+		alert('수신자 필터를 설정해 주세요');
+		return;
+	}else{
+		alert('전송');
+		document.forms[0].submit();
+	}
+	
+}
+
+
 </script>
 <body>
 
@@ -121,18 +125,14 @@ function sub(form){
       <textarea class="form-control" id="pwd" name="email_content" rows="30" cols="50"></textarea>
     </div>
       수신자 필터 :<br>
-      회원 등급 :  <input type="checkbox" name="user_grade" value="A" onclick="checkAll(this.checked, this.name)"> 전체
-			<input type="checkbox"  name="user_grade" value="M" onclick="chk(this.name)"> 멘티
- 			<input type="checkbox"  name="user_grade" value="T" onclick="chk(this.name)"> 강사 <br>
-     회원 상태 :	<input type="checkbox" name="user_type" value="A" onclick="checkAll(this.checked, this.name)"> 전체
-			<input type="checkbox"  name="user_type" value="N" onclick="chk(this.name)"> 일반
- 			<input type="checkbox"  name="user_type" value="H" onclick="chk(this.name)"> 휴면	
- 			<input type="checkbox"  name="user_type" value="L" onclick="chk(this.name)"> 잠김	 <br>
+      회원 등급 :  <input type="checkbox" name="Allfilter" value="'A'" onclick="checkAll(this.checked)"> 전체
+			<input type="checkbox"  name="filter" value="'M'" onclick="chk()"> 멘티
+ 			<input type="checkbox"  name="filter" value="'T'" onclick="chk()"> 강사 <br>
+
   			<input type="hidden" name ="user_email">
   			<input type="hidden" name ="filechk" value="N">
-  			<input type="hidden" name ="filter" value="X/X">
-  <div class="sendCnt">발송 수 : ??명</div>
-      <input type="button" value="발송" onclick="sub(this.parentElement)">
+  <div id="sendCnt">총 발송 건 수 : 0통</div>
+      <input type="button" value="발송" onclick="gosubmit()">
   </form>
 </div>
 

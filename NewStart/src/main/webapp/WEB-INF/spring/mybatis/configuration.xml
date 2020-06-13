@@ -24,6 +24,8 @@
 		<typeAlias type="com.start.pro.dto.DTO_Filter" alias="FilterDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_Mounui" alias="MDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_FAQ" alias="FAQDto"/>
+		<typeAlias type="com.start.pro.dto.DTO_ChatRoom" alias="ChatRoomDto" />
+		<typeAlias type="com.start.pro.dto.DTO_ChatList" alias="ChatListDto" />
 	</typeAliases>
 
 
@@ -43,6 +45,7 @@
 		<mapper resource="/sqls/Statement_User.xml"/>
 		<mapper resource="/sqls/Statement_Email.xml"/>
 		<mapper resource="/sqls/Statement_Mounui.xml"/>
+		<mapper resource="/sqls/Statement_Chat.xml" />
 	</mappers>
 
 </configuration>
