@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<body>
+	<%@ include file="/WEB-INF/views/boardTopMenu.jsp"%>
 <script type="text/javascript">
 	function delClick(re_seq){
 		location.href = "./reviewDelete.do?re_seq="+re_seq;
@@ -18,7 +20,7 @@
 	function modifyClick(re_seq){
 		location.href = "./moveModify.do?re_seq="+re_seq;
 	}
-	function a(input) {
+	$(function(){
 		if (input.files && input.files[0]) {
 			var reader = new FileReader(); // FIleApi
 			reader.onload = function(e) {
@@ -27,30 +29,32 @@
 				img.style.width = '100%';
 				img.style.height = 'auto';
 			}
-			reader.readAsDataURL(${dto.fileox});
+			reader.readAsDataURL("${dto.fileox}");
 			$("#image").show();
 		}
-	}
+		
+	});
 	
 </script>
-<body>
-	<%@ include file="/WEB-INF/views/boardTopMenu.jsp"%>
 
 <div class="container">
+  <img id="image" src="${dto.fileox }" ><br>
 	글번호 :${dto.re_seq}<br>
    제목 ; ${dto.re_title }<br>
    내용 : ${dto.re_content }<br>
    작성일 : ${dto.re_regdate }<br>
    별점 : ${dto.re_star }<br>
    강사 : ${dto.re_teacher }<br>
-  <img id="image" src="#" style="display: none;">
+   파일 : ${dto.fileox }
 
    
-   
+   <c:if test="${newstart.user_seq eq dto.user_seq }">
    	<input type="button" value="글 수정하기" onclick="modifyClick(${dto.re_seq})">
    	<input type="button" value="글 삭제하기" onclick="delClick(${dto.re_seq})">
-   	<input type="button" value="답글 달기" onclick="insertClick(${dto.re_seq})">
-   	
+   	</c:if>
+   	<c:if test="${newstart.user_seq eq dto.re_teacher }">
+   		<input type="button" value="답글 달기" onclick="insertClick(${dto.re_seq})">
+   	</c:if>
    	
 </div>
 </body>

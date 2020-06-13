@@ -13,7 +13,7 @@ public interface IService_User {
 	 * @return 회원 정보
 	 */
 	public List<DTO_User> searchAll();
-	public DTO_User searchDetail(int user_seq);
+	public DTO_User searchDetail(String user_seq);
 
 	
 	/**
@@ -21,7 +21,7 @@ public interface IService_User {
 	 * @param user_seq(강사인증을 신청한 멘트 번호)
 	 * @return 강사 승인시 true, 미승인 시 false
 	 */
-	public boolean updateTeacher(int user_seq);
+	public boolean updateTeacher(String user_seq);
 	
 	/**
 	 * 마지막 로그인이 1년이 넘은 회원의 유형을 휴면회원으로 변경
@@ -56,14 +56,14 @@ public interface IService_User {
 	 * @param user_seq(유저 번호)
 	 * @return 성공시 true, 실패시 false
 	 */
-	public boolean updateAdChk(int user_seq);
+	public boolean updateAdChk(String user_seq);
 	
 	/**
 	 * 스위칭 기능
 	 * @param user_seq(유저 번호)
 	 * @return 성공시 true, 실패시 false
 	 */
-	public boolean updateGrade(int user_seq);
+	public boolean updateGrade(String user_seq);
 	
 	/**
 	 * 마이페이지 수정
@@ -77,7 +77,7 @@ public interface IService_User {
 	 * @param user_seq
 	 * @return
 	 */
-	public boolean teacherReq(int user_seq);
+	public boolean teacherReq(String user_seq);
 	
 	
 	/**
@@ -89,14 +89,14 @@ public interface IService_User {
 	 * 강사 인증 요청 회원 상세 보기
 	 * @return UserDto
 	 */
-	public DTO_User searchTReqetail(int user_seq);
+	public DTO_User searchTReqDetail(String user_seq);
 	
 	/**
 	 * 강사 인증 승인
 	 * @param user_seq
 	 * @return
 	 */
-	public boolean teaRespY(int user_seq);
+	public boolean teaRespY(String user_seq);
 	
 	
 	/**
@@ -104,7 +104,7 @@ public interface IService_User {
 	 * @param user_seq
 	 * @return
 	 */
-	public boolean teaRespN(int user_seq);
+	public boolean teaRespN(String user_seq);
 	
 	
 }

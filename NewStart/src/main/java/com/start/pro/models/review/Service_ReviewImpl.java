@@ -56,7 +56,7 @@ public class Service_ReviewImpl implements IService_Review{
 	}
 
 	@Override
-	public List<Integer> searchMaching(int user_seq) {
+	public List<Integer> searchMaching(String user_seq) {
 		log.info("Service@@@@@후기 게시판 공고글 찾기,{}",user_seq);
 		return dao.searchMaching(user_seq);
 	}

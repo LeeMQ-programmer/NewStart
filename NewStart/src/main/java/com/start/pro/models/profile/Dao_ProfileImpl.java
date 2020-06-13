@@ -24,7 +24,7 @@ public class Dao_ProfileImpl implements IDao_Profile {
 	private SqlSessionTemplate session;
 
 	@Override
-	public DTO_Profile searchProfile(int user_seq) {
+	public DTO_Profile searchProfile(String user_seq) {
 		log.info("DAO@@@@@프로필 조회,{}",user_seq);
 		return session.selectOne(NS+"searchProfile",user_seq);
 	}
@@ -61,7 +61,7 @@ public class Dao_ProfileImpl implements IDao_Profile {
 	}
 
 	@Override
-	public Double avgStar(int user_seq) {
+	public Double avgStar(String user_seq) {
 		log.info("DAO@@@@@경력 수정,{}",user_seq);
 		return session.selectOne(NS+"avgStar",user_seq);
 	}

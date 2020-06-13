@@ -12,7 +12,7 @@ public interface IService_Profile {
 	 * @param user_seq(유저 번호)
 	 * @return DTO_Profile
 	 */
-	public DTO_Profile searchProfile(int user_seq);
+	public DTO_Profile searchProfile(String user_seq);
 	
 	/**
 	 * 프로필 등록 
@@ -42,5 +42,5 @@ public interface IService_Profile {
 	 */
 	public boolean updateCareer(DTO_Career cDto);
 	
-	public Double avgStar(int user_seq);
+	public Double avgStar(String user_seq);
 }

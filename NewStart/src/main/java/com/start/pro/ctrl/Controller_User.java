@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +40,29 @@ public class Controller_User {
 	
 	@RequestMapping(value = "/moveDetail.do", method = RequestMethod.GET)
 	public String userDetail(HttpServletRequest req, Model model) {
-		int user_seq = Integer.parseInt(req.getParameter("user_seq"));
+		String user_seq = req.getParameter("user_seq");
 		
 		DTO_User dto = service.searchDetail(user_seq);
 		model.addAttribute("dto",dto);
 		return "board/user/userDetail";
 	}
+	@RequestMapping(value = "/searchTReq.do" ,method = {RequestMethod.GET,RequestMethod.POST})
+	public String searchTReq(Model model) {
+		log.info("UserMain으로 이동합니다.!!@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+		List<DTO_User> lists = service.searchTReqAll();
+		log.info("@@@@@@@@@@@@@@@@2외어ㅏㄶ왿@@@@@@@@@@@@@@@@@,{}", lists);
+		model.addAttribute("lists", lists);
+		return "board/user/userTReq";
+	}
+	@RequestMapping(value = "/searchTReqDetail.do" ,method = {RequestMethod.GET,RequestMethod.POST})
+	public String searchTReqDetail(HttpServletRequest req, Model model) {
+		String user_seq = req.getParameter("user_seq");
+		DTO_User dto = service.searchTReqDetail(user_seq);
+		model.addAttribute("dto",dto);
+		return "board/user/userTReqDetail";
+	}
+
 	
 	//--------------------마이페이지--------------------------
 	//마이페이지 닉네임, 전화번호 수정
@@ -65,7 +83,12 @@ public class Controller_User {
 	
 	//----------------강사 인증--------------
 	
-//	public String 
+	@RequestMapping(value = "/teacherReq.do", method = {RequestMethod.GET,RequestMethod.POST})
+	public String teacherReq(HttpSession session) {
+		DTO_User dto = (DTO_User) session.getAttribute("newstart");
+		service.teacherReq(dto.getUser_seq());
+		return null;
+	}
 	
 	
 }

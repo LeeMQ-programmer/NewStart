@@ -52,7 +52,7 @@ public interface IService_Review {
 	 * @param user_seq(사용자의 번호)
 	 * @return 공고 글의 번호
 	 */
-	public List<Integer> searchMaching(int user_seq);
+	public List<Integer> searchMaching(String user_seq);
 	
 	/**
 	 * 매칭이 성공한 공고의 강사 찾기

@@ -82,11 +82,11 @@ public class Controller_Review {
 	@RequestMapping(value = "/insertReview.do", method = RequestMethod.POST)
 	public String insertReview(HttpServletRequest req, @RequestParam("filename") MultipartFile file) {
 		log.info("@@@@@@@@@@@@@@@@후기 작성 @@@@@@@@@@@@@,{}", new Date());
-		String path = "C:\\Users\\IT_LMK\\Desktop\\upload"; /* 절대 경로 */
-		int user_seq = Integer.parseInt(req.getParameter("user_seq"));
+		
+		String user_seq = req.getParameter("user_seq");
 		String re_title = req.getParameter("re_title");
 		String re_content = req.getParameter("re_content");
-		int re_teacher = Integer.parseInt(req.getParameter("re_teacher"));
+		String re_teacher = req.getParameter("re_teacher");
 		int re_star = Integer.parseInt(req.getParameter("re_star"));
 		// 파일 처리하는 모듈 작성
 		String saveFileName = ProfileImg.saveFile(file);
