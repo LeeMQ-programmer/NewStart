@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 <script type="text/javascript" src="./js/email.js"></script>
 <script type="text/javascript">
 window.onbeforeunload = function(e) {
@@ -46,13 +47,38 @@ window.onbeforeunload = function(e) {
 </div>
 
 <script type="text/javascript">
-	//alert('${dto.filechk}');
-	var radio = document.getElementsByName("use_chk");
-	//alert(radio.length);
-	for (var i = 0; i < radio.length; i++) {
-		if(radio[i].value == '${dto.use_chk}'){
-			radio[i].setAttribute('checked', 'checked');
-		}
+//alert('${dto.filechk}');
+var radio = document.getElementsByName("use_chk");
+//alert(radio.length);
+for (var i = 0; i < radio.length; i++) {
+	if(radio[i].value == '${dto.use_chk}'){
+		radio[i].setAttribute('checked', 'checked');
+	}
+}
+
+
+$(function(){
+	CKEDITOR.replace('content',function(ev){
+		filebrowserUploadUrl: './adm/fileupload.do'
+	});
+}); 
+	
+		
+
+	
+	function modify(){
+		document.getElementsByName('email_title')[0].readOnly= false;
+
+		CKEDITOR.instances.content.setReadOnly( false );
+		
+		document.getElementsByName('gosubmit')[0].style.display = "block";
+		
+		var btn = document.getElementsByName('modify')[0]
+
+		
+		btn.innerHTML = '취소';
+		btn.setAttribute("onClick", "location.reload(true);");
+		
 	}
 </script>
 </body>

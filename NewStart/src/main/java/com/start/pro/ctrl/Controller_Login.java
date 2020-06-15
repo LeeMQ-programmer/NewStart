@@ -77,7 +77,7 @@ public class Controller_Login {
 		
 		emailSend.LJMail("0", dto.getUser_email());
 		
-		return "login/SignUp3";
+		return "redirect:/loginForm.do";
 	}
 
 	//로그인 완료시

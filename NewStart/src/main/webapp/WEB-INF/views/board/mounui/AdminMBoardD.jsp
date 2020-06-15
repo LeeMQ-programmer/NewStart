@@ -7,11 +7,14 @@
 <title>Insert title here</title>
 
 </head>
+<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 <script type="text/javascript" src="./js/mounui.js"></script>
 <script type="text/javascript">
+
+
 function reply(){
 	document.domain = 'localhost';
-	window.open("./MBoardReply.do?seq=${dto.mounui_seq}&email=${dto.board_code}","답장보내기","width=1000px, height=1000px, left=300");
+	window.open("./AMBoardReply.do?seq=${dto.mounui_seq}&email=${dto.board_code}","답장보내기","width=1000px, height=1000px, left=300");
 }
 function del(){
 	
@@ -34,6 +37,17 @@ function del(){
       <label for="usr">작성자 :</label>
       <input type="text" class="form-control" name="title" id="usr" value="${dto.category_seq}&lt;${dto.board_code}&gt;" readonly="readonly">
     </div>
+    
+    <c:if test="${!empty files}">
+    <div class="form-group">
+      <label for="usr">파일 :</label><br>
+      <c:forEach items="${files}" var="file">
+	      <a href='./fileDownload.do?seq=${file.file_seq}'>${file.filerealname}</a><br/>
+      </c:forEach>
+    </div>
+	</c:if>
+    
+    
     <div class="form-group">
       <label for="usr">제목 :</label>
       <input type="text" class="form-control" name="title" id="usr" value="${dto.title}" readonly="readonly">
@@ -65,7 +79,7 @@ function del(){
 			</div>
 			<div class="form-group">
 				<label for="comment">내용:</label>
-				<textarea class="form-control" rows="5" id="comment" name="content"
+				<textarea class="form-control" rows="5" id="commentreply" name="content"
 					readonly="readonly">${edto.email_content}</textarea>
 			</div>
 			<div class="form-group">
@@ -78,5 +92,14 @@ function del(){
 
 	</div>
 
+<script type="text/javascript">
+$(function(){
+	CKEDITOR.replace('commentreply',function(ev){
+		filebrowserUploadUrl: './adm/fileupload.do'
+	});
+}); 
+
+
+</script>
 </body>
 </html>

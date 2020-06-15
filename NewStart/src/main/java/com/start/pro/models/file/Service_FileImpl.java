@@ -1,5 +1,7 @@
 package com.start.pro.models.file;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class Service_FileImpl implements IService_File{
 	}
 
 	@Override
-	public DTO_File searchFile(DTO_File dto) {
+	public List<DTO_File> searchFile(DTO_File dto) {
 		log.info("Service@@@@@@@@@@@searchFile,{}",dto);
 		return dao.searchFile(dto);
 	}
@@ -31,6 +33,11 @@ public class Service_FileImpl implements IService_File{
 	public boolean delFile(DTO_File dto) {
 		log.info("Service@@@@@@@@@@@delFile,{}",dto);
 		return dao.delFile(dto);
+	}
+
+	@Override
+	public DTO_File getDown(String seq) {
+		return dao.getDown(seq);
 	}
 
 

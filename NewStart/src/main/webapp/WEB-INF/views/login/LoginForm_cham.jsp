@@ -10,29 +10,40 @@
 <body>
 <%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 
-<form action="./logingo.do" method="post" id='login'>
-
-아이디 : 
-<input type="text" name="username" value="${id}">
-비밀번호
-<input type="text" name="password" value="${password}">
-<input id="remember_me" name ="remember_me" type = "checkbox"/>Remember me
- <c:if test="${not empty key}"> 
+<div class="container">
+  <h2>로그인</h2>
+  <form action="./logingo.do" method="post" id='login'>
+    <div class="form-group">
+      <label for="email">아이디:</label>
+     <input type="text" class="form-control" name="username" value="${id}">
+    </div>
+    <div class="form-group">
+      <label for="pwd">비밀번호:</label>
+     <input type="text" class="form-control" name="password" value="${password}">
+    </div>
+    <div class="checkbox">
+      <label><input id="remember_me" name ="remember_me" type = "checkbox"/> 자동 로그인</label>
+    </div>
+    <button type="button" class="btn btn-default" onclick="return ccchk()">로그인</button>
+     <c:if test="${not empty key}"> 
 		<br>
 	<img  src="https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=${key}">
 		<br>
 	<input type="hidden" name="key" value="${key}">
-	입력 : 
-	<input type="text" name="chk">
+	<label for="key">입력 :</label> 
+	<input type="text" class="form-control" name="chk">
 </c:if> 
+  </form>
+  <div style="color:red;">${error}</div>
+  <div style="margin-top: 50px;">
+<label for="signUp" style="margin-right: 10px;"><a href="./singUpform1.do">회원가입</a> </label> 
+<label for="findId" style="margin-right: 10px;"><a href="./goFId.do">아이디찾기</a></label>
+<label for="findPw" style="margin-right: 10px;"><a href="./goFPW.do">비밀번호 찾기</a></label>
+</div>
+</div>
 
-<button type="button" onclick="return ccchk()">로그인</button>
-</form>
-<div style="color:red;">${error}</div>
 
-<a href="./singUpform1.do">회원가입</a>
-<a href="./goFId.do">아이디찾기</a>
-<a href="./goFPW.do">비밀번호 찾기</a>
+
 
 
 </body>

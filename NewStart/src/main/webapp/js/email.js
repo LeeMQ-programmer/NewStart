@@ -1,16 +1,5 @@
 //---------------------------------------관리자 자동 이메일 게시판 상세보기----------------------------
-function modify(){
-	document.getElementsByName('email_title')[0].readOnly= false;
-	document.getElementsByName('email_content')[0].readOnly = false;
-	document.getElementsByName('gosubmit')[0].style.display = "block";
-	
-	var btn = document.getElementsByName('modify')[0]
-	
-	
-	btn.innerHTML = '취소';
-	btn.setAttribute("onClick", "location.reload(true);");
-	
-}
+
 
 
 
@@ -112,8 +101,18 @@ var pageAjax = function(){
 		type: "post",
 		async: true,
 		traditional : true,
-		data:  {"filter":filter, "successchk" : success,"firstDate":firstDate,"lastDate":lastDate,"index":index,"pageNum":pageNum,"listNum":listNum
-			,"index":index,"pageNum":pageNum,"listNum":listNum}, // 키 = 값
+		data:  {
+			"filter":filter,
+			"successchk" : success,
+			"firstDate":firstDate,
+			"lastDate":lastDate,
+			"index":index,
+			"pageNum":pageNum,
+			"listNum":listNum,
+			"index":index,
+			"pageNum":pageNum,
+			"listNum":listNum
+			}, // 키 = 값
 		dataType: "json",
 		success: function(msg){
 			//alert('dd');

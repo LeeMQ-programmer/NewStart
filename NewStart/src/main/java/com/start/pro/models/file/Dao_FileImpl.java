@@ -1,5 +1,7 @@
 package com.start.pro.models.file;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +26,10 @@ public class Dao_FileImpl implements IDao_File {
 	}
 
 	@Override
-	public DTO_File searchFile(DTO_File dto) {
+	public List<DTO_File> searchFile(DTO_File dto) {
 		log.info("DAO@@@@@@@@@@@@@@@@@searchFile,{}",dto);
 		
-		return session.selectOne(NS+"searchFile",dto);
+		return session.selectList(NS+"searchFile",dto);
 	}
 
 	@Override
@@ -35,6 +37,11 @@ public class Dao_FileImpl implements IDao_File {
 		log.info("DAO@@@@@@@@@@@@@@@@@delFile,{}",dto);
 		int isc = session.update(NS+"delFile",dto);
 		return isc>0?true:false;
+	}
+
+	@Override
+	public DTO_File getDown(String seq) {
+		return session.selectOne(NS+"getDown", seq);
 	}
 
 

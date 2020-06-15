@@ -249,46 +249,4 @@ function replyview(){
 //---------------------------------문의 답변------------------------------------------------
 
 
-function cancel(){
-	if(confirm('작성 중이던 문서가 사라집니다. 그래도 취소하시겠습니까?')){
-		window.close();
-	}
-}
-
-function sendreply(){
-	document.domain = 'localhost';
-	opener.name='boarddetail';
-	var f = document.getElementById('form');
-	var mounui_seq = document.getElementsByName('mounui_seq')[0].value;
-	var user_email = document.getElementsByName('user_email')[0].value;
-	var title = document.getElementsByName('title')[0].value;
-	//var content = document.getElementById('comment').value;
-	var filechk = document.getElementsByName('filechk')[0].value;
-	alert($('#comment').val());
-	//opener.document.location.href='';
-	//f.target = opener.name;
-	//f.submit();
-//	data : {"mounui_seq":mounui_seq, "user_email" : user_email,"title":title,"content":content,"filechk":filechk},
-/*	$.ajax({
-		url : "./MReplySend.do",
-		type : "post",
-		traditional : true,
-		data :$("#form").serialize(),
-		dataType : "text",
-		success: function(data){
-			if(data == 'true'){
-				alert('메일이 발송되었습니다!');
-				opener.document.location.href='./AdminMBoardDetail.do?seq='+mounui_seq;
-				self.close();
-			}else{
-				alert('메일 발송이 실패되었습니다.');
-			}
-		},
-		error : function(){
-			alert('오류');
-			}
-	});
-		
-	*/
-}
 

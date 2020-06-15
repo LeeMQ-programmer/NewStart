@@ -15,14 +15,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_FAQ;
+import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Filter;
 import com.start.pro.dto.DTO_Mounui;
 import com.start.pro.dto.DTO_Paging;
 import com.start.pro.dto.DTO_User;
+import com.start.pro.models.file.IService_File;
 import com.start.pro.models.mounui.IService_Mounui;
 
 @Controller
@@ -31,6 +34,8 @@ public class Controller_Mounui {
 	@Autowired
 	private IService_Mounui service;
 	
+	@Autowired
+	private IService_File file_Service;
 	
 	@RequestMapping(value = "/Umounuiboard.do", method = RequestMethod.GET)
 	public String mounuiboard(Model model){
@@ -44,25 +49,30 @@ public class Controller_Mounui {
 	//insertBoard
 	@RequestMapping(value = "/UinsertBoard.do", method = RequestMethod.POST)
 	public String insertBoard(DTO_Mounui dto, HttpSession session,Model model,
-			HttpServletResponse resp) throws IOException{
+			HttpServletResponse resp, @RequestParam(value="file", required = false) List<MultipartFile> report)
+					throws IOException{
 		
+		System.out.println("파일말고 글은 다 들어오나요?"+dto.toString());
 		
-		
+		System.out.println("파일 몇개 들어왔어??"+report.size());
 		
 		DTO_User user = (DTO_User) session.getAttribute("newstart");
 		dto.setUser_seq(user.getUser_seq());
+		if(report.size() > 0) {
+			System.out.println("파일있어");
+			dto.setFilechk("Y");
+			model.addAttribute("file", report);
+		}else {
+			System.out.println("파일없어");
+			dto.setFilechk("N");
+		}
+		
 		System.out.println(dto.toString());
 //		System.out.println(user.toString());
 		service.insertBoard(dto);
-		MultipartFile test = null;
-		model.addAttribute("filename", test);
-//		String userSeq = ((DTO_User) session.getAttribute("newstart")).getUser_seq();
-//		List<DTO_Mounui> dtos = service.userBoard(userSeq);
-		
-//		model.addAttribute("dtos", dtos);
-	   // PrintWriter	out = resp.getWriter();
-		//out.println("<script>alert('문의글이 등록되었습니다.');  location.href='./UserMBoard.do'; </script>");
-		//out.flush();
+		model.addAttribute("fileboard", "3000");
+		model.addAttribute("board_seq", dto.getMounui_seq());
+
 
 		return "redirect:/UserMBoard.do";
 	}
@@ -74,6 +84,8 @@ public class Controller_Mounui {
 		Map<String, String> map = new HashMap<String, String>();
 		List<DTO_Mounui> dtos = null;
 		DTO_Paging pdto = null;
+		
+		
 		
 		if(session.getAttribute("userMounuiBoardrow")==null) {
 			pdto = new DTO_Paging();
@@ -102,6 +114,13 @@ public class Controller_Mounui {
 	public String UserMBoardDetail(String seq, Model model){
 		
 		DTO_Mounui dto = service.userBoardDetail(seq);
+		
+		if(dto.getFilechk().equalsIgnoreCase("Y")) {
+			DTO_File fdto = new DTO_File("3000", seq);
+			List<DTO_File> fdtolist = file_Service.searchFile(fdto);
+			model.addAttribute("files",fdtolist);
+		}
+		
 		
 		System.out.println("왜안돼"+dto.toString());
 		
@@ -160,6 +179,12 @@ public class Controller_Mounui {
 	public String AdminMBoardDetail(String seq, Model model){
 		
 		DTO_Mounui dto = service.adminBoardDetail(seq);
+		
+		if(dto.getFilechk().equalsIgnoreCase("Y")) {
+			DTO_File fdto = new DTO_File("3000", seq);
+			List<DTO_File> fdtolist = file_Service.searchFile(fdto);
+			model.addAttribute("files",fdtolist);
+		}
 		
 		System.out.println("왜안돼"+dto.toString());
 		

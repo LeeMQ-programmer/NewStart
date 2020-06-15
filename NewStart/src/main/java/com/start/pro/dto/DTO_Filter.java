@@ -96,6 +96,7 @@ public class DTO_Filter {
 		return successchk;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setSuccesschk(String[] successchk) {
 		this.successchk = new ArrayList<String>(Arrays.asList(successchk));
 	}

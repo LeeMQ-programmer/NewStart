@@ -162,8 +162,8 @@
                      </dl>
                   </div>
                   <div id="buttom">
-                     <input type="button" class="btn btn-success" value="동의하고 회원가입" onclick="gosignUp()">
-                     <input type="button" class="btn btn-primary" value="돌아가기" onclick="javascript:history.back(-1)">
+                     <input type="button" class="btn btn-default" value="동의하고 회원가입" onclick="gosignUp()">
+                     <input type="button" class="btn btn-default" value="돌아가기" onclick="javascript:history.back(-1)">
                   </div>
                </div>
          </form>

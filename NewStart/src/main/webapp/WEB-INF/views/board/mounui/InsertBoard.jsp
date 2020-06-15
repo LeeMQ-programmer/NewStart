@@ -24,7 +24,7 @@ function chkchk(){
 <%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 
 <div class="container">
-  <form action="./UinsertBoard.do" method="post">
+  <form action="./UinsertBoard.do" method="post" enctype="multipart/form-data">
     <div class="form-group">
      <label for="sel1">Select list (select one):</label>
       <select class="form-control" name="category_seq" id="sel1">
@@ -39,7 +39,7 @@ function chkchk(){
       <label for="comment">내용:</label>
       <textarea class="form-control" rows="5" id="comment" name="content" style="resize: none"></textarea>
     </div>
-      <input type="hidden" class="form-control" name="filechk" value="N">
+      <input type="file" class="form-control" multiple="multiple" name="file">
       <button type="button" class="form-control" onclick="chkchk()">등록</button>
   </form>
 </div>

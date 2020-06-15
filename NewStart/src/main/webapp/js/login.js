@@ -8,7 +8,6 @@ function ccchk(){
 		alert('비밀번호를 입력해주세요');
 	}
 
-	
 	var key = $('input[name=key]').val();
 	var chk = $('input[name=chk]').val();
 
@@ -149,7 +148,9 @@ var Multichk = function(url,val){
 			}
 		}
 		if(i == 7){
-			$('.signUp').submit();
+			alert('이메일이 전송되었습니다. 인증을 하시면 회원가입이 완료됩니다.');
+				$('#signUp').submit();
+			
 		}
 
 	 });
@@ -177,9 +178,10 @@ function phonechk(val){
 		
 	if(!regExp.test(val)){
 		$('#phone').css('color','red');
-		$('#phone').html('올바른 핸드폰 번호가 아닙니다');
+		$('#phone').html('올바른 핸드폰 번호가 아닙니다 \'-\'는 제외한 번호만 입력해주세요');
 		$('input[name=user_phone]').attr('id','false');
 	}else{
+		$('#phone').css('color','black');
 		$('#phone').html('\'-\'는 제외한 번호만 입력해주세요');
 		$('input[name=user_phone]').attr('id','true');
 	}

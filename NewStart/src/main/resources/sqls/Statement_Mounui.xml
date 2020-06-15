@@ -31,6 +31,11 @@
 INSERT INTO MOUNUI
 (BOARD_CODE, MOUNUI_SEQ, USER_SEQ, CATEGORY_SEQ, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK)
 VALUES('3000', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category_seq}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
+
+ <selectKey order="AFTER" resultType="java.lang.String" keyProperty="mounui_seq">
+ 	SELECT MOUNUI_SEQS.CURRVAL AS MOUNUI_SEQ FROM DUAL
+ </selectKey>
+
 </insert>
 
 
@@ -186,6 +191,10 @@ SELECT TITLE, CONTENT, SUCCESSCHK, REGDATE FROM R_EMAIL re
 SELECT CATEGORY_SEQ, CATEGORY_TITLE FROM FAQ_CODE fc
 	ORDER BY CATEGORY_SORT
 </select>
+
+
+
+
 
 
 </mapper>

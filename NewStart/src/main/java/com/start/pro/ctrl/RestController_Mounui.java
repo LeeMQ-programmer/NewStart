@@ -40,7 +40,7 @@ public class RestController_Mounui {
 	private Util_JSON jsonUtil;
 	
 	//문의 게시판 답장 메일 보내기
-	@RequestMapping(value = "/MReplySend.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/AReplySend.do", method = RequestMethod.POST)
 	public boolean MReplySend(DTO_Mounui dto, String user_email) throws IOException{
 
 		System.out.println("ck에디터 넘어와??"+dto.toString());
