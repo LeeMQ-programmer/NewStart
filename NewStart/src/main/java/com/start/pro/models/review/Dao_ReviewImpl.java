@@ -62,7 +62,7 @@ public class Dao_ReviewImpl implements IDao_Review {
 	}
 
 	@Override
-	public List<Integer> searchMaching(int user_seq) {
+	public List<Integer> searchMaching(String user_seq) {
 		log.info("DAO@@@@@후기 게시판 공고글 찾기,{}",user_seq);
 		return session.selectList(NS+"searchMaching",user_seq);
 	}

@@ -19,7 +19,7 @@ public class Dao_UserImpl implements IDao_User {
 	private SqlSessionTemplate session;
 	
 	@Override
-	public boolean updateTeacher(int user_seq) {
+	public boolean updateTeacher(String user_seq) {
 		log.info("DAO@@@@@강사 등급 업데이트,{}",user_seq);
 		int isc = session.insert(NS+"updateTeacher",user_seq);
 		return isc>0?true:false;
@@ -40,7 +40,7 @@ public class Dao_UserImpl implements IDao_User {
 	}
 
 	@Override
-	public DTO_User searchDetail(int user_seq) {
+	public DTO_User searchDetail(String user_seq) {
 		log.info("DAO@@@@@회원 상세 조회,{}",user_seq);
 		return session.selectOne(NS+"searchDetail",user_seq);
 	}
@@ -67,14 +67,14 @@ public class Dao_UserImpl implements IDao_User {
 	}
 
 	@Override
-	public boolean updateAdChk(int user_seq) {
+	public boolean updateAdChk(String user_seq) {
 		log.info("DAO@@@@@광고 수신여부 변경,{}",user_seq);
 		int isc = session.update(NS+"updatePw",user_seq);
 		return isc>0?true:false;
 	}
 
 	@Override
-	public boolean updateGrade(int user_seq) {
+	public boolean updateGrade(String user_seq) {
 		log.info("DAO@@@@@스위칭,{}",user_seq);
 		int isc = session.update(NS+"updatePw",user_seq);
 		return isc>0?true:false;
@@ -89,14 +89,14 @@ public class Dao_UserImpl implements IDao_User {
 	}
 
 	@Override
-	public boolean teacherReq(int user_seq) {
+	public boolean teacherReq(String user_seq) {
 		log.info("DAO@@@@@강사 요청,{}",user_seq);
 		int isc = session.update(NS+"teacherReq", user_seq);
 		return isc>0?true:false;
 	}
 
 	@Override
-	public boolean tReqTime(int user_seq) {
+	public boolean tReqTime(String user_seq) {
 		log.info("DAO@@@@@강사 요청 시간,{}",user_seq);
 		int isc = session.update(NS+"tReqTime",user_seq);
 		return isc>0?true:false;
@@ -109,27 +109,27 @@ public class Dao_UserImpl implements IDao_User {
 	}
 
 	@Override
-	public DTO_User searchTReqetail(int user_seq) {
+	public DTO_User searchTReqDetail(String user_seq) {
 		log.info("DAO@@@@@스위칭,{}",user_seq);
 		return session.selectOne(NS+"updateMyPage",user_seq);
 	}
 
 	@Override
-	public boolean teaRespY(int user_seq) {
+	public boolean teaRespY(String user_seq) {
 		log.info("DAO@@@@@스위칭,{}",user_seq);
 		int isc = session.update(NS+"teaRespY",user_seq);
 		return isc>0?true:false;
 	}
 
 	@Override
-	public boolean tRespTime(int user_seq) {
+	public boolean tRespTime(String user_seq) {
 		log.info("DAO@@@@@스위칭,{}",user_seq);
 		int isc = session.update(NS+"tRespTime",user_seq);
 		return isc>0?true:false;
 	}
 
 	@Override
-	public boolean teaRespN(int user_seq) {
+	public boolean teaRespN(String user_seq) {
 		log.info("DAO@@@@@스위칭,{}",user_seq);
 		int isc = session.update(NS+"teaRespN",user_seq);
 		return isc>0?true:false;

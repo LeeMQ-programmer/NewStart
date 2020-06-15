@@ -34,11 +34,12 @@ public class DTO_User {
 	}
 
 	
-	public DTO_User(String user_seq,String user_nickname, String user_phone) {
+	public DTO_User(String user_seq,String user_nickname, String user_phone,String user_adchk) {
 		super();
 		this.user_seq = user_seq;
 		this.user_nickname = user_nickname;
 		this.user_phone = user_phone;
+		this.user_adchk = user_adchk;
 	}
 
 	public String getUser_seq() {

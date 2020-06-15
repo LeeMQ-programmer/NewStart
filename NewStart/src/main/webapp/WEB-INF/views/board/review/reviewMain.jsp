@@ -21,15 +21,15 @@
 						<th>별점</th>
 						<th>해당 강사</th>
 						<th>작성일</th>
-						<c:if test="${newstart eq 'A' }">
 							<th>삭제여부</th>
+						<c:if test="${newstart eq 'A' }">
 						</c:if>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="list" items="${lists}" varStatus="vs">
 						<tr>
-						<c:if test="${list.re_delete ne 'N' }">
+						<c:if test="${list.re_delete eq 'N' }">
 							<td>${list.re_seq}&nbsp;&nbsp;</td>
 							<td>${list.user_seq }&nbsp;&nbsp;</td>
 							<td><a href="./reviewDetail.do?re_seq=${list.re_seq}">
@@ -39,8 +39,8 @@
 							<td>${list.re_star }&nbsp;&nbsp;</td>
 							<td>${list.re_teacher }&nbsp;&nbsp;</td>
 							<td>${list.re_regdate }&nbsp;&nbsp;</td>
+							<td>${list.re_delete }</td>
 							<c:if test="${newstart eq 'A' }">
-								<td>${list.re_delete })</td>
 							</c:if>
 						</c:if>
 						</tr>

@@ -21,7 +21,7 @@ public class Cron {
 	private IService_User userService;
 	
 	//하루에 한번 실행 
-	@Scheduled(cron = "* * 0 * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	public void run() {
 //		log.info("cron 실행, 하루에 한번씩, {}",new Date());
 //		boolean isc = userService.updateHuman();

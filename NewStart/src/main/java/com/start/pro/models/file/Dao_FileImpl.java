@@ -1,12 +1,19 @@
 package com.start.pro.models.file;
 
+<<<<<<< HEAD
 import java.util.List;
+=======
+import java.util.Map;
+
+import javax.annotation.Resource;
+>>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.start.pro.dto.DTO_File;
 
@@ -17,6 +24,9 @@ public class Dao_FileImpl implements IDao_File {
 	private final String NS = "com.start.pro.File.";
 	@Autowired
 	private SqlSessionTemplate session;
+	
+	@Resource
+	private FileUtils fileUtils;
 	
 	@Override
 	public boolean insertFile(DTO_File dto) {
@@ -39,10 +49,14 @@ public class Dao_FileImpl implements IDao_File {
 		return isc>0?true:false;
 	}
 
+<<<<<<< HEAD
 	@Override
 	public DTO_File getDown(String seq) {
 		return session.selectOne(NS+"getDown", seq);
 	}
+=======
+	
+>>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 
 
 	

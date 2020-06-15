@@ -54,7 +54,12 @@
 						<li><a href="./userMain.do">유저 전체 조회</a> </li>
 					</c:if>
 					<c:if test="${newstart.user_grade ne 'A' && newstart.user_tchk eq 'Y' }">
-						<li><a href="./userMain.do">스위칭</a> </li>
+						<c:if test="${newstart.user_grade eq 'M' }">
+							<li><a href="./switch.do">강사로 스위칭</a> </li>
+						</c:if>
+						<c:if test="${newstart.user_grade eq 'T' }">
+							<li><a href="./switch.do">멘티로 스위칭</a> </li>
+						</c:if>
 					</c:if>
           			<li><a href="./logout.do" style="color:red;">로그아웃</a></li>
         		</ul>

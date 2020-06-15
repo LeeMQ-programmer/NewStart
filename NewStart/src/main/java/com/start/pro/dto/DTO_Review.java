@@ -4,11 +4,11 @@ public class DTO_Review {
 
 	private int board_code;
 	private int re_seq;
-	private int user_seq;
+	private String user_seq;
 	private String re_title;
 	private String re_regdate;
 	private String re_content;
-	private int re_teacher;
+	private String re_teacher;
 	private int re_group;
 	private String re_reply;
 	private String re_delete;
@@ -20,8 +20,8 @@ public class DTO_Review {
 	}
 
 	
-	public DTO_Review(int board_code, int re_seq, int user_seq, String re_title, String re_regdate, String re_content,
-			int re_teacher, int re_group, String re_reply, String re_delete, int re_star) {
+	public DTO_Review(int board_code, int re_seq, String user_seq, String re_title, String re_regdate, String re_content,
+			String re_teacher, int re_group, String re_reply, String re_delete, int re_star) {
 		super();
 		this.board_code = board_code;
 		this.re_seq = re_seq;
@@ -37,7 +37,7 @@ public class DTO_Review {
 	}
 	
 	//게시글 작성
-	public DTO_Review(int user_seq, String re_title, String re_content, int re_teacher, int re_star,String fileox) {
+	public DTO_Review(String user_seq, String re_title, String re_content, String re_teacher, int re_star,String fileox) {
 		super();
 		this.user_seq = user_seq;
 		this.re_title = re_title;
@@ -78,11 +78,11 @@ public class DTO_Review {
 		this.re_seq = re_seq;
 	}
 
-	public int getUser_seq() {
+	public String getUser_seq() {
 		return user_seq;
 	}
 
-	public void setUser_seq(int user_seq) {
+	public void setUser_seq(String user_seq) {
 		this.user_seq = user_seq;
 	}
 
@@ -110,11 +110,11 @@ public class DTO_Review {
 		this.re_content = re_content;
 	}
 
-	public int getRe_teacher() {
+	public String getRe_teacher() {
 		return re_teacher;
 	}
 
-	public void setRe_teacher(int re_teacher) {
+	public void setRe_teacher(String re_teacher) {
 		this.re_teacher = re_teacher;
 	}
 

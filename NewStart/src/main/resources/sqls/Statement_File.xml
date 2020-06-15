@@ -7,6 +7,7 @@
    <insert id="ReviewinsertFile" parameterType="FileDto">
       INSERT INTO FILEBOARD
       (FILE_SEQ, FILEBOARD, BOARD_SEQ,
+<<<<<<< HEAD
       FILENAME, FILEREALNAME, FILEURL
       )
       VALUES(FILE_SEQS.NEXTVAL, #{board_seq},(SELECT RE_SEQ FROM REVIEWBOARD r 
@@ -36,6 +37,33 @@
 	<select id="getDown" parameterType="java.lang.String" resultType="FileDto">
 	SELECT  FILEREALNAME,FILEURL FROM FILEBOARD f WHERE FILE_SEQ = #{file_seq}
 	</select>
+=======
+      FILENAME, FILEREALNAME, FILEURL,
+      )
+      VALUES(FILE_SEQS.NEXTVAL, #{board_seq},(SELECT RE_SEQ FROM REVIEWBOARD r 
+   WHERE USER_SEQ =#{user_seq} AND RE_TEACHER =#{re_reacher}),
+      #{filename}, #{filerealname}, #{fileurl})
+   </insert>
+   
+   <!-- 파일 업로드 -->
+   <insert id="insertFile" parameterType="FileDto">
+      INSERT INTO FILEBOARD
+      (FILE_SEQ, FILEBOARD, BOARD_SEQ,
+      FILENAME, FILEREALNAME, FILEURL
+      )
+      VALUES(FILE_SEQS.NEXTVAL, #{fileboard}, #{board_seq},
+      #{filename}, #{filerealname}, #{fileurl})
+   </insert>
+   
+   <!-- 파일 조회 -->
+   <select id="searchFile" parameterType="FileDto" resultType="FileDto" >
+      SELECT FILE_SEQ, FILEBOARD, BOARD_SEQ, 
+            FILENAME, FILEREALNAME, FILEURL,
+            FILEDATE, FILETYPE, FILE_DEL
+      FROM FILEBOARD
+      WHERE FILEBOARD = #{fileboard} AND BOARD_SEQ =#{board_seq}
+   </select>
+>>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 
    <!-- 파일 삭제 -->
    <update id="delFile" parameterType="FileDto">
@@ -44,10 +72,16 @@
       WHERE FILEBOARD =#{fileboard} AND BOARD_SEQ =#{board_seq}
    
    </update>
+<<<<<<< HEAD
 
 
 <!--  -->
+=======
+>>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 </mapper>
