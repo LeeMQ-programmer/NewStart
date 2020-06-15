@@ -5,10 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
+<script type="text/javascript" src="./js/email.js"></script>
 <body>
-
+<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 <div class="container">
   <h2>Form control: input</h2>
   <p>The form below contains two input elements; one of type text and one of type password:</p>
@@ -16,17 +16,21 @@
 	<input type="hidden" name="category_code" value="${dto.category_code}">
     <div class="form-group">
       <label for="usr">제목:</label>
-      <input type="text" class="form-control" id="usr" name="email_title" value="${dto.email_title}">
+      <input type="text" class="form-control" id="title" name="email_title" value="${dto.email_title}" readonly="readonly">
     </div>
     <div class="form-group">
       <label for="pwd">내용:</label>
-      <textarea class="form-control" id="pwd" name="email_content" rows="30" cols="50">${dto.email_content}</textarea>
+      <textarea class="form-control" id="content" name="email_content" rows="30" cols="50" readonly="readonly">${dto.email_content}</textarea>
     </div>
       <input type="hidden"  name="filechk" value="${dto.filechk}">
       사용 여부 : <input type="radio" id="chk" name="use_chk" value="Y"> 사용
       		<input type="radio" name="use_chk" value="N"> 비사용
-      <input type="submit">
   </form>
+  	<div>
+	<button class='btn' type="button" name='board' onclick='board()' >목록</button>
+	<button class='btn' type="button" name='modify' onclick="modify()">수정</button>
+	<button class='btn' type="button" name='gosubmit' onclick="gosubmit()" style='display: none;'>저장</button>
+	</div>
 </div>
 
 <script type="text/javascript">

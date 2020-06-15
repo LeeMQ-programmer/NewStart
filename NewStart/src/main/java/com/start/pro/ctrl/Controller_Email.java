@@ -1,10 +1,14 @@
 package com.start.pro.ctrl;
 
+import java.io.IOException;
+
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.start.pro.dto.DTO_Email;
+import com.start.pro.dto.DTO_Filter;
+import com.start.pro.dto.DTO_Paging;
 import com.start.pro.email.AsyncTask_SendEmail;
 import com.start.pro.models.email.IService_Email;
 import com.start.pro.models.login.IService_Login;
@@ -115,12 +121,21 @@ public class Controller_Email {
 
 	// 자동 이메일 상세보기
 	@RequestMapping(value = "/AutomailUp.do", method = RequestMethod.POST)
-	public String AutomailUp(DTO_Email dto) {
+	public void AutomailUp(DTO_Email dto, HttpServletResponse resp) throws IOException {
 
 		System.out.println("??" + dto.toString());
 		service.UpdateAuto(dto);
 
-		return "redirect:/AutomailB.do";
+		resp.setCharacterEncoding("utf-8");
+	    resp.setContentType("text/html; charset=UTF-8");
+
+		
+		
+	    PrintWriter	out = resp.getWriter();
+		out.println("<script>alert('수정 완료되었습니다');  location.href='./AutomailB.do'; </script>");
+		out.flush();
+		
+		
 	}
 
 	// 대량 메일 보내러 가기
@@ -141,7 +156,7 @@ public class Controller_Email {
 
 	// ManyMailSend.do
 	@RequestMapping(value = "/ManyMailSend.do", method = RequestMethod.POST)
-	public String ManyMailSend(DTO_Email dto) {
+	public String ManyMailSend(DTO_Email dto, HttpServletResponse resp) {
 
 		System.out.println("받아옴??" + dto.toString());
 		//dto.setSuccesschk("S");
@@ -150,15 +165,34 @@ public class Controller_Email {
 		System.out.println(dto.toString());
 		emailSend.sendManyMail(dto);
 
-		return "email/ManyMail";
+		
+		return "redirect:/checkMailSave.do";
 	}
 
 	// 관리자페이지 메일기록 확인
 	@RequestMapping(value = "/checkMailSave.do", method = RequestMethod.GET)
-	public String checkMailSave(Model model) {
+	public String checkMailSave(Model model, HttpSession session) {
 
-		List<DTO_Email> dtos = service.SelAllMail();
-
+//		List<DTO_Email> dtos = service.SelAllMail();
+		List<DTO_Email> dtos = null;
+		DTO_Paging pdto = null;
+		
+		if(session.getAttribute("row")==null) {
+			pdto = new DTO_Paging();
+		}else {
+			pdto = (DTO_Paging) session.getAttribute("row");
+		}
+		
+		DTO_Filter fdto = new DTO_Filter();
+		fdto.setStart(String.valueOf(pdto.getStart()));
+		fdto.setLast(String.valueOf(pdto.getlast()));
+		
+		System.out.println("왜 1111떠??"+fdto.toString());
+		
+		pdto.setTotal(service.getEmailCount(null));
+		dtos = service.SelAllMail(fdto);
+		System.out.println(pdto.toString());
+		model.addAttribute("row", pdto);
 		model.addAttribute("dtos", dtos);
 
 		return "email/MailSaveBoard";
@@ -184,6 +218,28 @@ public class Controller_Email {
 		model.addAttribute("dto", dto);
 
 		return "email/SelMailDetail";
+	}
+	
+	
+	///mailSaveDel.do
+	@RequestMapping(value = "/mailSaveDel.do", method = {RequestMethod.POST,RequestMethod.GET})
+	public void mailSaveDel(String[] seq, HttpServletResponse resp) throws IOException {
+
+		Map<String,String[]> map = new HashMap<String, String[]>();
+		map.put("seq", seq);
+		System.out.println(map.toString());
+		service.delemailsave(map);
+		
+		resp.setCharacterEncoding("utf-8");
+	    resp.setContentType("text/html; charset=UTF-8");
+
+		
+		
+	    PrintWriter	out = resp.getWriter();
+		out.println("<script>alert('삭제 되었습니다.');  location.href='./checkMailSave.do'; </script>");
+		out.flush();
+		
+		
 	}
 
 	// resend.do

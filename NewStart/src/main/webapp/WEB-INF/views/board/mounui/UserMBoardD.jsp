@@ -1,25 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
+<script type="text/javascript" src="./js/mounui.js"></script>
 <script type="text/javascript">
 
-del(){
+function udel(){
 	if(confirm('정말로 삭제하시겠습니까?')){
 	location.href='./UserMBoardDel.do?seq=${dto.mounui_seq}';
 	}
 }
-
 </script>
-
 <body>
+
+<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 <div class="container">
   <div class="form-group">
       <label for="usr">카테고리 :</label>
@@ -39,7 +37,7 @@ del(){
     </div>
       <input type="hidden" class="form-control" name="filechk" value="N">
       <button type="button" class='btn'  onclick="location.href='./UserMBoard.do'">목록</button>
-      <button type="button" class='btn' id="del" onclick="del()">삭제</button>
+      <button type="button" class='btn' id="del" onclick="udel()">삭제</button>
 </div>
 
 </body>

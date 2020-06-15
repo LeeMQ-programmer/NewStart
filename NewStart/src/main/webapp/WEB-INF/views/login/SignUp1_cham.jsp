@@ -5,92 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link type="text/css" rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<style type="text/css">
-
-.usm-join-box {
-	height: 120px;
-	margin-top: 3px;
-	margin-bottom: 30px;
-	padding: 10px;
-	border: 1px solid #E1E1E3;
-	overflow-y: scroll;
-	background-color: #fff;
-}
-
-.usm-agree input[type="checkbox"] {
-	cursor: pointer;
-}
-
-.usm-agree label {
-	padding: 0 0 0 7px;
-	cursor: pointer;
-}
-#container{
-	position : relative;
-	top : 10px;
-	width: 1000px;
-	margin: auto;
-}
-
-#title{
-	text-align: center;
-	position: relative;
-	width: 1000px;
-}
-
-#button{
-	margin-top: 40px;
-	position: relative;
-	text-align: center;
-	margin-bottom: 50px;
-}
-
-</style>
-<script type="text/javascript">
-function checkAll(bool){
-	
-	var chks = document.getElementsByName('user_adchk');
-
-	for (var i = 0; i < chks.length; i++) {
-		chks[i].checked = bool;
-	}
-}
-
-function chk(){
-	var chkbool = document.getElementsByName('user_adchk');
-	var allcheck = document.getElementById('i_agreeA');
-	var cnt = 0;
-	for (var i = 0; i < chkbool.length; i++) {
-		if(chkbool[i].checked){
-			cnt++;
-		}
-	}
-	
-	if(cnt == chkbool.length){
-		allcheck.checked = true;
-	}else{
-		allcheck.checked = false;
-	}
-	
-}
-
-function gosignUp(){
-	var chkbool = document.getElementsByName('user_adchk');
-	if(chkbool[0].checked == false || chkbool[1].checked == false){
-		alert('필수항목에 모두 동의해주세요');
-		return;
-	}else{
-		//alert('넘어갑니다~');
-		 document.forms["formchk"].submit();
-	}
-}
-</script>
+<link type="text/css" rel="stylesheet" href="./css/SignUp.css">
 </head>
+<script type="text/javascript" src="./js/login.js"></script>
 <body>
+ <%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
  
 <div id="container">
       <div id="title">

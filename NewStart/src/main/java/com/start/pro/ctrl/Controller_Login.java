@@ -44,6 +44,7 @@ public class Controller_Login {
 	//로그인창 
 	@RequestMapping(value = "/loginForm.do", method = {RequestMethod.GET,RequestMethod.POST})
 	public String loginForm(@RequestParam(value = "logout", required = false) String logout,
+			@RequestParam(value = "id", required = false) String id,
 			HttpServletRequest req, Model model) {
 
 		ServletContext app = req.getSession().getServletContext();
@@ -58,9 +59,8 @@ public class Controller_Login {
 		}
 		
 
-		if(logout != null) {
-			System.out.println("로그아웃거칩니다");
-			model.addAttribute("msg", "로그아웃 성공!");
+		if(id != null) {
+			model.addAttribute("id", id);
 		}
 
 

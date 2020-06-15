@@ -34,26 +34,29 @@ VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category_seq}, #{title}, #{cont
 </insert>
 
 
+
+<!-- 회원번호로 문의글 갯수 가져오기 -->
+<select id="getUserMounuiBoard" parameterType="java.lang.String" resultType="java.lang.String">
+SELECT COUNT(*) FROM MOUNUI m WHERE USER_SEQ = #{user_seq} AND DELCHK = 'N'
+</select>
+
+
 <!--회원번호로 문의글 정보 가져오기-->
- <select id="userBoard" parameterType="java.lang.String" resultType="MDto">
- SELECT fc.CATEGORY_TITLE, MOUNUI_SEQ, 
+ <select id="userBoard" parameterType="java.util.Map" resultType="MDto">
+SELECT CATEGORY_TITLE, MOUNUI_SEQ, TITLE,
+ 	CONTENT, REGDATE , REPLYCHK 
+FROM 
+(SELECT ROW_NUMBER() OVER(ORDER BY MOUNUI_SEQ DESC) AS RNUM, fc.CATEGORY_TITLE, MOUNUI_SEQ, 
 	 CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
  	CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK 
  		FROM MOUNUI m JOIN FAQ_CODE fc 
  			ON m.CATEGORY_SEQ = fc.CATEGORY_SEQ 
-  			AND USER_SEQ = #{seq} AND DELCHK = 'N'
-  				ORDER BY MOUNUI_SEQ DESC
+  			AND USER_SEQ = #{user_seq} AND DELCHK = 'N')
+	WHERE RNUM BETWEEN #{start} AND #{last}
  </select>
  
  
- <!-- 
- SEQ로 문의글 상세조회
- SELECT MOUNUI_SEQ, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
- FROM MOUNUI m 
-  WHERE BOARD_CODE = '0' AND
-   MOUNUI_SEQ = '1' AND 
-   DELCHK = 'N'0
-  -->
+ <!--SEQ로 문의글 상세조회 -->
  <select id="userBoardDetail" parameterType="java.lang.String" resultType="MDto">
   SELECT MOUNUI_SEQ, f.CATEGORY_TITLE ,TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
  	FROM MOUNUI m JOIN FAQ_CODE f ON m.CATEGORY_SEQ = f.CATEGORY_SEQ 
@@ -73,42 +76,66 @@ UPDATE MOUNUI
  UPDATE MOUNUI 
  SET DELCHK = 'Y'
  <where>
+ MOUNUI_SEQ IN
 	<foreach collection="seq" item="seq" open="(" close=")" separator=",">
-	  MOUNUI_SEQ IN #{seq}
+	   #{seq}
 	</foreach>
  </where>
 </update>
 
+<!-- 전체 글 갯수 세기  -->
+<select id="getAdminMounuiCnt" parameterType="FilterDto" resultType="java.lang.String">
+SELECT  COUNT(*)
+	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
+	<if test="_parameter != null">
+		<include refid="filter"/>
+		</if>
+</select>
+
+
  
  <!--전체 글 가져오기(삭제된 것까지)-->
 <select id="adminBoard" parameterType="FilterDto" resultMap="getAdminBoard">
-SELECT MOUNUI_SEQ, CATEGORY_TITLE, USER_SEQ, USER_EMAIL, USER_NICKNAME,
+SELECT MOUNUI_SEQ,  CATEGORY_TITLE, USER_SEQ, USER_EMAIL, USER_NICKNAME,TITLE,REGDATE, REPLYCHK, FILECHK, DELCHK  
+	FROM (SELECT ROW_NUMBER() OVER(ORDER BY MOUNUI_SEQ DESC) AS RNUM,MOUNUI_SEQ, CATEGORY_TITLE, USER_SEQ, USER_EMAIL, USER_NICKNAME,
 	CASE WHEN LENGTH(TITLE)>10 THEN SUBSTR(TITLE,1,10) || '....' ELSE TITLE END AS TITLE,
 	REGDATE, REPLYCHK, FILECHK, DELCHK  
 	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
-	<where>
-		<if test="_parameter != null">
-			<if test="user_grade != ''">
-				AND u.USER_GRADE = #{user_grade}
+	<if test="_parameter != null">
+		<include refid="filter"/>
+		</if>
+	)
+	WHERE RNUM BETWEEN #{start} AND #{last}
+</select>
+
+
+<!-- 필터 sql -->
+<sql id="filter">
+<where>
+			<if test="user_grade != null and user_grade != ''">
+				 u.USER_GRADE = #{user_grade}
 			</if>
-			<if test="replychk != ''">
+			<if test="replychk != null and replychk != ''">
 				AND m.REPLYCHK = #{replychk}
 			</if>		
-			<if test="delchk != ''">
-				m.DELCHK  = #{delchk}
+			<if test="delchk != null and delchk != ''">
+				AND m.DELCHK  = #{delchk}
 			</if>
-			<if test="firstDate != ''">
+			<if test="firstDate != null and firstDate != ''">
 		  		<![CDATA[AND REGDATE >= #{firstDate}]]>
 			</if>
-			<if test="lastDate != ''">
+			<if test="lastDate != null and lastDate != ''">
 		  		<![CDATA[AND REGDATE <= #{lastDate}]]>
 			</if>
-		</if>
+			<if test="successchk != null and successchk.size > 0">
+				AND CATEGORY_TITLE IN
+				<foreach collection="successchk" item="category" open="(" separator="," close=")">
+					#{category}
+				</foreach>
+			</if>
 	</where>
-	
-	
-	ORDER BY MOUNUI_SEQ DESC
-</select>
+</sql>
+
 
 <!-- 글 상세조회-->
 <select id="adminBoardDetail" parameterType="java.lang.String" resultMap="getAdminBoard">
@@ -118,6 +145,13 @@ SELECT MOUNUI_SEQ, CATEGORY_TITLE,CONTENT, USER_SEQ, USER_EMAIL, USER_NICKNAME,
 	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
 		WHERE  BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq}
 </select>
+
+
+<!-- 카테고리 타이틀들 가져오기 -->
+<select id="getTitle" resultType="java.lang.String">
+SELECT CATEGORY_TITLE FROM FAQ_CODE fc
+</select>
+
 
 
 

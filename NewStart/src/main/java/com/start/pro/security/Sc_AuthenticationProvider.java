@@ -43,8 +43,9 @@ public class Sc_AuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException(id);
         }
 		
+		user.setUser_pw(null);
 		
-		return new UsernamePasswordAuthenticationToken(id, pw, user.getAuthorities());
+		return new UsernamePasswordAuthenticationToken(user, pw, user.getAuthorities());
 	}
 
 	@Override

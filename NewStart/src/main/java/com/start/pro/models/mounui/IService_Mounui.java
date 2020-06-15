@@ -21,10 +21,14 @@ public interface IService_Mounui {
 	
 	/**
 	 * 유저의 회원번호를 통해 본인이 작성한 문의글들을 가져올 때 사용한다.
-	 * @param user_seq
+	 * 필요한 key는 다음과 같습니다.<br>
+	 * user_seq : 사용자의 seq<br>
+	 * start : 시작 글 번호
+	 * last : 끝 글 번호
+	 * @param map
 	 * @return List<DTO_Mounui>
 	 */
-	public List<DTO_Mounui> userBoard(String seq);
+	public List<DTO_Mounui> userBoard(Map<String, String> map);
 	
 	/**
 	 * 문의글 seq를 통해 글 상세조회할 때 사용한다.
@@ -57,7 +61,7 @@ public interface IService_Mounui {
 	/**
 	 * 관리자가 삭제한 글까지 포함한 모든 글을 가져올 때 사용한다.
 	 * 가져오는 데이터는 다음과 같다. <br>
-	 * MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE,REGDATE, REPLYCHK, FILECHK, DELCHK  
+	 *  MOUNUI_SEQ, USER_SEQ, CATEGORY, TITLE,REGDATE, REPLYCHK, FILECHK, DELCHK<br>
 	 * 필터를 사용할 때는 DTO_Filter를 넣어 사용한다.
 	 * 필터에 대한 값들은 다음과 같다.<br>
 	 * USER_GRADE, REPLYCHK, DELCHK, firstDate, lastDate
@@ -65,6 +69,15 @@ public interface IService_Mounui {
 	 */
 	public List<DTO_Mounui> adminBoard(DTO_Filter dto);
 	 
+	
+	/**
+	 * 관리자가 문의게시판을 전체 조회할 때 사용
+	 * @param DTO_Filter
+	 * @return int
+	 */
+	public int getAdminMounuiCnt(DTO_Filter dto);
+	
+	
 	/**
 	 * 관리자가 글을 상세조회할 때 사용한다.
 	 * 가져오는 데이터는 다음과 같다.<br>
@@ -109,4 +122,19 @@ public interface IService_Mounui {
 	 * @return DTO_Email
 	 */
 	public DTO_Email getReply(String seq);
+	
+	/**
+	 * FAQ의 카테고리를 가져옵니다
+	 * @return List
+	 */
+	public List<String> getTitle();
+	
+	/**
+	 * 사용자의 seq를 통해 본인이 작성한 문의글의 갯수를 가져옵니다.
+	 * @param String seq
+	 * @return int
+	 */
+	public int getUserMounuiBoard(String seq);
+	
+	
 }

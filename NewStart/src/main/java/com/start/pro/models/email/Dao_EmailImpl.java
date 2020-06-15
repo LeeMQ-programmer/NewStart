@@ -10,10 +10,15 @@ import org.springframework.stereotype.Repository;
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_Filter;
 import com.start.pro.dto.DTO_Mounui;
+import com.start.pro.dto.DTO_Paging;
+import com.start.pro.dto.DTO_User;
 
 @Repository
 public class Dao_EmailImpl implements IDao_Email{
 
+	
+	
+	
 	@Autowired
 	private SqlSessionTemplate session;
 	
@@ -82,8 +87,8 @@ public class Dao_EmailImpl implements IDao_Email{
 	}
 
 	@Override
-	public List<DTO_Email> SelAllMail() {
-		return session.selectList(NS+"SelAllMail");
+	public List<DTO_Email> SelAllMail(DTO_Filter dto) {
+		return session.selectList(NS+"SelAllMail",dto);
 	}
 
 	@Override
@@ -111,6 +116,21 @@ public class Dao_EmailImpl implements IDao_Email{
 	@Override
 	public DTO_Mounui selReplyAemail(String seq) {
 		return session.selectOne(NS+"selReplyAemail", seq);
+	}
+
+	@Override
+	public boolean delemailsave(Map<String,String[]> map) {
+		return session.delete(NS+"delemailsave",map) > 0 ? true : false;
+	}
+
+	@Override
+	public int getEmailCount(DTO_Filter dto) {
+		return Integer.parseInt(session.selectOne(NS+"getEmailCount",dto));
+	}
+
+	@Override
+	public DTO_User getinfo(String email) {
+		return session.selectOne(NS+"getinfo", email);
 	}
 
 

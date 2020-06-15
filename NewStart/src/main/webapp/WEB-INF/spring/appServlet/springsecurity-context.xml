@@ -48,7 +48,8 @@
 			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"/>
 		<!-- 4주 -->
 		<security:remember-me key="new_start" token-validity-seconds="2419200"
-		remember-me-parameter="remember_me"/>
+		remember-me-parameter="remember_me" authentication-success-handler-ref="loginSuccessHandler"
+		data-source-ref="dataSource" user-service-ref="memberService"/>
 
 		<security:csrf disabled="true"/>
 	

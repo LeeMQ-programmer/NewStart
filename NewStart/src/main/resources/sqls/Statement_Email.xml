@@ -3,6 +3,7 @@
 <mapper namespace="com.start.pro.email">
 
 
+
 <!-- 인증 이메일 -->
 
 <!--인증 이메일 발송하면서 정보 입력-->
@@ -120,8 +121,16 @@ WHERE CATEGORY_CODE=#{category_code}
   
   
 
-
-	 
+<!-- 메일 기록 삭제 -->
+<delete id="delemailsave" parameterType="java.util.Map">
+DELETE FROM EMAIL_SAVE
+	<where>
+	EMAIL_SEQ IN
+	<foreach collection="seq" item="seq" open="(" close=")" separator=",">
+	   #{seq}
+	</foreach>
+	</where>
+</delete>
   
   
  <!-- 재전송 -->
@@ -140,13 +149,48 @@ WHERE CATEGORY_CODE=#{category_code}
  
  
  <!--전체 발송 이력 조회-->
-<select id="SelAllMail" resultType="EmailDto">
-SELECT EMAIL_SEQ, CATEGORY_CODE, 
+<select id="SelAllMail" parameterType="FilterDto" resultType="EmailDto">
+ SELECT EMAIL_SEQ, CATEGORY_CODE, EMAIL_TITLE, USER_EMAIL, SUCCESSCHK, REGDATE 		
+FROM (SELECT  ROW_NUMBER() OVER(ORDER BY EMAIL_SEQ DESC) AS RNUM ,EMAIL_SEQ, CATEGORY_CODE, 
 	CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE END AS EMAIL_TITLE
 	, USER_EMAIL, SUCCESSCHK, REGDATE 
 	FROM EMAIL_SAVE es
-		ORDER BY EMAIL_SEQ desc
+		<include refid="filter"/>
+		)
+		WHERE  RNUM BETWEEN #{start} AND #{last}
 </select>
+
+<!-- 글 전체 갯수  -->
+<select id="getEmailCount" parameterType="FilterDto" resultType="java.lang.String">
+	SELECT COUNT(*) FROM EMAIL_SAVE es 
+	<if test="_parameter != null">
+	<include refid="filter"/>
+	</if>
+</select>
+
+
+
+<sql id="filter">
+		<where>
+		<if test="filter != null and filter != ''">
+		"FILTER" = ''''||${filter}||'''' 
+		</if>
+		<if test="successchk != null and successchk.size > 0">
+		AND SUCCESSCHK IN 
+		<foreach collection="successchk" item="successchk" open="(" close=")" separator=",">
+				#{successchk}
+			</foreach>
+		</if>
+		<if test="firstDate != null and firstDate != ''">
+		  <![CDATA[AND REGDATE >= #{firstDate}]]>
+		</if>
+		<if test="lastDate != null and lastDate != ''">
+		  <![CDATA[AND REGDATE <= #{lastDate}]]>
+		</if>
+	</where>
+
+</sql>
+
 
 
 <!-- 발송 이력 상세 조회-->
@@ -156,49 +200,10 @@ SELECT EMAIL_SEQ,CATEGORY_CODE, EMAIL_TITLE, EMAIL_CONTENT, FILECHK, USER_EMAIL,
   WHERE EMAIL_SEQ = #{email_seq}
 </select>
 
-<!-- 
-필터에 따른 발송 이력 조회
-SELECT EMAIL_SEQ, CATEGORY_CODE,
-	CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE END AS EMAIL_TITLE,
-	USER_EMAIL, SUCCESSCHK, REGDATE 
-	FROM EMAIL_SAVE es
-		WHERE (REGDATE >= '20200601' AND REGDATE <= '20200605') 
-			OR CATEGORY_CODE = '0'
-			OR (SELECT USER_GRADE FROM "USER" u WHERE u.USER_EMAIL = es.USER_EMAIL) = 'M' 
-			OR (SELECT USER_TYPE FROM "USER" u WHERE u.USER_EMAIL = es.USER_EMAIL) = 'N'
- -->
-
-<select id="SelMailFilter" parameterType="FilterDto" resultType="EmailDto">
-SELECT EMAIL_SEQ, CATEGORY_CODE, 
-CASE WHEN LENGTH(EMAIL_TITLE)>10 THEN SUBSTR(EMAIL_TITLE,1,10) || '....' ELSE EMAIL_TITLE
-END AS EMAIL_TITLE, USER_EMAIL, SUCCESSCHK, REGDATE 
-	FROM EMAIL_SAVE es 
-	<where>
-		<if test="filter != null">
-		"FILTER" = ''''||${filter}||'''' 
-		</if>
-		<if test="successchk != null">
-		AND SUCCESSCHK IN 
-		<foreach collection="successchk" item="successchk" open="(" close=")" separator=",">
-				#{successchk}
-			</foreach>
-		</if>
-		<if test="firstDate != ''">
-		  <![CDATA[AND REGDATE >= #{firstDate}]]>
-		</if>
-		<if test="lastDate != ''">
-		  <![CDATA[AND REGDATE <= #{lastDate}]]>
-		</if>
-	</where>
-</select>
 
 <!-- 수동 이메일 -->
 
-<!-- 
-필터에 따라서 회원 유저 이메일 정보 받아오기
-SELECT USER_EMAIL FROM "USER" u 
- WHERE USER_GRADE = 'M' AND USER_ADCHK = 'Y'
- -->
+<!--필터에 따라서 회원 유저 이메일 정보 받아오기 -->
 <select id="SelUserFiter" parameterType="java.util.Map" resultType="java.lang.String">
 SELECT USER_EMAIL FROM "USER" u 
 	<where>
@@ -208,6 +213,8 @@ SELECT USER_EMAIL FROM "USER" u
 	</where>
 </select>
 
-
+<select id="getinfo" parameterType="java.lang.String" resultType="UserDto">
+SELECT USER_NAME, USER_NICKNAME FROM "USER" u  WHERE USER_EMAIL = #{email}
+</select>
 
 </mapper>

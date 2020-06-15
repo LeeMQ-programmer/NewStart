@@ -1,6 +1,9 @@
 package com.start.pro.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class DTO_Filter {
 
@@ -11,20 +14,32 @@ public class DTO_Filter {
 	private String firstDate;
 	private String lastDate;
 	private List<String> successchk;
+	private String start;
+	private String last;
+	private String[] temp;
 	
+	
+	
+	
+	public String[] getTemp() {
+		return temp;
+	}
+
+	public void setTemp(String[] temp) {
+		for (int i = 0; i < temp.length; i++) {
+			System.out.println(temp[i]);
+		}
+		this.successchk = new ArrayList<String>(Arrays.asList(temp));
+		System.out.println("잘 겹쳤어");
+		this.temp = temp;
+	}
+
 	public DTO_Filter() {}
 
-	public DTO_Filter(String user_grade, String replychk, String delchk, String filter, String firstDate,
-			String lastDate, List<String> successchk) {
-		super();
-		this.user_grade = user_grade;
-		this.replychk = replychk;
-		this.delchk = delchk;
-		this.filter = filter;
-		this.firstDate = firstDate;
-		this.lastDate = lastDate;
-		this.successchk = successchk;
-	}
+
+	
+	
+
 
 	public String getUser_grade() {
 		return user_grade;
@@ -55,6 +70,7 @@ public class DTO_Filter {
 	}
 
 	public void setFilter(String filter) {
+		System.out.println("이건어케들어오는데 야발"+filter);
 		this.filter = filter;
 	}
 
@@ -74,19 +90,39 @@ public class DTO_Filter {
 		this.lastDate = lastDate;
 	}
 
+
+
 	public List<String> getSuccesschk() {
 		return successchk;
 	}
 
-	public void setSuccesschk(List<String> successchk) {
-		this.successchk = successchk;
+	public void setSuccesschk(String[] successchk) {
+		this.successchk = new ArrayList<String>(Arrays.asList(successchk));
+	}
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getLast() {
+		return last;
+	}
+
+	public void setLast(String last) {
+		this.last = last;
 	}
 
 	@Override
 	public String toString() {
 		return "DTO_Filter [user_grade=" + user_grade + ", replychk=" + replychk + ", delchk=" + delchk + ", filter="
-				+ filter + ", firstDate=" + firstDate + ", lastDate=" + lastDate + ", successchk=" + successchk + "]";
+				+ filter + ", firstDate=" + firstDate + ", lastDate=" + lastDate + ", successchk=" + successchk
+				+ ", start=" + start + ", last=" + last + "]";
 	}
+
 	
 	
 	
