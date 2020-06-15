@@ -11,10 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.start.pro.dto.DTO_User;
 import com.start.pro.models.user.IService_User;
@@ -72,8 +70,9 @@ public class Controller_User {
 		String user_seq =req.getParameter("user_seq");
 		String user_nickname = req.getParameter("user_nickname");
 		String user_phone = req.getParameter("user_phone");
-		log.info(user_seq+ "    :      "+user_nickname+"   :    "+user_phone);
-		DTO_User dto = new DTO_User(user_seq,user_nickname, user_phone);
+		String user_adchk = req.getParameter("user_adchk");
+		log.info(user_seq+ "    :      "+user_nickname+"   :    "+user_phone+" : "+user_adchk);
+		DTO_User dto = new DTO_User(user_seq,user_nickname, user_phone,user_adchk);
 		service.updateMyPage(dto);
 		System.out.println("넘어간다!");
 		return "redirect:/reviewMain.do";

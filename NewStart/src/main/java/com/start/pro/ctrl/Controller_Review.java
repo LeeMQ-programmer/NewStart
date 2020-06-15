@@ -39,7 +39,9 @@ public class Controller_Review {
 	private IService_Review service;
 	@Autowired
 	private IService_File fService;
-	private static String attach_path = "C:\\Users\\IT_LMK\\Desktop\\upload"; /* 절대 경로 */
+	
+	String uploadPath = "C:\\fileupload\\";
+
 
 	// 후기 전체 페이지 조회
 	@RequestMapping(value = "/reviewMain.do", method = { RequestMethod.GET, RequestMethod.POST })
@@ -80,28 +82,41 @@ public class Controller_Review {
 
 	// 후기 게시글 작성
 	@RequestMapping(value = "/insertReview.do", method = RequestMethod.POST)
-	public String insertReview(HttpServletRequest req, @RequestParam("filename") MultipartFile file) {
+	public String insertReview(HttpServletRequest req, MultipartFile file) {
 		log.info("@@@@@@@@@@@@@@@@후기 작성 @@@@@@@@@@@@@,{}", new Date());
+		log.info("파일이름 :" + file.getOriginalFilename());
+		log.info("파일크기 : " + file.getSize());
+		log.info("컨텐트 타입 : " + file.getContentType());
 		
 		String user_seq = req.getParameter("user_seq");
 		String re_title = req.getParameter("re_title");
 		String re_content = req.getParameter("re_content");
 		String re_teacher = req.getParameter("re_teacher");
 		int re_star = Integer.parseInt(req.getParameter("re_star"));
+		
+		String filerealname = file.getOriginalFilename();
+		String fileboard = req.getParameter("fileboard");
+		String filename = null;
+		// 랜덤생성+파일이름 저장
+		// 파일명 랜덤생성 메서드호출
+		filename = uploadFile(filerealname, file.getBytes());
+		String fileurl = uploadPath+filename;
+		String filetype = file.getContentType();
 		// 파일 처리하는 모듈 작성
-		String saveFileName = ProfileImg.saveFile(file);
-		File f = new File(attach_path, saveFileName);
-		String fileUrl = String.valueOf(f);
+//		String saveFileName = ProfileImg.saveFile(file);
+//		File f = new File(uploadPath, saveFileName);
+//		String fileUrl = String.valueOf(f);
+		
 
 //		DTO_File fDto = new DTO_File("4000", saveFileName, file, String.valueOf(user_seq), String.valueOf(re_teacher));
 //		fService.insertFile(fDto);
-		DTO_Review dto = new DTO_Review(user_seq, re_title, re_content, re_teacher, re_star, saveFileName);
-
-
+		DTO_Review dto = new DTO_Review(user_seq, re_title, re_content, re_teacher, re_star, fileurl);
 
 		boolean isc = service.insertReview(dto);
 		log.info("글 번호는 : {}",dto.getRe_seq());	 
 		if (isc) {
+			DTO_File fDto = new DTO_File(fileboard, filename, filerealname, fileurl, filetype, user_seq, re_teacher);
+			fService.insertFile(fDto);
 
 		}
 		System.out.println("완료");
@@ -214,4 +229,17 @@ public class Controller_Review {
 		FileCopyUtils.copy(inputStream, resp.getOutputStream());
 
 	}
+	
+	// 파일명 랜덤생성 메서드
+		private String uploadFile(String originalName, byte[] fileData) throws Exception {
+			// uuid 생성(Universal Unique IDentifier, 범용 고유 식별자)
+			UUID uuid = UUID.randomUUID();
+			// 랜덤생성+파일이름 저장
+			String savedName = uuid.toString() + "_" + originalName;
+			File target = new File(uploadPath, savedName);
+			// 임시디렉토리에 저장된 업로드된 파일을 지정된 디렉토리로 복사
+			// FileCopyUtils.copy(바이트배열, 파일객체)
+			FileCopyUtils.copy(fileData, target);
+			return savedName;
+		}
 }

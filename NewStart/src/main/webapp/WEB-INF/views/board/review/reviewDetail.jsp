@@ -23,13 +23,14 @@
 	$(function(){
 		if (input.files && input.files[0]) {
 			var reader = new FileReader(); // FIleApi
+			var url = ${dto.fileox};
 			reader.onload = function(e) {
 				var img = document.getElementById("image");
 				img.src = e.target.result;
 				img.style.width = '100%';
 				img.style.height = 'auto';
 			}
-			reader.readAsDataURL("${dto.fileox}");
+			reader.readAsDataURL(url);
 			$("#image").show();
 		}
 		
@@ -45,7 +46,7 @@
    작성일 : ${dto.re_regdate }<br>
    별점 : ${dto.re_star }<br>
    강사 : ${dto.re_teacher }<br>
-   파일 : ${dto.fileox }
+   파일 : ${dto.fileox }<br>
 
    
    <c:if test="${newstart.user_seq eq dto.user_seq }">

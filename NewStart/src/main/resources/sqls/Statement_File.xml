@@ -7,11 +7,11 @@
 	<insert id="insertFile" parameterType="FileDto">
 		INSERT INTO FILEBOARD
 		(FILE_SEQ, FILEBOARD, BOARD_SEQ,
-		FILEREALNAME, FILEURL,
+		FILEREALNAME, FILEURL,FILESIZE,USER_SEQ
 		)
 		VALUES(FILE_SEQS.NEXTVAL, #{board_seq},(SELECT RE_SEQ FROM REVIEWBOARD r 
 	WHERE USER_SEQ =#{user_seq} AND RE_TEACHER =#{re_teacher}),
-		#{filerealname}, #{fileurl})
+		#{filerealname}, #{fileurl},#{filesize},#{user_seq})
 	</insert>
 	<!-- 파일 조회 -->
 	<select id="searchFile" parameterType="FileDto" resultType="FileDto" >

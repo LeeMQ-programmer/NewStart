@@ -1,5 +1,7 @@
 package com.start.pro.models.file;
 
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.start.pro.dto.DTO_File;
 
 public interface IService_File {

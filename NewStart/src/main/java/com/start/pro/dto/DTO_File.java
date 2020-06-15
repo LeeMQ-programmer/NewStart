@@ -10,12 +10,17 @@ public class DTO_File {
 	private String fileurl;
 	private String filedate;
 	private String filetype;
-	private String user_seq;
 	private String file_del;
+
+	private String user_seq;
 	private String re_teacher;
 
+	public DTO_File() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public DTO_File(String file_seq, String fileboard, String board_seq, String filename, String filerealname,
-			String fileurl, String filedate, String filetype, String user_seq, String file_del) {
+			String fileurl, String filedate, String filetype, String user_seq, String file_del, String re_teacher) {
 		super();
 		this.file_seq = file_seq;
 		this.fileboard = fileboard;
@@ -27,42 +32,21 @@ public class DTO_File {
 		this.filetype = filetype;
 		this.user_seq = user_seq;
 		this.file_del = file_del;
+		this.re_teacher = re_teacher;
 	}
 	
+	
 
-	public DTO_File(String fileboard, String board_seq) {
+	public DTO_File(String fileboard, String filename, String filerealname, String fileurl, String filetype,
+			String user_seq, String re_teacher) {
 		super();
 		this.fileboard = fileboard;
-		this.board_seq = board_seq;
-	}
-
-
-	public DTO_File(String fileboard, String board_seq, String filename, String filerealname, String fileurl,
-			String filetype, String user_seq) {
-		super();
-		this.fileboard = fileboard;
-		this.board_seq = board_seq;
 		this.filename = filename;
 		this.filerealname = filerealname;
 		this.fileurl = fileurl;
 		this.filetype = filetype;
 		this.user_seq = user_seq;
-	}
-
-	
-
-	public DTO_File(String board_seq, String filerealname, String fileurl, String user_seq, String re_teacher) {
-		super();
-		this.board_seq = board_seq;
-		this.filerealname = filerealname;
-		this.fileurl = fileurl;
-		this.user_seq = user_seq;
 		this.re_teacher = re_teacher;
-	}
-
-
-	public DTO_File() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getFile_seq() {
@@ -121,11 +105,11 @@ public class DTO_File {
 		this.filedate = filedate;
 	}
 
-	public String getFiletype() {
+	public String getfiletype() {
 		return filetype;
 	}
 
-	public void setFiletype(String filetype) {
+	public void setfiletype(String filetype) {
 		this.filetype = filetype;
 	}
 
@@ -144,23 +128,21 @@ public class DTO_File {
 	public void setFile_del(String file_del) {
 		this.file_del = file_del;
 	}
-	
 
-	protected String getRe_teacher() {
+	public String getRe_teacher() {
 		return re_teacher;
 	}
 
-
-	protected void setRe_teacher(String re_teacher) {
+	public void setRe_teacher(String re_teacher) {
 		this.re_teacher = re_teacher;
 	}
-
 
 	@Override
 	public String toString() {
 		return "DTO_File [file_seq=" + file_seq + ", fileboard=" + fileboard + ", board_seq=" + board_seq
 				+ ", filename=" + filename + ", filerealname=" + filerealname + ", fileurl=" + fileurl + ", filedate="
-				+ filedate + ", filetype=" + filetype + ", user_seq=" + user_seq + ", file_del=" + file_del + "]";
+				+ filedate + ", filetype=" + filetype + ", user_seq=" + user_seq + ", file_del=" + file_del
+				+ ", re_teacher=" + re_teacher + "]";
 	}
 
 }
