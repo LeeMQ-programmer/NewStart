@@ -106,7 +106,7 @@ function searchFilter(){
 				html+=	"광고성";
 				}
 				html+=	"</td>";
-				html+=	"<td><a href=\"./SelMailDetail.do?seq="+data[i].email_seq+"\">"+data[i].email_title+"</a></td>";
+				html+=	"<td><a href=\"./ASelMailDetail.do?seq="+data[i].email_seq+"\">"+data[i].email_title+"</a></td>";
 				html+=	"<td>";
 				switch(data[i].successchk){
 				case 'S' : html+="대기 중"; break;
@@ -188,7 +188,7 @@ function multiDelChk(){
 
 
 	<div class="container">
-		<form action="./mailSaveDel.do" method="post">
+		<form action="./AmailSaveDel.do" method="post">
 		<h2>Basic Table</h2>
 		<p>The .table class adds basic styling (light padding and only
 			horizontal dividers) to a table:</p>
@@ -211,7 +211,7 @@ function multiDelChk(){
 						<td><c:choose>
 								<c:when test="${dto.category_code eq '1'}">광고성</c:when>
 							</c:choose></td>
-						<td><a href="./SelMailDetail.do?seq=${dto.email_seq}">${dto.email_title}</a></td>
+						<td><a href="./ASelMailDetail.do?seq=${dto.email_seq}">${dto.email_title}</a></td>
 						<td><c:choose>
 								<c:when test="${dto.successchk eq 'S'}">대기 중</c:when>
 								<c:when test="${dto.successchk eq 'F'}">실패</c:when>

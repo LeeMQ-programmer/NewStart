@@ -8,30 +8,14 @@ function modify(){
 	
 	
 	btn.innerHTML = '취소';
-	btn.setAttribute("onClick", "cancel()");
+	btn.setAttribute("onClick", "location.reload(true);");
 	
 }
 
 
-function cancel(){
-	if(confirm('작성하던 문서가 저장되지 않습니다. 그래도 취소하시겠습니까?')){
-		location.reload(true);
-	}
-}
-
-function board(){
-	var btn = document.getElementsByName('modify')[0].innerHTML;
-	if(btn == '취소'){
-		if(confirm('작성하던 문서가 저장되지 않습니다. 그래도 취소하시겠습니까?')){
-			location.href='./AutomailB.do';
-		}
-	}else{
-			location.href='./AutomailB.do';
-	}
-}
-
 
 function gosubmit(){
+	
 	if(document.getElementById('title').value.trim() == ''){
 		alert('제목을 입력해주세요');
 	}else if(document.getElementById('content').value.trim() == ''){
@@ -148,7 +132,7 @@ var pageAjax = function(){
 					html+=	"광고성";
 					}
 					html+=	"</td>";
-					html+=	"<td><a href=\"./SelMailDetail.do?seq="+v.email_seq+"\">"+v.email_title+"</a></td>";
+					html+=	"<td><a href=\"./ASelMailDetail.do?seq="+v.email_seq+"\">"+v.email_title+"</a></td>";
 					html+=	"<td>";
 					switch(v.successchk){
 					case 'S' : html+="대기 중"; break;
@@ -353,13 +337,15 @@ function chkCnt(user_grade){
 }
 
 function gosubmit_email(){
+	
 	var chkbool = document.getElementsByName('filter');
 	var email_title = document.getElementsByName('email_title')[0];
-	var email_content = document.getElementsByName('email_content')[0];
-	
+	//var email_content = document.getElementsByName('email_content')[0];
+	var email_content = CKEDITOR.instances['pwd'].getData();
+	alert(email_content);
 	var cnt = 0;
 
-	if(email_title.value.trim() == '' || email_content.value.trim() == ''){
+	if(email_title.value.trim() == '' || email_content.trim() == ''){
 		alert('제목 및 내용을 작성해주세요');
 		return;
 	}

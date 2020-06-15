@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_FAQ;
@@ -31,8 +32,7 @@ public class Controller_Mounui {
 	private IService_Mounui service;
 	
 	
-	
-	@RequestMapping(value = "/mounuiboard.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/Umounuiboard.do", method = RequestMethod.GET)
 	public String mounuiboard(Model model){
 
 		List<DTO_FAQ> Fdto = service.getCategory();
@@ -42,8 +42,8 @@ public class Controller_Mounui {
 	}
 	
 	//insertBoard
-	@RequestMapping(value = "/insertBoard.do", method = RequestMethod.POST)
-	public void insertBoard(DTO_Mounui dto, HttpSession session,Model model,
+	@RequestMapping(value = "/UinsertBoard.do", method = RequestMethod.POST)
+	public String insertBoard(DTO_Mounui dto, HttpSession session,Model model,
 			HttpServletResponse resp) throws IOException{
 		
 		
@@ -54,20 +54,17 @@ public class Controller_Mounui {
 		System.out.println(dto.toString());
 //		System.out.println(user.toString());
 		service.insertBoard(dto);
-
-		
+		MultipartFile test = null;
+		model.addAttribute("filename", test);
 //		String userSeq = ((DTO_User) session.getAttribute("newstart")).getUser_seq();
 //		List<DTO_Mounui> dtos = service.userBoard(userSeq);
 		
 //		model.addAttribute("dtos", dtos);
-		resp.setCharacterEncoding("utf-8");
-	    resp.setContentType("text/html; charset=UTF-8");
-		
-	    PrintWriter	out = resp.getWriter();
-		out.println("<script>alert('문의글이 등록되었습니다.');  location.href='./UserMBoard.do'; </script>");
-		out.flush();
+	   // PrintWriter	out = resp.getWriter();
+		//out.println("<script>alert('문의글이 등록되었습니다.');  location.href='./UserMBoard.do'; </script>");
+		//out.flush();
 
-//		return "board/mounui/UserMBoard";
+		return "redirect:/UserMBoard.do";
 	}
 
 	//유저 문이 게시판
@@ -179,7 +176,7 @@ public class Controller_Mounui {
 	
 	
 	//문의 게시판 답장하기
-	@RequestMapping(value = "/MBoardReply.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/AMBoardReply.do", method = RequestMethod.GET)
 	public String MBoardReply(String seq, String email, Model model){
 		
 		model.addAttribute("seq", seq);

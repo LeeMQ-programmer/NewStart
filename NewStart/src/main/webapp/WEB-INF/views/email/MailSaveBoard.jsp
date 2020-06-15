@@ -20,7 +20,7 @@
 
 
 
-	<form action="./mailSaveDel.do" method="post" id="frm">
+	<form action="./AmailSaveDel.do" method="post" id="frm">
 	유저 타입 :
 	<div id="searchfilter">
 		회원 등급 : <input type="checkbox" name="user_grade" value="'A'" onclick="checkAll(this.checked, this.name)"> 전체
@@ -92,5 +92,6 @@
 		list.options[listNum/5-1].selected = "selected";
 	</script>
 	
+
 </body>
 </html>

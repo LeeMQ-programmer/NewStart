@@ -43,6 +43,8 @@ public class RestController_Mounui {
 	@RequestMapping(value = "/MReplySend.do", method = RequestMethod.POST)
 	public boolean MReplySend(DTO_Mounui dto, String user_email) throws IOException{
 
+		System.out.println("ck에디터 넘어와??"+dto.toString());
+		
 		if(emailSender.sendReplyMail(user_email, dto.getTitle(), dto.getContent())) {
 			dto.setDelchk("Y");
 			mservice.SendReply(dto);

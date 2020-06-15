@@ -262,16 +262,18 @@ function sendreply(){
 	var mounui_seq = document.getElementsByName('mounui_seq')[0].value;
 	var user_email = document.getElementsByName('user_email')[0].value;
 	var title = document.getElementsByName('title')[0].value;
-	var content = document.getElementsByName('content')[0].value;
+	//var content = document.getElementById('comment').value;
 	var filechk = document.getElementsByName('filechk')[0].value;
+	alert($('#comment').val());
 	//opener.document.location.href='';
 	//f.target = opener.name;
 	//f.submit();
-	$.ajax({
+//	data : {"mounui_seq":mounui_seq, "user_email" : user_email,"title":title,"content":content,"filechk":filechk},
+/*	$.ajax({
 		url : "./MReplySend.do",
 		type : "post",
 		traditional : true,
-		data : {"mounui_seq":mounui_seq, "user_email" : user_email,"title":title,"content":content,"filechk":filechk},
+		data :$("#form").serialize(),
 		dataType : "text",
 		success: function(data){
 			if(data == 'true'){
@@ -287,6 +289,6 @@ function sendreply(){
 			}
 	});
 		
-	
+	*/
 }
 

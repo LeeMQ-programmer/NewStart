@@ -40,7 +40,7 @@ public class Controller_Email {
 	private Util_JSON jsonUtil;
 
 	// 메일 보내기
-	@RequestMapping(value = "/testmail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/Atestmail.do", method = RequestMethod.GET)
 	public String test() {
 
 //		emailSend.ddd();
@@ -139,14 +139,14 @@ public class Controller_Email {
 	}
 
 	// 대량 메일 보내러 가기
-	@RequestMapping(value = "/manymailForm.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/AmanymailForm.do", method = RequestMethod.GET)
 	public String manymailForm() {
 
 		return "email/ManyMail";
 	}
 
 	// 대량 메일 정보 받기
-	@RequestMapping(value = "/manymailget.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/Amanymailget.do", method = RequestMethod.POST)
 	public String manymailget(DTO_Email dto) {
 
 		System.out.println(dto.toString());
@@ -155,7 +155,7 @@ public class Controller_Email {
 	}
 
 	// ManyMailSend.do
-	@RequestMapping(value = "/ManyMailSend.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/AManyMailSend.do", method = RequestMethod.POST)
 	public String ManyMailSend(DTO_Email dto, HttpServletResponse resp) {
 
 		System.out.println("받아옴??" + dto.toString());
@@ -163,15 +163,19 @@ public class Controller_Email {
 		//dto.setCategory_code("1");
 		//service.SendEmail(dto);
 		System.out.println(dto.toString());
+		
+		dto.setSuccesschk("S");
+		dto.setCategory_code("1");
+		service.SendEmail(dto);
 		emailSend.sendManyMail(dto);
 
-		
-		return "redirect:/checkMailSave.do";
+
+		return "redirect:/AcheckMailSave.do";
 	}
 
 	// 관리자페이지 메일기록 확인
-	@RequestMapping(value = "/checkMailSave.do", method = RequestMethod.GET)
-	public String checkMailSave(Model model, HttpSession session) {
+	@RequestMapping(value = "/AcheckMailSave.do", method = RequestMethod.GET)
+	public String AcheckMailSave(Model model, HttpSession session) {
 
 //		List<DTO_Email> dtos = service.SelAllMail();
 		List<DTO_Email> dtos = null;
@@ -200,7 +204,7 @@ public class Controller_Email {
 
 	// 이메일 기록 상세 보기
 	// SelMailDetail.do
-	@RequestMapping(value = "/SelMailDetail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ASelMailDetail.do", method = RequestMethod.GET)
 	public String SelMailDetail(Model model, String seq) {
 
 		DTO_Email dto = service.SelMailDetail(seq);
@@ -222,7 +226,7 @@ public class Controller_Email {
 	
 	
 	///mailSaveDel.do
-	@RequestMapping(value = "/mailSaveDel.do", method = {RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value = "/AmailSaveDel.do", method = {RequestMethod.POST,RequestMethod.GET})
 	public void mailSaveDel(String[] seq, HttpServletResponse resp) throws IOException {
 
 		Map<String,String[]> map = new HashMap<String, String[]>();
@@ -236,7 +240,7 @@ public class Controller_Email {
 		
 		
 	    PrintWriter	out = resp.getWriter();
-		out.println("<script>alert('삭제 되었습니다.');  location.href='./checkMailSave.do'; </script>");
+		out.println("<script>alert('삭제 되었습니다.');  location.href='./AcheckMailSave.do'; </script>");
 		out.flush();
 		
 		
@@ -244,7 +248,7 @@ public class Controller_Email {
 
 	// resend.do
 	// 재전송
-	@RequestMapping(value = "/resend.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/Aresend.do", method = RequestMethod.GET)
 	public String resend(Model model, String seq) {
 
 		DTO_Email dto = service.mailresend(seq);
@@ -256,7 +260,7 @@ public class Controller_Email {
 
 		emailSend.resend(dto);
 
-		return "redirect:/checkMailSave.do";
+		return "redirect:/AcheckMailSave.do";
 	}
 
 

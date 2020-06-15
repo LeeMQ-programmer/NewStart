@@ -17,5 +17,12 @@ public class Controller_Main {
 		
 		return "index";
 	}
+
+	@RequestMapping(value = "/access_denied_page.do", method = RequestMethod.GET)
+	public String denied() {
+		logger.info("denied.do");
+		System.out.println("안들어와??");
+		return "access_denied";
+	}
 	
 }

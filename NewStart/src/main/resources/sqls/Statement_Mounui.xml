@@ -30,7 +30,7 @@
 <insert id="insertBoard" parameterType="MDto">
 INSERT INTO MOUNUI
 (BOARD_CODE, MOUNUI_SEQ, USER_SEQ, CATEGORY_SEQ, TITLE, CONTENT, REGDATE, REPLYCHK, FILECHK, DELCHK)
-VALUES('0', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category_seq}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
+VALUES('3000', MOUNUI_SEQS.NEXTVAL , #{user_seq}, #{category_seq}, #{title}, #{content}, SYSDATE, 'N', #{filechk}, 'N')
 </insert>
 
 
@@ -60,7 +60,7 @@ FROM
  <select id="userBoardDetail" parameterType="java.lang.String" resultType="MDto">
   SELECT MOUNUI_SEQ, f.CATEGORY_TITLE ,TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-DD') AS REGDATE , REPLYCHK, FILECHK 
  	FROM MOUNUI m JOIN FAQ_CODE f ON m.CATEGORY_SEQ = f.CATEGORY_SEQ 
- 		AND BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq} AND DELCHK = 'N'
+ 		AND BOARD_CODE = '3000' AND MOUNUI_SEQ = #{mounui_seq} AND DELCHK = 'N'
  </select>
   
  <!--글 seq로 문의글 정보 수정하기-->
@@ -82,6 +82,10 @@ UPDATE MOUNUI
 	</foreach>
  </where>
 </update>
+
+
+
+
 
 <!-- 전체 글 갯수 세기  -->
 <select id="getAdminMounuiCnt" parameterType="FilterDto" resultType="java.lang.String">
@@ -143,7 +147,7 @@ SELECT MOUNUI_SEQ, CATEGORY_TITLE,CONTENT, USER_SEQ, USER_EMAIL, USER_NICKNAME,
 	TITLE,
 	REGDATE, REPLYCHK, FILECHK ,DELCHK  
 	FROM MOUNUI m NATURAL JOIN "USER" u NATURAL JOIN FAQ_CODE
-		WHERE  BOARD_CODE = '0' AND MOUNUI_SEQ = #{mounui_seq}
+		WHERE  BOARD_CODE = '3000' AND MOUNUI_SEQ = #{mounui_seq}
 </select>
 
 

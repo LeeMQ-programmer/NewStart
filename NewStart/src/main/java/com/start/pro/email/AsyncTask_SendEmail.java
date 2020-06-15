@@ -129,9 +129,6 @@ public class AsyncTask_SendEmail {
 	public void sendManyMail(DTO_Email mailList) {
 
 		System.out.println("들어왓숑!");
-		mailList.setSuccesschk("S");
-		mailList.setCategory_code("1");
-		service.SendEmail(mailList);
 		System.out.println("이런게 왔당"+mailList.toString());
 
 		// 기존 

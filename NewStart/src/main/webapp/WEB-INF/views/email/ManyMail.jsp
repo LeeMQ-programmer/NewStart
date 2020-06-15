@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
 <script type="text/javascript" src="./js/email.js"></script>
 <body>
 <%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
@@ -15,14 +16,14 @@
 <p>도움말 : 사용자의 이름은  \${name}, 닉네임은 \${nickname}로 표기하시면 자동으로 설정됩니다.</p>
 </div>
 <div class="container">
-  <form action="./ManyMailSend.do" method="post">
+  <form action="./AManyMailSend.do" method="post">
     <div class="form-group">
       <label for="usr">제목:</label>
       <input type="text" class="form-control" id="usr" name="email_title" >
     </div>
     <div class="form-group">
       <label for="pwd">내용:</label>
-      <textarea class="form-control" id="pwd" name="email_content" rows="30" cols="50"></textarea>
+      <textarea class="form-control" id="pwd" name="email_content" rows="30" cols="50" ></textarea>
     </div>
       수신자 필터 :<br>
       회원 등급 :  <input type="checkbox" name="Allfilter" value="'A'" onclick="checkAll(this.checked)"> 전체
@@ -36,7 +37,14 @@
   </form>
 </div>
 
-
+<script type="text/javascript">
+		$(function(){
+			CKEDITOR.replace('pwd',{
+				filebrowserUploadUrl: './adm/fileupload.do'
+			});
+		});
+		
+</script>
 
 </body>
 </html>

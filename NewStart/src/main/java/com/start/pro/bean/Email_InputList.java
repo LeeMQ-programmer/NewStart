@@ -34,7 +34,7 @@ public class Email_InputList {
 			sb.append("광고성");
 		}
 		sb.append("</td>");
-		sb.append("<td><a href='./SelMailDetail.do?seq="+dto.getEmail_seq()+"'>"+dto.getEmail_title()+"</a></td>");
+		sb.append("<td><a href='./ASelMailDetail.do?seq="+dto.getEmail_seq()+"'>"+dto.getEmail_title()+"</a></td>");
 		sb.append("<td>");
 		switch (dto.getSuccesschk()) {
 		case "S":

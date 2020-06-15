@@ -21,17 +21,26 @@
 	
 		<security:access-denied-handler error-page="/access_denied_page.do"/>
 		
+
+		<security:intercept-url  pattern="/*.js"
+			access="none" />
+		<security:intercept-url pattern="/*.css"
+			access="none" />
+		<security:intercept-url pattern="/*.jpg"
+			access="none" />
+
+		<security:intercept-url pattern="/U**"
+			access="hasAnyAuthority('ROLE_M','ROLE_T','ROLE_A')" />
+
+		<security:intercept-url pattern="/M**"
+			access="hasRole('ROLE_M')" />
+		<security:intercept-url pattern="/T**"
+			access="hasRole('ROLE_T')" />
+		<security:intercept-url pattern="/A**"
+			access="hasRole('ROLE_A')" />
 		
-
-		<security:intercept-url pattern="/resources/**"
-			access="permitAll" />
-
-		<security:intercept-url pattern="/admin/**"
-			access="hasRole('User')" />
-
 		<security:intercept-url pattern="/**"
 			access="permitAll" />
-		
 
 		<security:form-login
 			login-processing-url="/logingo.do"

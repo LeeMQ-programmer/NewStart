@@ -40,7 +40,7 @@ function del(){
     </div>
     <div class="form-group">
       <label for="comment">내용:</label>
-      <textarea class="form-control" rows="5" id="comment" name="content" readonly="readonly">${dto.content}</textarea>
+      <textarea class="form-control" rows="5" id="comment" name="content" readonly="readonly" style="resize: none">${dto.content}</textarea>
     </div>
     <div class="form-group">
       <label for="usr">등록일 :</label>
