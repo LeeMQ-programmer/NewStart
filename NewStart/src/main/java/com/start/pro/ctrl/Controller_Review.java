@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,7 +83,7 @@ public class Controller_Review {
 
 	// 후기 게시글 작성
 	@RequestMapping(value = "/insertReview.do", method = RequestMethod.POST)
-	public String insertReview(HttpServletRequest req, MultipartFile file) {
+	public String insertReview(HttpServletRequest req, MultipartFile file) throws IOException, Exception {
 		log.info("@@@@@@@@@@@@@@@@후기 작성 @@@@@@@@@@@@@,{}", new Date());
 		log.info("파일이름 :" + file.getOriginalFilename());
 		log.info("파일크기 : " + file.getSize());
