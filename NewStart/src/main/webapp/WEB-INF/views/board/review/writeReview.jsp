@@ -37,7 +37,7 @@ function pageList(){
 		${teacher }<br>
 		re_title : <input type="text" name="re_title"><br>
 		re_content : <textarea rows="5" cols="50" name="re_content"></textarea><br>
-		<input multiple="multiple" type="file" name="filename" id="filename" >
+		<input multiple="multiple" type="file" name="file" id="file" >
 		<br>
 		
 		<input type="submit" value="새글 쓰기">

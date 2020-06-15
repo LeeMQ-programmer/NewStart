@@ -19,18 +19,5 @@ public class Controller_File {
 	@Autowired
 	private IService_File service;
 	
-	@RequestMapping(value = "/moveInsert.do", method = RequestMethod.GET)
-	public String moveInsert() {
 	
-		return "board/file/writeform";
-	}
-	
-	// 게시판 글 작성
-	@RequestMapping(value = "/upload.do", method = RequestMethod.POST)
-	public String write(DTO_File dto_file, MultipartHttpServletRequest mpRequest) throws Exception{
-		log.info("write");
-		service.write(dto_file, mpRequest);
-		
-		return "redirect:/board/list";
-	}
 }
