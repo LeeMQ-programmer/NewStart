@@ -95,7 +95,7 @@ public class Service_UserImpl implements IService_User{
 	@Override
 	public DTO_User searchTReqDetail(String user_seq) {
 		log.info("SERVICE@@@@강사 요청한 유저 상세 보기,{}",user_seq);
-		return dao.searchDetail(user_seq);
+		return dao.searchTReqetail(user_seq);
 	}
 
 	@Override

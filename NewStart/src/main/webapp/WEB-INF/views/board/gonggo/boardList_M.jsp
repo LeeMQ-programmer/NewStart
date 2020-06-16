@@ -13,7 +13,6 @@
 <body>
 	<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 
-
 	<div id="container">
 		<div id="select">
 			<span> <select class="btn btn-primary" id="list" name="list"
@@ -42,10 +41,14 @@
 						<th>작성일</th>
 						<th>파일유무</th>
 					</tr>
-					<jsp:useBean id="format" class="com.start.pro.models.gonggo.inputMList"
+					<jsp:useBean id="format" class="com.start.pro.models.gonggo.inputListM"
 						scope="page" />
+					
+					<jsp:setProperty property="pageMaker" name="format" value="${pageMaker}" />
+					<jsp:setProperty property="flists" name="format" value="${flists}" />
 					<jsp:setProperty property="lists" name="format" value="${lists}" />
 					<jsp:setProperty property="users" name="format" value="${users}" />
+					<jsp:setProperty property="listTotal" name="format" value="${listTotal}" />
 					<jsp:getProperty property="listForm" name="format" />
 
 					</tbody>
@@ -61,6 +64,29 @@
 	<c:if test="${user eq 'M'}">
 		<input class='btn btn-primary btn-center' type='button' id="T" value='글 작성' onclick='GonggoCreate()'>
 	</c:if>
+	
+ <div>
+      <ul class="pagination">
+           <c:if test="${pageMaker.prev}">
+             <li>
+                <a href="m_main.do${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a>
+             </li>
+          </c:if> 
+      
+          <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+             <li>
+                <a href="m_main.do${pageMaker.makeQuery(idx)}">${idx}</a>
+             </li>
+          </c:forEach>
+      
+          <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+             <li>
+                <a href="m_main.do${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a>
+             </li>
+          </c:if> 
+      </ul>
+   </div> 
+	
 	
 <script type="text/javascript">
 // 크롬 뚫어주는 친구

@@ -3,6 +3,7 @@ package com.start.pro.models.gonggo;
 import java.util.List;
 
 import com.start.pro.dto.DTO_Bidding;
+import com.start.pro.dto.DTO_Criteria;
 import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
@@ -45,9 +46,13 @@ public interface IDao_Gonggo {
 	public DTO_File gonggo_upload_file_view(String seq);
 	
 	
+	public List<DTO_Gonggo> BoardListRowM(DTO_Criteria cri);
+	public List<DTO_Gonggo> BoardListRowT(DTO_Criteria cri);
+	public List<DTO_Gonggo> BoardListRowA(DTO_Criteria cri);
 	
-	
-	
+	 public int BoardListTotalA();
+	 public int BoardListTotalM();
+	 public int BoardListTotalT();
 	
 	
 	

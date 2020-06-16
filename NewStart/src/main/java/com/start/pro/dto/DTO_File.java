@@ -51,6 +51,17 @@ public class DTO_File {
    
 
 
+<<<<<<< HEAD
+	public DTO_File(String fileboard, String board_seq, String filename, String filerealname, String fileurl, String filetype) {
+		super();
+		this.fileboard = fileboard;
+		this.board_seq = board_seq;
+		this.filename = filename;
+		this.filerealname = filerealname;
+		this.fileurl = fileurl;
+		this.filetype =  filetype;
+	}
+=======
    public DTO_File(String fileboard, String board_seq, String filename, String filerealname, String fileurl, String filetype) {
       super();
       this.fileboard = fileboard;
@@ -60,6 +71,7 @@ public class DTO_File {
       this.fileurl = fileurl;
       this.filetype =  filetype;
    }
+>>>>>>> branch 'workspace' of https://github.com/LeeMQ-programmer/NewStart.git
 
 
    public DTO_File() {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
-
 	<typeAliases>
 		<typeAlias type="com.start.pro.dto.DTO_User" alias="UserDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_Gonggi" alias="GongGiDto"/>
@@ -18,7 +17,6 @@
 		<typeAlias type="com.start.pro.dto.DTO_Review" alias="ReDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_SMS" alias="SMSDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_Declaration" alias="DecDto"/>
-		
 		<typeAlias type="com.start.pro.dto.DTO_Email" alias="EmailDto"/>		
 		<typeAlias type="com.start.pro.security.Sc_User" alias="UserDetailsDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_Filter" alias="FilterDto"/>
@@ -26,9 +24,8 @@
 		<typeAlias type="com.start.pro.dto.DTO_FAQ" alias="FAQDto"/>
 		<typeAlias type="com.start.pro.dto.DTO_ChatRoom" alias="ChatRoomDto" />
 		<typeAlias type="com.start.pro.dto.DTO_ChatList" alias="ChatListDto" />
+		<typeAlias type="com.start.pro.dto.DTO_Push" alias="PushDto" />
 	</typeAliases>
-
-
 
 	<mappers>
 		<mapper resource="/sqls/Statement_Login.xml"/>
@@ -46,6 +43,7 @@
 		<mapper resource="/sqls/Statement_Email.xml"/>
 		<mapper resource="/sqls/Statement_Mounui.xml"/>
 		<mapper resource="/sqls/Statement_Chat.xml" />
+		<mapper resource="/sqls/Statement_Push.xml" />
 	</mappers>
 
 </configuration>

@@ -2,24 +2,37 @@ package com.start.pro.models.gonggo;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
 
+
+import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
+import com.start.pro.dto.DTO_PageMaker;
 import com.start.pro.dto.DTO_User;
 
-@Controller
-public class inputMList {
-
+public class inputListM {
+	
 	private List<DTO_Gonggo> lists;
 	private DTO_User users;
+	private DTO_PageMaker pageMaker;
+	private int listTotal;
+	private List<DTO_File> flists;
 	
 	
+	public void setFlists(List<DTO_File> flists) {
+		this.flists = flists;
+	}
 	public void setLists(List<DTO_Gonggo> lists) {
 		this.lists = lists;
 	}
 
 	public void setUsers(DTO_User users) {
 		this.users = users;
+	}
+	public void setPageMaker(DTO_PageMaker pageMaker) {
+		this.pageMaker = pageMaker;
+	}
+	public void setListTotal(int listTotal) {
+		this.listTotal = listTotal;
 	}
 
 	// 날짜
@@ -30,11 +43,27 @@ public class inputMList {
 	
 	// TODO
 	// 이미지 미리보기 구현 파트로 파일 업로드 구현이 완료되면 사용자가 선택한 사진이 여기에 자동으로 어펜드되게 만들어주면 되겠다.
-	private String titleFormat() {
+	private String titleFormat(String go_seq) {
 		StringBuffer buf = new StringBuffer();
-		buf.append("<img src='./img/reply.jpg'/>");
+		for (int i = 0; i < flists.size(); i++) {
+			DTO_File fileDto = flists.get(i);
+			try {
+				if(fileDto.getFileboard().equalsIgnoreCase("2000")) {
+					if(fileDto.getBoard_seq().equalsIgnoreCase(go_seq)) {
+						System.out.println("값은 들어와" + fileDto.getFileboard() + fileDto.getBoard_seq() + fileDto.getFilename() + fileDto.getFiletype());
+						System.out.println("근데 통과도 하네?? ");
+						String url = "./img/" + fileDto.getFilename();
+						System.out.println("fUrl은? : " + url);
+						buf.append("<img src=\'" + url + "\' style='width: 100px; height:100px'>");
+					}
+				}
+			} catch (Exception e) {
+			}
+		}
+		
 		return buf.toString();
 	}
+	
 
 	// 출력 리스트 폼
 	private String listForm(DTO_Gonggo dto) {
@@ -74,7 +103,7 @@ public class inputMList {
 				buf.append("<td>");
 				buf.append("<div class='panel-heading'>");
 				buf.append("<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + dto.getGonggo_seq()
-						+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat() + dto.getGonggo_title()
+						+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat(dto.getGonggo_seq()) + dto.getGonggo_title()
 						+ "</a>	");
 				buf.append("</div>");
 				buf.append("</td>");
@@ -125,10 +154,12 @@ public class inputMList {
 	public String getListForm() {
 		System.out.println("getListForm으로 들어오긴 합니다.");
 		StringBuffer buf = new StringBuffer();
+		System.out.println("listTotal값은???" + listTotal);
 		for (int i = 0; i < lists.size(); i++) {
 			System.out.println("나가는 lists의 값은 뭔가요?" + lists);
 			buf.append(listForm(lists.get(i)));
 		}
 		return buf.toString();
 	}
+
 }
