@@ -6,6 +6,8 @@ import java.util.Map;
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_Filter;
 import com.start.pro.dto.DTO_Mounui;
+import com.start.pro.dto.DTO_Paging;
+import com.start.pro.dto.DTO_User;
 
 public interface IDao_Email {
 
@@ -185,7 +187,7 @@ public interface IDao_Email {
 	 * REGDATE : 발송일
 	 * @return List<DTO_Email>
 	 */
-	public List<DTO_Email> SelAllMail();
+	public List<DTO_Email> SelAllMail(DTO_Filter dto);
 	
 	
 	 /**
@@ -252,5 +254,24 @@ public interface IDao_Email {
 	 */
 	public DTO_Mounui selReplyAemail(String seq);
 	
+	/**
+	 * 이메일 기록을 다중 삭제할 때 사용합니다
+	 * @param map : seq
+	 * @return boolean
+	 */
+	public boolean delemailsave(Map<String,String[]> list);
 	
+	/**
+	 * 이메일 기록 전체 글 갯수를 가져온다.
+	 * @return int
+	 */
+	public int getEmailCount(DTO_Filter dto);
+	
+	/**
+	 * 이메일 내용 바꿀때 사용한다.
+	 * ${name}, ${nickname}
+	 * @param email
+	 * @return DTO_User
+	 */
+	public DTO_User getinfo(String email);
 }

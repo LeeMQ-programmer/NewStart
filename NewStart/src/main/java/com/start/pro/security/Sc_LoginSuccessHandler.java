@@ -57,15 +57,17 @@ public class Sc_LoginSuccessHandler implements AuthenticationSuccessHandler{
 	public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp,
 			Authentication authentication) throws IOException, ServletException {
 		System.out.println("로긍니성공?");
+		System.out.println(((Sc_User)authentication.getPrincipal()).getUser_email());
 		System.out.println(defaultUrl);
 		//입력 아이디
-		String id = req.getParameter("username");
+		String id = ((Sc_User)authentication.getPrincipal()).getUser_email();
 		System.out.println(id);
 
 //		String id = (String)authentication.getPrincipal();
 //		System.out.println(seq);
 		DTO_User userDto = service.getUser(id);
 		
+		System.out.println("멀받아왔어??"+userDto.toString());
 		// 에러 지우기
 		clearErrorSession(req, userDto);
 		// 로그인성공 업데이트
@@ -100,7 +102,8 @@ public class Sc_LoginSuccessHandler implements AuthenticationSuccessHandler{
 	
 	@SuppressWarnings("unused")
 	private void clearErrorSession(HttpServletRequest req, DTO_User userDto) {
-		HttpSession session = req.getSession(false);
+		System.out.println("_이게없는거지?"+req.toString());
+		HttpSession session = req.getSession();
 		//유저 세션 담기
 		session.setAttribute("newstart", userDto);
 		

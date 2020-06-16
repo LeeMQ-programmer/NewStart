@@ -43,5 +43,11 @@
 		transaction-manager="transactionManager" />
 
 
-
+		<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- <mvc:mapping path="/boardList.do"/> -->
+			<mvc:mapping path="/UinsertBoard.do" />
+			<bean class="com.start.pro.intercepter.intercepter" />
+		</mvc:interceptor>
+		</mvc:interceptors>
 </beans>

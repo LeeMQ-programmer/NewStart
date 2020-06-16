@@ -2,7 +2,7 @@ package com.start.pro.dto;
 
 public class DTO_Mounui {
 
-	private String board_code;
+	private String board_code = "3000";
 	private String mounui_seq;
 	private String user_seq;
 	private String category_seq;

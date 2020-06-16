@@ -23,14 +23,14 @@ public class Cron {
 	//하루에 한번 실행 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void run() {
-		log.info("cron 실행, 하루에 한번씩, {}",new Date());
-		boolean isc = userService.updateHuman();
-		if(isc) {
-			log.info("휴면 업데이트 성공");
-		}else {
-			log.info("휴면 업데이트 실패");
-			
-		}
+//		log.info("cron 실행, 하루에 한번씩, {}",new Date());
+//		boolean isc = userService.updateHuman();
+//		if(isc) {
+//			log.info("휴면 업데이트 성공");
+//		}else {
+//			log.info("휴면 업데이트 실패");
+//			
+//		}
 	}
 
 }

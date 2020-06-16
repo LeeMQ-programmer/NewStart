@@ -80,4 +80,16 @@ public class Sc_User implements UserDetails {
 		return true;
 	}
 
+	
+	public void setUser_pw(String user_pw) {
+		this.user_pw = user_pw;
+	}
+
+	@Override
+	public String toString() {
+		return "Sc_User [user_email=" + user_email + ", user_pw=" + user_pw + ", user_grade=" + user_grade
+				+ ", user_type=" + user_type + "]";
+	}
+
+	
 }

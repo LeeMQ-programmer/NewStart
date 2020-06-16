@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 <form action="./user_email/MultiChk.do" method="POST">
 	아이디 중복검사 :
 	<input type="text" name="val">

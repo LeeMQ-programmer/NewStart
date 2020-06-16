@@ -7,8 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
-휴먼 풀리셨습니다 
-<a href="./loginForm.do">메인화면으로 돌아가기</a>
+<img src="./img/denied.jpg">
+<script type='text/javascript'>
+setTimeout("location.href='./logout.do'",5000); 
+</script>
 </body>
 </html>
