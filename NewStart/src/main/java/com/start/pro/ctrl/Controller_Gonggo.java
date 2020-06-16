@@ -1,11 +1,10 @@
 package com.start.pro.ctrl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +21,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.start.pro.dto.DTO_BWL;
+import com.start.pro.dto.DTO_Criteria;
+import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
+import com.start.pro.dto.DTO_PageMaker;
 import com.start.pro.dto.DTO_User;
-import com.start.pro.models.bidding.IService_Bidding;
 import com.start.pro.models.bwl.IService_Bwl;
+import com.start.pro.models.file.IService_File;
 import com.start.pro.models.gonggo.IService_Gonggo;
 import com.start.pro.models.user.IService_User;
 
@@ -44,6 +48,10 @@ public class Controller_Gonggo {
 	@Autowired
 	IService_Bwl BWL_service;
 	
+	@Autowired
+	IService_File file_service;
+	
+	
 	Logger log = LoggerFactory.getLogger(getClass());
 	
 	
@@ -51,7 +59,7 @@ public class Controller_Gonggo {
 	@RequestMapping(value="/gonggo.do", method = RequestMethod.GET)
 	public String Gonggo(HttpSession session) {
 		log.info("gonggo.do 접속 완료");
-		DTO_User this_user =  user.searchDetail(Integer.parseInt("1"));
+		DTO_User this_user =  user.searchDetail("22");
 		session.setAttribute("newstart", this_user);
 		return "board/gonggo/GonggoDiv";
 	}
@@ -60,7 +68,7 @@ public class Controller_Gonggo {
 	
 	
 	@RequestMapping(value="/m_main.do", method = RequestMethod.GET)
-	public String boardList_M(HttpSession session, Model model) {
+	public String boardList_M(HttpSession session, Model model, DTO_Criteria cri) {
 		log.info("t_main.do 접속 완료");
 
 		DTO_User userD = (DTO_User) session.getAttribute("newstart");
@@ -68,32 +76,26 @@ public class Controller_Gonggo {
 		
 		// 페이징 처리된 리스트
 		List<DTO_Gonggo> glists = null;
+		List<DTO_File> flists = new ArrayList<DTO_File>();
+		Integer listTotal = gonggo.BoardListTotalM();
 		
 		System.out.println("강사페이지  페이지 정리 끝");
 		
 		// 1) 1)의 객체를 사용자 List로 가져오는 service!
-		glists = gonggo.gonggo_View();
-		
+		glists = gonggo.BoardListRowM(cri);
+		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기" + glists + "리스트의 전체 길이 : " + glists.size());
 		
 		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기" + glists);
-		
-		// 멘티 게시판이므로 강사의 공고는 지우고 출력되게 하기
-		for(int i = 0; i< glists.size(); i++){
-				String gangsa = glists.get(i).getUser_seq();
-				System.out.println("gangsa seq : " + gangsa);
-				DTO_User gangsa_dto = user.searchDetail(Integer.parseInt(gangsa));
-				String grade = gangsa_dto.getUser_grade();
-				System.out.println("도출된 강사의 grade는 ?" + grade);
-			if(grade.equalsIgnoreCase("T")) {
-				// 1) 페이징에 관련된 정보 DTO
-				System.out.println("삭제 될 glists의 종류 : " + glists.get(i));
-				glists.remove(i);
-				--i;
-			}
-		}
-		
+		System.out.println("getPage : " + cri.getPage());
+		System.out.println("getPageStart : " + cri.getPageStart());
+		System.out.println("getPerPageNum : " + cri.getPerPageNum());
+		System.out.println("getRowEnd : " + cri.getRowEnd());
+		System.out.println("getRowStart : " + cri.getRowStart());
+		System.out.println("makeQuery : " + cri.makeQuery());
 
-		// BWL에서 이미 매칭이 된 공고는 지우고 출력되게 만들기
+		System.out.println();
+
+		// 4) BWL에서 이미 매칭이 된 공고는 지우고 출력되게 만들기
 		List<DTO_BWL> BWL_lists = BWL_service.bwl_show();
 		for (int i = 0; i < BWL_lists.size(); i++) {
 			if(BWL_lists.get(i).getSuccess_person() != null) {
@@ -102,16 +104,46 @@ public class Controller_Gonggo {
 					String gong_seq = glists.get(j).getGonggo_seq();
 					if(BWL_Seq.equalsIgnoreCase(gong_seq)) {
 						glists.remove(j);
+						--listTotal;
 						--j;
 					}
 				}
 			}
 		}
+
+		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기2222 : " + glists);
+		for (int i = 0; i < glists.size(); i++) {
+			DTO_Gonggo gongDto = glists.get(i);
+			String seq = gongDto.getGonggo_seq();
+			String code = gongDto.getBoard_code();
+			try {
+				DTO_File fDto = new DTO_File(code, seq);
+				DTO_File resultFDto;
+				resultFDto = file_service.searchFile(fDto);
+				flists.add(resultFDto);
+			} catch (Exception e) {
+				
+			}
+		}
+		model.addAttribute("listTotal", listTotal);
+		System.out.println("listTotal의 값은? " + model.getAttribute("listTotal"));
 		
+		model.addAttribute("flists", flists);
+		System.out.println("flists의 값은? " + model.getAttribute("flists"));
+
 		
+		DTO_PageMaker pageMaker = new DTO_PageMaker();
+	      pageMaker.setCri(cri);
+	      pageMaker.setTotalCount(listTotal);
+		    System.out.println("glists.size()의 값은? : " + glists.size());
+	      model.addAttribute("pageMaker", pageMaker);
 		model.addAttribute("lists", glists);
 		model.addAttribute("users", userD);
-		System.out.println("row의 값은?" + model.getAttribute("row"));
+		System.out.println("getTotalCount의 값은? " + pageMaker.getTotalCount());
+		System.out.println("getDisplayPageNum의 값은? " + pageMaker.getDisplayPageNum());
+		System.out.println("getEndPage의 값은? " + pageMaker.getEndPage());
+		System.out.println("getStartPage의 값은? " + pageMaker.getStartPage());
+		System.out.println("getCri의 값은? " + pageMaker.getCri());
 		System.out.println("lists의 값은? " + model.getAttribute("lists"));
 		System.out.println("users의 값은? " + model.getAttribute("users"));
 		
@@ -119,65 +151,42 @@ public class Controller_Gonggo {
 	}
 	
 	
-	@RequestMapping(value="/m_detail.do", method = RequestMethod.GET)
-	public String M_Detail() {
-		log.info("m_detail.do 접속 완료");
-		return "board/gonggo/M_Detail";
-	}
 	
-	@RequestMapping(value="/m_insert.do", method = RequestMethod.GET)
-	public String M_Insert() {
+	@RequestMapping(value="/boardInsertM.do", method = RequestMethod.GET)
+	public String M_Insert(HttpSession session, Model model) {
 		log.info("m_insert.do 접속 완료");
+		DTO_User user = (DTO_User) session.getAttribute("newstart");
+		String user_seq = user.getUser_seq();
+		model.addAttribute("user_seq", user_seq);
+		System.out.println("나가는 user_seq값 : " + model.getAttribute("user_seq"));
 		return "board/gonggo/M_Insert";
-	}
-	
-	@RequestMapping(value="/m_modify.do", method = RequestMethod.GET)
-	public String M_Modify() {
-		log.info("m_modify.do 접속 완료");
-		return "board/gonggo/M_Modify";
 	}
 	
 	
 ////////////////////////////////////////////////////// 강사 관련 페이지 ///////////////////////////////////////////////////////	
-	
+
 	@RequestMapping(value="/t_main.do", method = RequestMethod.GET)
-	public String boardList_T(HttpSession session, Model model) {
+	public String boardList_T(HttpSession session, Model model, DTO_Criteria cri) {
 		log.info("t_main.do 접속 완료");
 		
 		DTO_User userD = (DTO_User) session.getAttribute("newstart");
 		System.out.println("uDto의 값은? : " + userD);
 		// 페이징 처리된 리스트
 		List<DTO_Gonggo> glists = null;
+		List<DTO_File> flists = new ArrayList<DTO_File>();
 		
-		
+
+		Integer listTotal = gonggo.BoardListTotalT();
 		
 		
 		// 1) 1)의 객체를 사용자 List로 가져오는 service!
-		glists = gonggo.gonggo_View();
+		glists = gonggo.BoardListRowT(cri);
 		
-		
-		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기" + glists);
+		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기" + glists + "리스트의 전체 길이 : " + glists.size());
 		
 
-		// 강사 게시판이므로 멘티의 공고는 지우고 출력되게 하기
-		for(int i = 0; i< glists.size(); i++){
-			String gangsa = glists.get(i).getUser_seq();
-			System.out.println("gangsa seq : " + gangsa);
-			DTO_User gangsa_dto = user.searchDetail(Integer.parseInt(gangsa));
-			String grade = gangsa_dto.getUser_grade();
-			System.out.println("도출된 강사의 grade는 ?" + grade);
-				
-			// 만약 회원 grade가 M이라면 제거하기(여긴 강사게시판이니까 당연히 제거 해줘야지)
-			if(grade.equalsIgnoreCase("M")) {
-				// 1) 페이징에 관련된 정보 DTO
-				System.out.println("삭제 될 glists의 종류 : " + glists.get(i));
-				glists.remove(i);
-				--i;
-			}
-		}
 		
-		
-		// BWL에서 이미 매칭이 된 공고는 지우고 출력되게 만들기
+		// 4) BWL에서 이미 매칭이 된 공고는 지우고 출력되게 만들기
 		List<DTO_BWL> BWL_lists = BWL_service.bwl_show();
 		for (int i = 0; i < BWL_lists.size(); i++) {
 			if(BWL_lists.get(i).getSuccess_person() != null) {
@@ -186,32 +195,62 @@ public class Controller_Gonggo {
 					String gong_seq = glists.get(j).getGonggo_seq();
 					if(BWL_Seq.equalsIgnoreCase(gong_seq)) {
 						glists.remove(j);
+						--listTotal;
+						--j;
 					}
 				}
 			}
 		}
+
+
+		System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기2222 : " + glists);
+		for (int i = 0; i < glists.size(); i++) {
+			DTO_Gonggo gongDto = glists.get(i);
+			String seq = gongDto.getGonggo_seq();
+			String code = gongDto.getBoard_code();
+			try {
+				DTO_File fDto = new DTO_File(code, seq);
+				DTO_File resultFDto;
+				resultFDto = file_service.searchFile(fDto);
+				flists.add(resultFDto);
+			} catch (Exception e) {
+				
+			}
+		}
 		
+		model.addAttribute("flists", flists);
+		System.out.println("flists의 값은? " + model.getAttribute("flists"));
+
+		
+		DTO_PageMaker pageMaker = new DTO_PageMaker();
+	    pageMaker.setCri(cri);
+	    System.out.println("glists.size()의 값은? : " + glists.size());
+	    pageMaker.setTotalCount(listTotal);
+	    model.addAttribute("pageMaker", pageMaker);
 		model.addAttribute("lists", glists);
 		model.addAttribute("users", userD);
-		System.out.println("row의 값은?" + model.getAttribute("row"));
+		System.out.println("pageMaker의 값은? " + pageMaker.getTotalCount());
 		System.out.println("lists의 값은? " + model.getAttribute("lists"));
 		System.out.println("users의 값은? " + model.getAttribute("users"));
+		
+
+		model.addAttribute("listTotal", listTotal);
+		System.out.println("listTotal의 값은? " + model.getAttribute("listTotal"));
 		
 		return "board/gonggo/boardList_T"; // board/gonggo/A_Main
 	}
 	
 	
-	
-	@RequestMapping(value="/t_detail.do", method = RequestMethod.GET)
-	public String T_Detail() {
-		log.info("t_detail.do 접속 완료");
-		return "board/gonggo/T_Detail";
-	}
-	@RequestMapping(value="/t_insert.do", method = RequestMethod.GET)
-	public String T_Insert() {
+	@RequestMapping(value="/boardInsertT.do", method = RequestMethod.GET)
+	public String T_Insert(HttpSession session, Model model) {
 		log.info("t_insert.do 접속 완료");
+		DTO_User user = (DTO_User) session.getAttribute("newstart");
+		String user_seq = user.getUser_seq();
+		model.addAttribute("user_seq", user_seq);
+		System.out.println("나가는 user_seq값 : " + model.getAttribute("user_seq"));
 		return "board/gonggo/T_Insert";
 	}
+	
 	@RequestMapping(value="/t_modify.do", method = RequestMethod.GET)
 	public String T_Modify() {
 		log.info("t_modify.do 접속 완료");
@@ -227,34 +266,66 @@ public class Controller_Gonggo {
 	
 	@RequestMapping(value="/a_main.do", method = RequestMethod.GET)
 	
-	public String boardList_A(HttpSession session, Model model) {
+	public String boardList_A(HttpSession session, Model model, DTO_Criteria cri) {
 		log.info("boardList_A.do 접속 완료");
 		
 		DTO_User userD = (DTO_User) session.getAttribute("newstart");
 		System.out.println("uDto의 값은? : " + userD);
-
+		
+		// 페이징 처리된 리스트
 		List<DTO_Gonggo> glists = null;
+		List<DTO_File> flists = new ArrayList<DTO_File>();
+
+
+		Integer listTotal = gonggo.BoardListTotalA();
 		
 
 		if(userD.getUser_grade().equalsIgnoreCase("A")) { //U는 일반유저, A는 관리자
-//			lists = service.userBoardList();
-			// 1) 1)의 객체를 사용자 List로 가져오는 service!
-			glists = gonggo.gonggo_View();
-			
-		} else {
-//			lists = service.userBoardList();
-			// 1) 1)의 객체를 사용자 List로 가져오는 service!
-//			glists = gonggo.gonggo_View();
-			// 2) 사용자 글 전체를 가져오는 service --> RowDto에 total값을 넣어주기
-//			rowDto.setTotal(glists.size());
+			glists = gonggo.BoardListRowA(cri);
+			System.out.println("강사페이지  공고글 전체 불러와 리스트에 담기" + glists + "리스트의 전체 길이 : " + glists.size());
+		} 
+		
+		
+		for (int i = 0; i < glists.size(); i++) {
+			DTO_Gonggo gongDto = glists.get(i);
+			String seq = gongDto.getGonggo_seq();
+			String code = gongDto.getBoard_code();
+			try {
+				DTO_File fDto = new DTO_File(code, seq);
+				DTO_File resultFDto;
+				resultFDto = file_service.searchFile(fDto);
+				flists.add(resultFDto);
+			} catch (Exception e) {
+				
+			}
 		}
 		
+		model.addAttribute("flists", flists);
+		System.out.println("flists의 값은? " + model.getAttribute("flists"));
+		
+		
+		DTO_PageMaker pageMaker = new DTO_PageMaker();
+	      pageMaker.setCri(cri);
+	      pageMaker.setTotalCount(listTotal);
+	      model.addAttribute("pageMaker", pageMaker);
+		
+	      
+	      
+	      
+	      
+	      
 		// 2) 글들
 		model.addAttribute("lists", glists);
 		model.addAttribute("users", userD);
-		System.out.println("row의 값은?" + model.getAttribute("row"));
+		
+		System.out.println("pageMaker의 값은? " + model.getAttribute("pageMaker"));
 		System.out.println("lists의 값은? " + model.getAttribute("lists"));
 		System.out.println("users의 값은? " + model.getAttribute("users"));
+		
+
+		model.addAttribute("listTotal", listTotal);
+		System.out.println("listTotal의 값은? " + model.getAttribute("listTotal"));
+		
 		
 		return "board/gonggo/boardList_A"; // board/gonggo/A_Main
 	}
@@ -377,27 +448,51 @@ public class Controller_Gonggo {
 		return obj;	
 	}
 	
-	////////////////////////////////////////////////// 글 작성하기 ///////////////////////////////////////////////////////////
-	
-	// /boardInsertT.do
-	@RequestMapping(value="/boardInsertT.do", method = RequestMethod.GET)
-	public String boardInsertT() {
-		log.info("Welcome boardInsertT.do \t{}");
-		return "board/gonggo/T_Insert";
-	}
-	
-	// /boardInsertM.do
-	@RequestMapping(value="/boardInsertM.do", method = RequestMethod.GET)
-	public String boardInsertM() {
-		return "board/gonggo/M_Insert";
-	}
+	////////////////////////////////////////////////// 글 작성하기 & 썸네파일 업로드 ///////////////////////////////////////////////////////////
+
+	private static final String charSet = "utf-8";
+	private static final String dir = "C:/nobrand/workspace_spring/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/20200512_Spring_EDU/img";
+	private static final int fileSize = 1024 * 1024 * 100;
 	
 	// /boardInsert.do
 	@RequestMapping(value="/boardInsert.do", method = RequestMethod.POST)
-	public String boardInsert(DTO_Gonggo dto) {
-		log.info("Welcome boardInsert 공고글 제작 시작 \t{}",dto.toString());
+	 public String boardInsert(DTO_Gonggo dto, HttpServletRequest req, HttpSession session, 
+			 @RequestParam("myfile") MultipartFile report) throws IOException {    
+		//command객체가 아닌 request로 submit한 값 받아오기     
+
 		gonggo.gonggo_insert(dto);
+		String fileboard = "2000";
+		String board_seq = dto.getGonggo_seq();
+		
+		////////////////////////////////////////////////////////// 여기서부터는 공통 모듈 /////////////////////////////////////////////////////////////////////////////
+		
+        //파일명
+        String userfile = report.getOriginalFilename();
+        
+        //파일명 중 확장자만 추출
+        //lastIndexOf(".") - 뒤에 있는 . 의 index번호
+        String originalFileExtension = userfile.substring(userfile.lastIndexOf("."));
+        
+        String realfile = UUID.randomUUID().toString().replaceAll("-", "");
+        String separator = File.separator; 
+        String extension = userfile.substring(userfile.lastIndexOf("."), userfile.length());
+        String fileurl = dir+separator+realfile+originalFileExtension;
+        
+        //파일을 저장하기 위한 파일 객체 생성
+        File file1 = new File(fileurl);
+        
+        //파일 저장
+        report.transferTo(file1);
+        
+        System.out.println("업로드한 파일은");
+        System.out.println(userfile + "은 업로드한 파일이다.");
+        System.out.println(realfile + "라는 이름으로 업로드 됐다.");
+        System.out.println("파일사이즈는 " + report.getSize());
+        DTO_File fileDto = new DTO_File(fileboard, board_seq, realfile+originalFileExtension, userfile, fileurl, extension);
+        System.out.println("DTO는 " + fileDto);
+        file_service.insertFile(fileDto);
 		return "redirect:/gonggo.do";
 	}
+
 	
 }

@@ -15,7 +15,7 @@ public interface IDao_User {
 	 */
 	public List<DTO_User> searchAll();
 	
-	public DTO_User searchDetail(int user_seq);
+	public DTO_User searchDetail(String user_seq);
 
 	
 	/**

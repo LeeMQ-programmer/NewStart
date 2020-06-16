@@ -40,7 +40,7 @@ public class Dao_UserImpl implements IDao_User {
 	}
 
 	@Override
-	public DTO_User searchDetail(int user_seq) {
+	public DTO_User searchDetail(String user_seq) {
 		log.info("DAO@@@@@회원 상세 조회,{}",user_seq);
 		return session.selectOne(NS+"searchDetail",user_seq);
 	}

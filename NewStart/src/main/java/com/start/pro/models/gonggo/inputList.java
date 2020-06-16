@@ -2,13 +2,27 @@ package com.start.pro.models.gonggo;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
+import com.start.pro.dto.DTO_PageMaker;
 import com.start.pro.dto.DTO_User;
+import com.start.pro.models.file.IService_File;
+import com.start.pro.models.file.Service_FileImpl;
 
 public class inputList {
 	private List<DTO_Gonggo> lists;
 	private DTO_User users;
-
+	private DTO_PageMaker pageMaker;
+	private int listTotal;
+	private List<DTO_File> flists;
+	
+	
+	public void setFlists(List<DTO_File> flists) {
+		this.flists = flists;
+	}
+	
 	public void setLists(List<DTO_Gonggo> lists) {
 		this.lists = lists;
 	}
@@ -17,18 +31,38 @@ public class inputList {
 		this.users = users;
 	}
 
+	public void setPageMaker(DTO_PageMaker pageMaker) {
+		this.pageMaker = pageMaker;
+	}
+	public void setListTotal(int listTotal) {
+		this.listTotal = listTotal;
+	}
+
 	// 날짜
 	private String dateFormat(String date) {
 		return date.substring(0, date.indexOf(" "));
 	}
 
-	
-
 	// TODO
 	// 관리자의 이미지 미리보기 구현 파트로 사용자들이 등록한 이미지를 디비로부터 찾아와서 연결해주면 되겠다.
-	private String titleFormat() {
+	private String titleFormat(String go_seq) {
 		StringBuffer buf = new StringBuffer();
-		buf.append("<img src='./img/reply.jpg'/>");
+		for (int i = 0; i < flists.size(); i++) {
+			DTO_File fileDto = flists.get(i);
+			try {
+				if(fileDto.getFileboard().equalsIgnoreCase("2000")) {
+					if(fileDto.getBoard_seq().equalsIgnoreCase(go_seq)) {
+						System.out.println("값은 들어와" + fileDto.getFileboard() + fileDto.getBoard_seq() + fileDto.getFilename() + fileDto.getFiletype());
+						System.out.println("근데 통과도 하네?? ");
+						String url = "./img/" + fileDto.getFilename();
+						System.out.println("fUrl은? : " + url);
+						buf.append("<img src=\'" + url + "\' style='width: 100px; height:100px'>");
+					}
+				}
+			} catch (Exception e) {
+			}
+		}
+		
 		return buf.toString();
 	}
 
@@ -38,52 +72,53 @@ public class inputList {
 		System.out.println("DTO_Gonggo : \t{}" + dto);
 		System.out.println("DTO_User : \t{}" + users);
 		StringBuffer buf = new StringBuffer();
-		
+
 		// colspan의 기본 user 종류별로 구분
 
-			System.out.println("유저쪽으로 유입 : \t{}" + dto);
-			
-			int n = 7;
-			buf.append("<tr>");
-			buf.append("<td><input type='checkbox' name='chkVal' value='" + dto.getGonggo_seq() + "'></td>");
-			buf.append("<td>" + dto.getGonggo_seq() + "</td>");
-			buf.append("<td>");
-			buf.append("<div class='panel-heading'>");
-			buf.append("<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + dto.getGonggo_seq()
-					+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat() + dto.getGonggo_title()
-					+ "</a>	");
-			buf.append("</div>");
-			buf.append("</td>");
-			buf.append("<td>" + dto.getUser_seq() + "</td>");
-			buf.append("<td>" + dateFormat(dto.getGonggo_time()) + "</td>");
-			n = 7;
-			buf.append("<td>" + dto.getFileox() + "</td>");
-			buf.append("</tr>");
-			buf.append("<tr>");
-			buf.append("<td colspan='" + n + "'>");
-			buf.append("<div id='collapse'" + dto.getGonggo_seq() + " class='panel-collapse'>");
-			buf.append("<div class='form-group'>");
-			buf.append("<label>내용</label>");
-			buf.append("<textarea rows='7' class='form-control' readonly='readonly'>" + dto.getGonggo_content() + "</textarea>");
-			buf.append("</div>");
-			buf.append("<div>");
-			buf.append("<div class ='form-group'>");
-			buf.append("<input class='btn btn-primary btn-center' type='button' value='글 삭제' onclick='del(\""
-						+ dto.getGonggo_seq() + "\")'>");
-			buf.append("</div>");
-			buf.append("</div>");
-			buf.append("</div>");
-			buf.append("</td>");
-			buf.append("</tr>");
-	
-			return buf.toString();
-			
+		System.out.println("유저쪽으로 유입 : \t{}" + dto);
+		int n = 7;
+		buf.append("<tr>");
+		buf.append("<td><input type='checkbox' name='chkVal' value='" + dto.getGonggo_seq() + "'></td>");
+		buf.append("<td>" + dto.getGonggo_seq() + "</td>");
+		buf.append("<td>");
+		buf.append("<div class='panel-heading'>");
+		buf.append("<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + dto.getGonggo_seq()
+				+ "' onclick='collapse(\"" + dto.getGonggo_seq() + "\")'>" + titleFormat(dto.getGonggo_seq()) + dto.getGonggo_title()
+				+ "</a>	");
+		buf.append("</div>");
+		buf.append("</td>");
+		buf.append("<td>" + dto.getUser_seq() + "</td>");
+		buf.append("<td>" + dateFormat(dto.getGonggo_time()) + "</td>");
+		n = 7;
+		buf.append("<td>" + dto.getFileox() + "</td>");
+		buf.append("</tr>");
+		buf.append("<tr>");
+		buf.append("<td colspan='" + n + "'>");
+		buf.append("<div id='collapse'" + dto.getGonggo_seq() + " class='panel-collapse'>");
+		buf.append("<div class='form-group'>");
+		buf.append("<label>내용</label>");
+		buf.append("<textarea rows='7' class='form-control' readonly='readonly'>" + dto.getGonggo_content()
+				+ "</textarea>");
+		buf.append("</div>");
+		buf.append("<div>");
+		buf.append("<div class ='form-group'>");
+		buf.append("<input class='btn btn-primary btn-center' type='button' value='글 삭제' onclick='del(\""
+				+ dto.getGonggo_seq() + "\")'>");
+		buf.append("</div>");
+		buf.append("</div>");
+		buf.append("</div>");
+		buf.append("</td>");
+		buf.append("</tr>");
+		return buf.toString();
 	}
 
 	// 리스트 가져가기
 	public String getListForm() {
+		
 		System.out.println("getListForm으로 들어오긴 합니다.");
 		StringBuffer buf = new StringBuffer();
+		
+		System.out.println("listTotal값은???" + listTotal);
 		for (int i = 0; i < lists.size(); i++) {
 			System.out.println("나가는 lists의 값은 뭔가요?" + lists);
 			buf.append(listForm(lists.get(i)));
@@ -92,3 +127,4 @@ public class inputList {
 	}
 
 }
+

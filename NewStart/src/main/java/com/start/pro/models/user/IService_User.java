@@ -13,7 +13,7 @@ public interface IService_User {
 	 * @return 회원 정보
 	 */
 	public List<DTO_User> searchAll();
-	public DTO_User searchDetail(int user_seq);
+	public DTO_User searchDetail(String user_seq);
 
 	
 	/**

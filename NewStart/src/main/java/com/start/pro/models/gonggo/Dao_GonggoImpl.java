@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.start.pro.dto.DTO_Bidding;
+import com.start.pro.dto.DTO_Criteria;
 import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
@@ -79,4 +80,36 @@ public class Dao_GonggoImpl implements IDao_Gonggo{
 		return session.selectOne(NS+"gonggo_upload_file_view", seq);
 	}
 
+	@Override
+	   public List<DTO_Gonggo> BoardListRowM(DTO_Criteria cri) {
+		log.info("Welcome BoardListRowM DAO 진입 : \t{}", cri);
+	      return session.selectList(NS+"BoardListRowM",cri);
+	   }
+	   @Override
+	   public List<DTO_Gonggo> BoardListRowT(DTO_Criteria cri) {
+		   log.info("Welcome BoardListRowT DAO 진입 : \t{}", cri);
+		   return session.selectList(NS+"BoardListRowT",cri);
+	   }
+	   @Override
+	   public List<DTO_Gonggo> BoardListRowA(DTO_Criteria cri) {
+		   log.info("Welcome BoardListRowA DAO 진입 : \t{}", cri);
+		   return session.selectList(NS+"BoardListRowA",cri);
+	   }
+	
+	 @Override
+	   public int BoardListTotalA() {
+		 log.info("Welcome BoardListTotalA DAO 진입 : \t{}");
+	      return session.selectOne(NS+"BoardListTotalA");
+	   }
+	 @Override
+	 public int BoardListTotalM() {
+		 log.info("Welcome BoardListTotalM DAO 진입 : \t{}");
+		 return session.selectOne(NS+"BoardListTotalM");
+	 }
+	 @Override
+	 public int BoardListTotalT() {
+		 log.info("Welcome BoardListTotalT DAO 진입 : \t{}");
+		 return session.selectOne(NS+"BoardListTotalT");
+	 }
+	
 }

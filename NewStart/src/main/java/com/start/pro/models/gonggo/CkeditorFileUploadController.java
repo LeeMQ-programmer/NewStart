@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +27,7 @@ import com.google.gson.JsonObject;
 @RequestMapping("/adm")
 public class CkeditorFileUploadController {
 
-	@RequestMapping(value="fileupload.do", method=RequestMethod.POST)
+	@RequestMapping(value="/fileupload.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String fileUpload(HttpServletRequest req, HttpServletResponse resp, 
                  MultipartHttpServletRequest multiFile) throws Exception {
@@ -79,5 +80,6 @@ public class CkeditorFileUploadController {
 		System.out.println("json에 저장된 형태 : " + json.toString());
 		return null;
 	}	
+	
 	
 }

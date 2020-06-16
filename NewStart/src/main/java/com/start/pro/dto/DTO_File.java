@@ -51,14 +51,14 @@ public class DTO_File {
 	
 
 
-	public DTO_File(String board_seq, String filename, String filerealname, String user_seq, String re_teacher) {
+	public DTO_File(String fileboard, String board_seq, String filename, String filerealname, String fileurl, String filetype) {
 		super();
+		this.fileboard = fileboard;
 		this.board_seq = board_seq;
 		this.filename = filename;
 		this.filerealname = filerealname;
-//		this.fileurl = fileurl;
-		this.user_seq = user_seq;
-		this.re_teacher = re_teacher;
+		this.fileurl = fileurl;
+		this.filetype =  filetype;
 	}
 
 

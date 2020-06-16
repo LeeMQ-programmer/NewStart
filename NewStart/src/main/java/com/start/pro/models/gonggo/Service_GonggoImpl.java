@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.start.pro.dto.DTO_Bidding;
+import com.start.pro.dto.DTO_Criteria;
 import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
@@ -68,6 +69,38 @@ public class Service_GonggoImpl implements IService_Gonggo{
 	public List<DTO_File> gonggo_fileList(String seq) {
 		log.info("Service impl gonggo_fileList : \t{}", seq);
 		return null;
+	}
+
+	@Override
+	public List<DTO_Gonggo> BoardListRowM(DTO_Criteria cri){
+		log.info("Service impl BoardListRowM : \t{}", cri);
+		return dao.BoardListRowM(cri);
+	}
+	@Override
+	public List<DTO_Gonggo> BoardListRowT(DTO_Criteria cri){
+		log.info("Service impl BoardListRowT : \t{}", cri);
+		return dao.BoardListRowT(cri);
+	}
+	@Override
+	public List<DTO_Gonggo> BoardListRowA(DTO_Criteria cri){
+		log.info("Service impl BoardListRowA : \t{}", cri);
+		return dao.BoardListRowA(cri);
+	}
+
+	@Override
+	public int BoardListTotalA() {
+		log.info("Service impl BoardListTotal : \t{}");
+		return dao.BoardListTotalA();
+	}
+	@Override
+	public int BoardListTotalT() {
+		log.info("Service impl BoardListTotal : \t{}");
+		return dao.BoardListTotalT();
+	}
+	@Override
+	public int BoardListTotalM() {
+		log.info("Service impl BoardListTotal : \t{}");
+		return dao.BoardListTotalM();
 	}
 
 }

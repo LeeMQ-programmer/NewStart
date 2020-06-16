@@ -3,6 +3,7 @@ package com.start.pro.models.gonggo;
 import java.util.List;
 
 import com.start.pro.dto.DTO_Bidding;
+import com.start.pro.dto.DTO_Criteria;
 import com.start.pro.dto.DTO_File;
 import com.start.pro.dto.DTO_Gonggo;
 
@@ -71,4 +72,24 @@ public interface IService_Gonggo {
 	 * @return
 	 */
 	public List<DTO_File> gonggo_fileList(String seq);
+
+
+	/**
+	 * 페이징을 하기 위해 필요한 DTO_Criteria cri를 활용하기
+	 * @param dto
+	 * @return
+	 */
+	public List<DTO_Gonggo> BoardListRowM(DTO_Criteria cri);
+	public List<DTO_Gonggo> BoardListRowT(DTO_Criteria cri);
+	public List<DTO_Gonggo> BoardListRowA(DTO_Criteria cri);
+	
+	 
+	 /**
+	  * 전체 글 리스트의 개수를 추출해내는 것
+	  * @return
+	  */
+	 public int BoardListTotalA();
+	 public int BoardListTotalM();
+	 public int BoardListTotalT();
+
 }
