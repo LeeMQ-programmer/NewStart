@@ -1,10 +1,6 @@
 package com.start.pro.models.file;
 
-<<<<<<< HEAD
 import java.util.List;
-=======
-import org.springframework.web.multipart.MultipartHttpServletRequest;
->>>>>>> branch 'master' of https://github.com/LeeMQ-programmer/NewStart.git
 
 import com.start.pro.dto.DTO_File;
 
