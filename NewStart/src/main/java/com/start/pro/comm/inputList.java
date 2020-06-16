@@ -24,12 +24,11 @@ public class inputList {
 	}
 	
 //	이미지
-	private String titleFormat(int teacher,String reply) {
+	private String titleFormat(String teacher,String reply) {
 		StringBuffer sb = new StringBuffer();
 		
-		if (teacher==0 && reply.equalsIgnoreCase("Y")) {
-			sb.append("&nbsp;&nbsp;&nbsp;");
-			sb.append("<img alt='리플' src='./img/reply.png'/>");
+		if (teacher.equals("0") && reply.equalsIgnoreCase("Y")) {
+			sb.append("&nbsp;&nbsp;&nbsp<img alt='리플' src='./img/reply.png'/>");
 		}
 		return sb.toString();
 	}

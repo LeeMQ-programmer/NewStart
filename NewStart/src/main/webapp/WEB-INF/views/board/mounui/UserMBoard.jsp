@@ -1,83 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
-<script type="text/javascript">
-//다중 삭제
-function checkAll(bool){
-	
-	var chks = document.getElementsByName('seq');
-
-	for (var i = 0; i < chks.length; i++) {
-		chks[i].checked = bool;
-	}
-}
-
-
-function multiDelChk(){
-	var chks = document.getElementsByName('seq');
-	var cntChecked = 0;
-	for (var i = 0; i < chks.length; i++) {
-		if(chks[i].checked){
-			cntChecked ++;
-		}
-	}
-	if(cntChecked>0){
-		if(confirm('정말로 삭제하시겠습니까?')){
-		 document.getElementById('del').submit();
-		}
-	}else{
-		alert("선택된 글이 없습니다.");
-		return;
-	}
-}
-
-function chk(){
-	var chkbool = document.getElementsByName('seq');
-	var allcheck = document.getElementsByName('allcheck')[0];
-	var cnt = 0;
-	for (var i = 0; i < chkbool.length; i++) {
-		if(chkbool[i].checked){
-			cnt++;
-		}
-	}
-	
-	if(cnt == chkbool.length){
-		allcheck.checked = true;
-	}else{
-		allcheck.checked = false;
-	}
-	
-}
-</script>
+<script type="text/javascript" src="./js/checkbox.js"></script>
+<script type="text/javascript" src="./js/usermounui.js"></script>
 <body>
-
+<%@include file="/WEB-INF/views/boardTopMenu.jsp"%>
 
 <div class="container">
 <form action="./UserMBoardDel.do" method="post" id="del">
-  <h2>Basic Table</h2>
-  <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>            
+  <h2>문의 게시판</h2>
+  
+  
+  <span>
+		<select class="btn btn-primary" id="list" name="list" onchange="pageList()">
+				<option value="5" >5</option>
+				<option value="10" >10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+		</select>
+</span>
+  
+  
+  
+  
+  
   <table class="table">
     <thead>
       <tr>
-      	<th><input type="checkbox" name='allcheck' onclick="checkAll(this.checked)"><th>
+      	<th><input type="checkbox" name='seq' onclick="checkAll(this.checked,this.name)"><th>
         <th>카테고리</th>
         <th>제목</th>
         <th>등록일</th>
         <th>답변 처리 여부</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="boardlist">
 		<c:forEach items="${dtos}" var="dto" varStatus="idx">
 		      <tr>
-		      	 <td><input type="checkbox" name="seq" value="${dto.mounui_seq}" onclick="chk()"></td>
+		      	 <td><input type="checkbox" name="seq" value="${dto.mounui_seq}" onclick="chk(this.name)"></td>
        			 <td>${fn:length(dtos)-idx.index}</td>
        			 <td>${dto.category_title}</td>
         		 <td><a href="./UserMBoardDetail.do?seq=${dto.mounui_seq}">${dto.title}</a></td>
@@ -92,10 +57,32 @@ function chk(){
 		</c:forEach>
     </tbody>
   </table>
+  
+  <div class="center">
+		<ul class="pagination">
+			<li><a href="#" onclick="pageFirst()">&laquo;</a></li>
+			<li><a href="#" onclick = "pagePre(${userMounuiBoardrow.pageNum},${userMounuiBoardrow.pageList})">&lsaquo;</a></li>
+				<c:forEach var="i" begin="${userMounuiBoardrow.pageNum}" end="${userMounuiBoardrow.count}" step="1">
+					<li><a href="#" onclick="pageIndex(${i})">${i}</a></li>
+				</c:forEach>
+			<li><a href="#" onclick='pageNext(${userMounuiBoardrow.pageNum},${userMounuiBoardrow.total},${userMounuiBoardrow.listNum},${userMounuiBoardrow.pageList})'>&rsaquo;</a></li>
+			<li><a href="#" onclick='pageLast(${userMounuiBoardrow.pageNum},${userMounuiBoardrow.total},${userMounuiBoardrow.listNum},${userMounuiBoardrow.pageList})'>&raquo;</a></li>
+		</ul>
+	<input type="hidden" name="index" id="index" value="${userMounuiBoardrow.index}">
+	<input type="hidden" name="pageNum" id="pageNum" value="${userMounuiBoardrow.pageNum}">
+	<input type="hidden" name="listNum" id="listNum" value="${userMounuiBoardrow.listNum}">
+	</div>
+  
+  
   <button type="button" onclick="multiDelChk()">삭제</button>
   </form>
 </div>
 
+<script type="text/javascript">
+		var listNum = document.getElementById('listNum').value;
+		var list = document.getElementById('list');
+		list.options[listNum/5-1].selected = "selected";
+</script>
 
 </body>
 </html>

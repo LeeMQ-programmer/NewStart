@@ -23,7 +23,7 @@ public class Service_ProfileImpl implements IService_Profile{
 	private IDao_Profile dao;
 	
 	@Override
-	public DTO_Profile searchProfile(int user_seq) {
+	public DTO_Profile searchProfile(String user_seq) {
 		log.info("Service@@@@@프로필 전체 조회,{}",user_seq);
 		return dao.searchProfile(user_seq);
 	}
@@ -53,7 +53,7 @@ public class Service_ProfileImpl implements IService_Profile{
 	}
 
 	@Override
-	public Double avgStar(int user_seq) {
+	public Double avgStar(String user_seq) {
 		log.info("Service@@@@@경력 수정,{}",user_seq);
 		return dao.avgStar(user_seq);
 	}

@@ -28,6 +28,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.start.pro.dto.DTO_Email;
+import com.start.pro.dto.DTO_User;
 import com.start.pro.models.email.IService_Email;
 import com.start.pro.util.Util_JSON;
 
@@ -128,26 +129,20 @@ public class AsyncTask_SendEmail {
 	public void sendManyMail(DTO_Email mailList) {
 
 		System.out.println("들어왓숑!");
-		mailList.setSuccesschk("S");
-		mailList.setCategory_code("1");;
-		service.SendEmail(mailList);
 		System.out.println("이런게 왔당"+mailList.toString());
 
 		// 기존 
 		List<String> mails = jsonUtil.jsonToList(mailList.getUser_email(),"user_email");
 		
-		// 수정
-		// 배열 타입으로 온다. .....,.....,....
-		//String[] mails = mailList.getUser_email().split(",");
-		//for (int i = 0; i < mails.length; i++) {
-		//	System.out.println(mails[i]);
-		//}
 		
 		
 		MimeMessagePreparator[] preparators = new MimeMessagePreparator[mails.size()];
 		int i = 0;
 		for (String mail : mails) {
-
+			
+			DTO_User udto = service.getinfo(mail);
+			String content = mailList.getEmail_content().replace("${name}", udto.getUser_name()).replace("${nickname}", udto.getUser_nickname());
+			
 			preparators[i++] = new MimeMessagePreparator() {
 				@Override
 				public void prepare(MimeMessage mimeMessage) throws Exception {
@@ -155,7 +150,7 @@ public class AsyncTask_SendEmail {
 					helper.setFrom(setFrom);
 					helper.setTo(mail);
 					helper.setSubject(mailList.getEmail_title());
-					helper.setText(mailList.getEmail_content(), true);
+					helper.setText(content, true);
 				}
 			};
 		}

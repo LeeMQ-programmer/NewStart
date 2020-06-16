@@ -21,10 +21,14 @@ public interface IDao_Mounui {
 	
 	/**
 	 * 유저의 회원번호를 통해 본인이 작성한 문의글들을 가져올 때 사용한다.
-	 * @param user_seq
+	 * 필요한 key는 다음과 같습니다.<br>
+	 * user_seq : 사용자의 seq<br>
+	 * start : 시작 글 번호
+	 * last : 끝 글 번호
+	 * @param map
 	 * @return List<DTO_Mounui>
 	 */
-	public List<DTO_Mounui> userBoard(String seq);
+	public List<DTO_Mounui> userBoard(Map<String, String> map);
 	
 	/**
 	 * 문의글 seq를 통해 글 상세조회할 때 사용한다.
@@ -110,5 +114,25 @@ public interface IDao_Mounui {
 	 * @return DTO_Email
 	 */
 	public DTO_Email getReply(String seq);
+	
+	/**
+	 * FAQ의 카테고리를 가져옵니다
+	 * @return List
+	 */
+	public List<String> getTitle();
+	
+	/**
+	 * 관리자가 문의게시판을 전체 조회할 때 사용
+	 * @param DTO_Filter
+	 * @return int
+	 */
+	public int getAdminMounuiCnt(DTO_Filter dto);
+	
+	/**
+	 * 사용자의 seq를 통해 본인이 작성한 문의글의 갯수를 가져옵니다.
+	 * @param String seq
+	 * @return int
+	 */
+	public int getUserMounuiBoard(String seq);
 	
 }

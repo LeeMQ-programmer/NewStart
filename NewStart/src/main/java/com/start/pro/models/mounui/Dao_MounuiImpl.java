@@ -27,8 +27,8 @@ public class Dao_MounuiImpl implements IDao_Mounui {
 	}
 
 	@Override
-	public List<DTO_Mounui> userBoard(String seq) {
-		return session.selectList(NS+"userBoard", seq);
+	public List<DTO_Mounui> userBoard(Map<String,String> map) {
+		return session.selectList(NS+"userBoard", map);
 	}
 
 	@Override
@@ -74,6 +74,21 @@ public class Dao_MounuiImpl implements IDao_Mounui {
 	@Override
 	public DTO_Email getReply(String seq) {
 		return session.selectOne(NS+"getReply",seq);
+	}
+
+	@Override
+	public List<String> getTitle() {
+		return session.selectList(NS+"getTitle");
+	}
+
+	@Override
+	public int getAdminMounuiCnt(DTO_Filter dto) {
+		return Integer.parseInt(session.selectOne(NS+"getAdminMounuiCnt", dto));
+	}
+
+	@Override
+	public int getUserMounuiBoard(String seq) {
+		return Integer.parseInt(session.selectOne(NS+"getUserMounuiBoard", seq));
 	}
 
 }

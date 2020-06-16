@@ -47,15 +47,32 @@
 		});
 	}
 	function requestTeacher(user_seq){
-		location.href="./tReq.do"
+		location.href="./tReq.do?user_seq="+user_seq;
 	}
 	
+	$(function(){
+		var adchk = '${newstart.user_adchk}';
+		if (adchk == 'Y') {
+			$("input[name='user_adchk']").prop("checked", true);
+		}
+		
+
+			
+	});
 	
-	
+	function adchk(){
+// 		alert("dfhaklfdja");
+		if ($("input:checkbox[name='user_adchk']").is(":checked")){
+			$("input[name='user_adchk']").value("Y");
+		}else{
+			$("input[name='user_adchk']").value("N");
+		}
+	}
 </script>
+
 <h1>${newstart.user_name}님의mypage</h1>
+
 <div class="container">
-${newstart }
   <form action="./updateMyPage.do" method="post">
   <input type="text" name="user_seq" id="user_seq" value="${newstart.user_seq }">
     <div class="form-group">
@@ -71,8 +88,10 @@ ${newstart }
       <input type="text" class="form-control" name="user_phone" id="user_phone" value="${newstart.user_phone }">
     </div>
     <div class="form-group">
-     	광고성 수신 여부 :  <input type="checkbox"  name="user_adchk" id="user_adchk" value="${newstart.user_adchk }">
+    	광고성 수신 여부 : 
+     		 <input type="checkbox"  name="user_adchk" id="user_adchk" onchange="adchk()">
     </div>
+
     <div class="form-group">
       <label for="user_tchk">강사 인증 :</label>
       <input type="button" name="user_tchk" id="user_tchk" value="${newstart.user_tchk }" onclick="requestTeacher(${newstart.user_tchk })">

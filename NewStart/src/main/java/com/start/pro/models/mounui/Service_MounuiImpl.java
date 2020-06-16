@@ -1,10 +1,13 @@
 package com.start.pro.models.mounui;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.start.pro.dto.DTO_Email;
 import com.start.pro.dto.DTO_FAQ;
@@ -12,7 +15,7 @@ import com.start.pro.dto.DTO_Filter;
 import com.start.pro.dto.DTO_Mounui;
 
 @Service
-public class Service_MounuiImpl implements IService_Mounui{
+public class Service_MounuiImpl<E> implements IService_Mounui{
 
 	@Autowired
 	private IDao_Mounui dao;
@@ -24,8 +27,8 @@ public class Service_MounuiImpl implements IService_Mounui{
 	}
 
 	@Override
-	public List<DTO_Mounui> userBoard(String seq) {
-		return dao.userBoard(seq);
+	public List<DTO_Mounui> userBoard(Map<String, String> map) {
+		return dao.userBoard(map);
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class Service_MounuiImpl implements IService_Mounui{
 
 	@Override
 	public List<DTO_Mounui> adminBoard(DTO_Filter dto) {
-		return dao.adminBoard(dto);
+		return  dao.adminBoard(dto);
 	}
 
 	@Override
@@ -71,6 +74,21 @@ public class Service_MounuiImpl implements IService_Mounui{
 	@Override
 	public DTO_Email getReply(String seq) {
 		return dao.getReply(seq);
+	}
+
+	@Override
+	public List<String> getTitle() {
+		return dao.getTitle();
+	}
+
+	@Override
+	public int getAdminMounuiCnt(DTO_Filter dto) {
+		return dao.getAdminMounuiCnt(dto);
+	}
+
+	@Override
+	public int getUserMounuiBoard(String seq) {
+		return dao.getUserMounuiBoard(seq);
 	}
 
 }

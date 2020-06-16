@@ -21,17 +21,26 @@
 	
 		<security:access-denied-handler error-page="/access_denied_page.do"/>
 		
+
+		<security:intercept-url  pattern="/*.js"
+			access="none" />
+		<security:intercept-url pattern="/*.css"
+			access="none" />
+		<security:intercept-url pattern="/*.jpg"
+			access="none" />
+
+		<security:intercept-url pattern="/U**"
+			access="hasAnyAuthority('ROLE_M','ROLE_T','ROLE_A')" />
+
+		<security:intercept-url pattern="/M**"
+			access="hasRole('ROLE_M')" />
+		<security:intercept-url pattern="/T**"
+			access="hasRole('ROLE_T')" />
+		<security:intercept-url pattern="/A**"
+			access="hasRole('ROLE_A')" />
 		
-
-		<security:intercept-url pattern="/resources/**"
-			access="permitAll" />
-
-		<security:intercept-url pattern="/admin/**"
-			access="hasRole('User')" />
-
 		<security:intercept-url pattern="/**"
 			access="permitAll" />
-		
 
 		<security:form-login
 			login-processing-url="/logingo.do"
@@ -48,7 +57,8 @@
 			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"/>
 		<!-- 4주 -->
 		<security:remember-me key="new_start" token-validity-seconds="2419200"
-		remember-me-parameter="remember_me"/>
+		remember-me-parameter="remember_me" authentication-success-handler-ref="loginSuccessHandler"
+		data-source-ref="dataSource" user-service-ref="memberService"/>
 
 		<security:csrf disabled="true"/>
 	
